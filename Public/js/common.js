@@ -331,6 +331,8 @@ var publicSearch = {
             }
             if (result[i]['than']) {
                 str += " data-than='" + result[i]['than'] + "'";
+            }else{
+                str += " data-than='" + $("#hid_than").val() + "'";
             }
             if (page == "getGoodsInfoByText" || page == "getGoodsInfoOut") {
                 str += " data-brand='" + result[i]['brand_name'] + "'";
