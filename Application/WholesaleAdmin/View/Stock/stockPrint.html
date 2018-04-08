@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+	<style type="text/css" id="style1">
+		table {
+			border-collapse: collapse;
+		    width: 100%;
+		    font-size: 20px;
+		    background-color: #fff;
+		    border: 1px solid #d0d0d0;
+		}
+		td,th {
+			text-align: center;
+			border: 1px solid #d0d0d0; 
+		}
+		td span{margin-left:10px;} 
+	</style>
+</head>
+<body> 
+	<div class="container-fluid mt10" >
+		<div class="col-xs-12" id="divPrint">
+			<table class="tb-style">
+				<thead>
+					<tr style="height:35px;">
+						<th>行号</th>
+						<th>商品名称</th>
+						<th>单位</th>
+						<th>库存数</th> 
+						<th style="width:100px;">备注</th>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="list" id="vo">
+					<tr>
+						<td>{$key+1}</td> 
+						<td>{$vo.gname}</td>
+						<td>{$vo.uname}</td>
+						<td>{$vo.num|keep4}</td>  
+						<td></td>
+					</tr>
+					</volist> 
+				</tbody>
+			</table> 
+		</div>
+	</div> 
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/LodopFuncs.js"></script> 
+	<script>
+		$(function(){
+			setTimeout(function(){
+				printme();
+			},500); 
+		});
+		function printme(){  
+			$("table tbody tr").each(function(index,value){
+				if(index%2==0){
+					$(value).css("background-color","#e4e4e4");
+				}else{
+					$(value).css("background-color","#fff"); 
+				}
+			});
+			var strBodyStyle="<style>"+$("#style1").html()+"</style>";
+			var strFormHtml=strBodyStyle+"<body>"+$("#divPrint").html()+"</body>";
+
+			LODOP=getLodop();  
+			LODOP.PRINT_INIT("stockPrint库存打印");
+			LODOP.ADD_PRINT_TABLE(10,0,"100%","90%",strFormHtml);
+			// LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",iRadioValue);		
+			LODOP.PREVIEW();
+			if (LODOP.CVERSION){
+				CLODOP.On_Return = function(TaskID, Value) {
+		            if(Value==0 || Value==1){
+		            	parent.layer.closeAll();
+		            }
+		        }
+			} 
+		}
+	</script>
+	
+</body>
+</html>

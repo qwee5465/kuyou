@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+    <script type="text/javascript" src="__PUBLIC__/js/html5media.min.js"></script>
+    <style type="text/css">
+    	.rec-content{width: 100%;height: 200px;background: #fff;box-shadow:0 0 8px #d6d6d6;overflow: auto;}
+    	.rec-content-li{width: 95%;padding: 6px;text-align: center;border-bottom: 1px solid #dcdcdc;}
+    	a{color: #000;}
+    	.rec-content-li a:hover{color: #000;}
+    	.notice-content{width: 100%;height: 200px;background: #fff;box-shadow:0 0 8px #d6d6d6;overflow: auto;}
+    	.notice-content-li{width: 100%;padding: 6px;text-align: center;border-bottom: 1px solid #dcdcdc;}
+    	.notice-content-li span{color: #a96a73}
+    	.notice-content-li a:hover{color: #000;}
+    </style>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="mt20">
+			<div class="col-xs-12 col-md-4">
+				<div class="video-teach">
+					<p>视频教学</p>
+					<video  controls="controls" width="400" height="200">
+						<source src="__PUBLIC__/movie.mp4" type="video/mp4">
+					</video>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-5">
+				<div class="recommand">
+					<p>推荐</p>
+					<div class="rec-content">
+						<ul>
+							<li class="rec-content-li"><a href="">xxx供应商白菜九折甩卖 xxx供应商甩卖九折V.........</a></li>
+							<li class="rec-content-li"><a href="">xxx供应商白菜九折甩卖 xxx供应商甩卖九折V.........</a></li>
+							<li class="rec-content-li"><a href="">xxx供应商白菜九折甩卖 xxx供应商甩卖九折V.........</a></li>
+							<li class="rec-content-li"><a href="">xxx供应商白菜九折甩卖 xxx供应商甩卖九折V.........</a></li>
+							<li class="rec-content-li"><a href="">xxx供应商白菜九折甩卖 xxx供应商甩卖九折V.........</a></li>
+							<li class="rec-content-li"><a href="">xxx供应商白菜九折甩卖 xxx供应商甩卖九折V.........</a></li>
+							<li class="rec-content-li"><a href="">xxx供应商白菜九折甩卖 xxx供应商甩卖九折V.........</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-3">
+				<div class="notice">
+					<p>通知</p>
+					<div class="notice-content">
+						<ul>
+							<li class="notice-content-li"><a href="">2016/9/9进销存软件<span>更新V1.12</span></a></li>
+							<li class="notice-content-li"><a href="">2016/9/9进销存软件<span>更新V1.12</span></a></li>
+							<li class="notice-content-li"><a href="">2016/9/9进销存软件<span>更新V1.12</span></a></li>
+							<li class="notice-content-li"><a href="">2016/9/9进销存软件<span>更新V1.12</span></a></li>
+							<li class="notice-content-li"><a href="">2016/9/9进销存软件<span>更新V1.12</span></a></li>
+							<li class="notice-content-li"><a href="">2016/9/9进销存软件<span>更新V1.12</span></a></li>
+							<li class="notice-content-li"><a href="">2016/9/9进销存软件<span>更新V1.12</span></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid mt20">
+		<div class="col-xs-12 col-md-12">
+			<div style="background: #fff;border-bottom: 1px solid #c3c7c8;height: 60px;line-height: 60px;">
+				<span class="fs-16 ml15">形势走势图</span>
+				<select class="ml15">
+					<option>白菜类</option>
+					<option>猪肉类</option>
+				</select>
+				<select class="ml15">
+					<option>价格走势图</option>
+					<option>销量走势图</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-xs-12 col-md-12">
+			<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+		</div>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script type="text/javascript">
+
+		$(function () {
+		    $('#container').highcharts({
+		        chart: {
+		            type: 'area',
+		            spacingBottom: 30
+		        },
+		        title: {
+		            text: '年销售额走势'
+		        },
+		        // subtitle: {
+		        //     text: '* Jane\'s banana consumption is unknown',
+		        //     floating: true,
+		        //     align: 'right',
+		        //     verticalAlign: 'bottom',
+		        //     y: 15
+		        // },
+		        legend: {
+		            layout: 'vertical',
+		            align: 'left',
+		            verticalAlign: 'top',
+		            x: 150,
+		            y: 100,
+		            floating: true,
+		            borderWidth: 1,
+		            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+		        },
+		        xAxis: {
+
+		            categories: ['一月份', '二月份', '三月份', '四月份', '五月份', '六月份', '七月份', '八月份', '九月份', '十月份', '十一月份', '十二月份'],
+		            max:11
+		        },
+		        yAxis: {
+		        	title:null,
+		            labels: {
+		                formatter: function () {
+		                    if(this.value<=500){
+		                    	return this.value;
+		                    }else if(this.value >500 && this.value <=1000){
+		                    	return this.value;
+		                    }else if(this.value >1000 && this.value <=1500){
+		                    	return this.value;
+		                    }else if(this.value >1500 && this.value <=2000){
+		                    	return this.value;
+		                    }else if(this.value >2000 && this.value <=2500){
+		                    	return this.value;
+		                    }else if(this.value >2500 && this.value <=3000){
+		                    	return this.value;
+		                    }else if(this.value >3000 && this.value <=3500){
+		                    	return this.value;
+		                    }else if(this.value >3500 && this.value <=4000){
+		                    	return this.value;
+		                    }else if(this.value >4000){
+		                    	return this.value;
+		                    }
+		                }
+		            }
+		        },
+		        tooltip: {
+		            formatter: function () {
+		                return '<b>' + this.series.name + '</b><br/>' +
+		                    this.x + ': ' + this.y;
+		            }
+		        },
+		        plotOptions: {
+		            area: {
+		                fillOpacity: 0.5
+		            }
+		        },
+		        credits: {
+		            enabled: false
+		        },
+		        series: [{
+		            name: '白菜',
+		            data: [0, 250, 1200, 1500, 2500, 3100, 3900, 3400,2100,1600,1300,1000]
+		        }]
+		    });
+		});
+	</script>
+</body>
+</html>

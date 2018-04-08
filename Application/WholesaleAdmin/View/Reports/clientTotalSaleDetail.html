@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}客户销售明细</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.t-caption{text-align: center;border: 1px solid #59ab76; border-bottom: none; background: #59ab76; color: #fff;}
+		.headcolor2 td{background-color: #404040; border:1px solid #404040;color: #fff;border-left: 1px solid #404040 !important; border-bottom: 1px solid #404040 !important;}
+	table tr:nth-child(even){background-color: #e4e4e4;}
+	.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;width:95%;margin:auto;}
+	.navbar-default {background-color: #fff;}
+	.noradius{border-radius: 0px;}
+	.ml5{margin-left: 5px;}
+	.ml20{margin-left: 20px;}
+	.col-md-2{width: auto;}
+	.col-xs-6{width: auto;}
+	.fs-14,select{letter-spacing: 1.5px;}
+	.btn-success{background-color: #59ab76;border:1px solid #3b9f5f; letter-spacing: 1.5px; border-radius: 4px;}
+	.btn-success:hover{background-color:#3b9f5f; border:1px solid #3b9f5f;}
+	.btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important;}
+    .btn_color:hover{background-color: #6db81f !important; border:1px solid #6db81f !important;}
+    .tb-style td{border-left: 1px solid #d2d2d2; border-bottom: 1px solid #d2d2d2;} 
+	</style>
+	<style type="text/css" id="style1">
+		table {
+			border-collapse: collapse;
+		    width: 100%;
+		    font-size: 16px;
+		    background-color: #fff;
+		    border: 1px solid #d0d0d0;
+		}
+		td,th {
+			text-align: center;
+			border: 1px solid #d0d0d0;  
+		}
+		td span{margin-left:10px;} 
+	</style>
+</head>
+<body>
+	<div id="body_content">
+		<div class="nav navbar-default">
+			<div class="container-fluid">
+				<h3>客户销售明细</h3>
+				<div>
+					<form action="__SELF__" method="post">
+						<div class="form-group ml15">
+							<div class="row">
+								<div class="col-xs-6 col-md-2">
+									<span class="fl fs-14 mt8">日期&nbsp;&nbsp;&nbsp;从</span>
+									<input type="text" name="stime" id="date1" value="{$stime}" class="form-control w-115 fl ml5 noradius">
+								</div>
+								<div>
+									<span class="fl fs-14 ml5 mt8">到</span>
+									<input type="text" name="etime" id="date2" value="{$etime}" class="form-control w-120 fl ml5 noradius">
+								</div> 
+								<div class="none">
+									<span class="fl fs-14 mt8 ml20">品牌名称</span>
+									<input type="text" name="brand_name" value="{$brand_name}" id="brand_name" class="form-control w-120 fl ml5">
+								</div>  
+								<div>
+									<span class="fl fs-14 mt8 ml20">商品名称</span>
+									<input type="text" name="gname" id="gname" value="{$gname}" class="form-control w-120 fl ml5">
+								</div>   
+								<div  class="none">
+									<span class="fl fs-14 mt8 ml20">是否加工</span>
+									<select class="w-115 fl ml5" name="machining" id="machining">
+										<option value="">全部</option>
+										<option value="0">不加工</option>
+										<option value="1">加工</option>
+									</select>
+								</div> 
+							</div> 
+						</div> 
+						<div class="form-group ml15">
+							<div class="none">
+								<span class="fl fs-14 mt8">商品类别</span>
+								<select class="w-115 fl ml5" name="gtid" id="gtid" onchange="getTwoTypeInfo(this.value)">
+									<option value="">一级全部</option>
+									<volist name="tlist" id='vo'>
+										<option value="{$vo.gtid}">{$vo.type_name}</option>
+									</volist>
+								</select>
+								<select name="gtid1" id="gtid1"  class="w-115 fl ml15" onchange="getThreeTypeInfo(this.value)">
+									<option value="">二级全部</option>
+								</select>
+								<select name="gtid2" id="gtid2" class="w-115 fl ml15">
+									<option value="">三级全部</option> 
+								</select>  
+							</div>  
+							<div>
+								<span class="fl mt8 ml20">客户类型</span>
+									<select class="w-115 fl ml5" onchange="getCilentInfo(this.value)" name="ctid" id="ctid">
+										<option value="">全部类型</option>
+										<volist name="ctlist" id='vo'>
+											<option value="{$vo.ctid}">{$vo.type_name}</option>
+										</volist>
+									</select>
+									<span class="fl fs-14 mt8 ml20">客户名称</span>
+									<select name="c_id" id="c_id" class="w-100 fl ml5">
+										<option value="">全部</option>
+										<volist name="clist" id='vo'>
+											<option value="{$vo.c_id}">{$vo.cname}</option>
+										</volist>
+									</select> 
+									<span class="fl fs-14 mt8 ml20">比对合同</span>
+									<select name="cgpid" id="cgpid" class="fl ml5">
+										<option value="">无</option>
+										<volist name="cgplist" id='vo'>
+											<option value="{$vo.cgpid}">{$vo.cgpid}</option>
+										</volist>
+									</select> 
+								</div>
+								<div>
+									<input type="submit" value="搜 索" onclick="return checkFrom()" class="btn btn-success ml20" /> 
+									<input type="button" value="数据列设置" class="btn data w-100 btn-success ml20 btn_color"/>
+									<input type="button" class="btn btn-success ml20" onclick="printme()" value='打 印' />
+									<!-- <input type="button" class="btn btn-success ml20" onclick="exportTotalSale()" value='导 出' /> -->
+								</div>
+						</div>
+					</form>
+				</div>	
+			</div>
+		</div>
+		<div class="contianer-fluid"> 
+			<div id="divPrint">
+				<table class="tb-style t-table">
+					<thead>
+						<caption class="t-caption">客户销售明细表</caption>
+						<tr>
+							<td id="tdxj">小计</td>
+							<td id="tdxjje">{$subtotal}</td>
+							<td></td>
+							<td id="tdhdje">{$subhttotal}</td>
+						</tr>
+						<tr id="tr1">
+							<td>行号</td>
+							<if condition="$rdcList.gtname_s eq 0">
+								<td class="t_gtname_p">{$titles.gtname}</td>
+							</if> 
+							<if condition="$rdcList.gname_s eq 0">
+								<td style="min-width:70px;max-width:290px;" class="t_gname_p">{$titles.gname}</td>
+							</if> 
+							<!-- <if condition="$rdcList.alias_s eq 0">
+								<td class="t_alias_p">{$titles.alias}</td>
+							</if>  -->
+							<if condition="$rdcList.bname_s eq 0">
+								<td class="t_bname_p">{$titles.bname}</td>
+							</if> 
+							<if condition="$rdcList.uname_s eq 0">
+								<td class="t_uname_p">{$titles.uname}</td>
+							</if>
+							<if condition="$rdcList.num_s eq 0">
+								<td class="t_num_p">{$titles.num}</td>
+							</if>
+							<if condition="$rdcList.cd_num_s eq 0">
+								<td class="t_cd_num_p">{$titles.cd_num}</td>
+							</if>
+							<if condition="$rdcList.snum_s eq 0">
+								<td class="t_snum_p">{$titles.snum}</td>
+							</if>
+							<td>销售金额</td>
+							<td>合同单价</td>
+							<td>合同金额</td>
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id='vo'>
+							<tr>
+								<td>{$key+1}</td>
+								<if condition="$rdcList.gtname_s eq 0">
+									<td class="t_gtname_p">{$vo.type_name}
+										<if condition="$vo['type_name1']">
+											>{$vo.type_name1}
+										</if>
+										<if condition="$vo['type_name2']">
+											>{$vo.type_name2}
+										</if>
+									</td>
+								</if>
+								<if condition="$rdcList.gname_s eq 0">
+									<td class="t_gname_p">{$vo.gname}</td> 
+								</if> 
+								<!-- <if condition="$rdcList.alias_s eq 0">
+									<td class="t_alias_p">{$vo.alias}</td> 
+								</if> -->  
+								<if condition="$rdcList.bname_s eq 0">
+									<td class="t_bname_p">{$vo.brand_name}</td> 
+								</if> 
+
+								<if condition="$rdcList.uname_s eq 0">
+									<td class="t_uname_p">{$vo.unit_name}</td>  
+								</if> 
+								<if condition="$rdcList.num_s eq 0">
+									<td class="t_num_p">{$vo['num']}</td>
+								</if>
+								<if condition="$rdcList.cd_num_s eq 0">
+									<td class="t_cd_num_p">{$vo['cd_num']}</td>
+								</if>
+								<if condition="$rdcList.snum_s eq 0">
+									<td class="t_snum_p">{$vo['num']+$vo['cd_num']}</td>
+								</if>	
+								<td>{$vo['sales_amount']}</td>
+								<td>{$vo['cgp_price']}</td>
+								<td>{$vo['num']*$vo['cgp_price']}</td>
+							</tr> 
+						</volist> 
+					</tbody>
+				</table> 
+			</div>
+		</div>
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/scrolltop.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/LodopFuncs.js"></script>
+	<script type="text/javascript">  
+		//页面加载时
+		$(function(){
+			$("#machining").val("{$machining}");
+			$("#c_id").val("{$c_id}");
+			$("#gtid").val("{$gtid}");
+			$("#ctid").val("{$ctid}");
+			$("#cgpid").val("{$cgpid}");
+			getTwoTypeInfo({$gtid});
+			getCilentInfo("{$ctid}");
+			//合计跨列
+			$("#tdxj").attr("colspan",$("tbody #tr1 td").length-3);
+		}); 
+
+		function checkFrom(){
+			var stime =$("#date1").val();
+			var etime =$("#date2").val();
+			var ctid = $("#ctid").val();
+			if(!stime){
+        		layer.tips('请选择开始日期', '#date1', {tips: 1});
+				return false;
+        	}
+        	if(!etime){
+        		layer.tips('请选择结束日期', '#date2', {tips: 1});
+				return false;
+        	}
+        	return true;
+		}
+
+		//根据客户类型获取客户信息
+		function getCilentInfo(ctid){
+			if(ctid){
+				$.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">全部客户</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['c_id']+'">'+result[i]['cname']+'</option>';
+		                }
+		                $("#c_id").html(str);  
+		                var c_id = "{$c_id}";
+		                $("#c_id").val(c_id);
+		            }else{ 
+				    	$("#c_id").html('<option value="">全部客户</option>');  
+		            }
+		        }, "json");
+	        }else{
+	        	$("#c_id").html('<option value="">全部客户</option>');  
+	        }
+		}
+
+
+
+
+		laydate({
+
+            elem: '#date1'
+
+        });
+        laydate({
+
+            elem: '#date2'
+
+        });
+
+		//导出excel
+        function exportTotalSale(){
+        	var stime = $("#date1").val(),
+        		etime = $("#date2").val(),
+        		brand_name = $("#brand_name").val(),
+        		c_id = $("#c_id").val(),
+        		machining = $("#machining").val(),
+        		gtid = $("#gtid").val(),
+        		gtid1 = $("#gtid1").val(),
+        		gtid2 = $("#gtid2").val(),
+        		tcaption = $("#tcaption").val(),
+        		gname = $("#gname").val();
+        	var url ="{:U('Reports/exportTotalSale')}";
+        	url+="?stime="+stime+"&etime="+etime+"&brand_name="+brand_name+"&c_id="+c_id+"&machining="+machining+"&gtid="+gtid+"&gtid1="+gtid1+"&gtid2="+gtid2+"&gname="+gname+"&tcaption="+tcaption;
+        	location.href=url;
+        } 
+
+        var index =0,index1=0;	
+		//根据1级类型编号获取二级分类
+	    function getTwoTypeInfo(fid){ 
+	    	var gtid1 = "{$gtid1}";
+	    	if(fid){
+		        $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">二级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		                if(gtid1 && gtid1!="0"){
+		                	if(index==0){
+			                	$("#gtid1").val(gtid1);
+			                	getThreeTypeInfo(gtid1);
+			                	index++;
+		                	}
+		                }
+		            }else{
+		            	var str ='<option value="">二级全部</option>';
+				    	$("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		            }
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">二级全部</option>';
+		    	$("#gtid1").html(str); 
+                $("#gtid2").html('<option value="">三级全部</option>');
+		    }
+	    }
+
+	    //根据二级类型编号获取三级分类
+	    function getThreeTypeInfo(fid){ 
+	    	var gtid2 ="{$gtid2}";
+	    	if(fid){
+		        $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">三级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid2").html(str);
+		                if(gtid2 && gtid2!="0"){
+		                	if(index1==0){
+		                		$("#gtid2").val(gtid2);
+		                		index1++;
+		                	}
+		                } 
+		            }else{
+		            	var str ='<option value="">三级全部</option>';
+		    			$("#gtid2").html(str);
+		            }
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">三级全部</option>';
+		    	$("#gtid2").html(str);
+		    }
+	    }
+
+							
+        //数据列设置
+		$('.data').click(function(){ 
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['700px', '500px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Reports/reportsDataSet.html'
+			});
+		});
+
+		//打印 
+		function printme(){     
+			var index = layer.msg('请稍后', {
+			    icon: 16,
+			    shade: 0.01,
+			    time: 3000
+			});
+			$("table tr").each(function(index,value){
+				if(index%2==0){
+					$(value).css("background-color","#e4e4e4");
+				}else{
+					$(value).css("background-color","#fff"); 
+				}
+
+			});
+			var strBodyStyle="<style>"+$("#style1").html()+"</style>";
+			var strFormHtml=strBodyStyle+"<body>"+$("#divPrint").html()+"</body>";
+
+			LODOP=getLodop();  
+			LODOP.PRINT_INIT("clientTotalSaleDetail客户销售明细表");
+			LODOP.ADD_PRINT_TABLE(0,0,"100%","95%",strFormHtml);
+			// LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",iRadioValue);		
+			LODOP.PREVIEW();
+
+			// var stime = $("#date1").val(),
+   //      		etime = $("#date2").val(),
+   //      		brand_name = $("#brand_name").val(),
+   //      		c_id = $("#c_id").val(),
+   //      		machining = $("#machining").val(),
+   //      		gtid = $("#gtid").val(),
+   //      		gtid1 = $("#gtid1").val(),
+   //      		gtid2 = $("#gtid2").val(),
+   //      		tcaption = $("#tcaption").val(),
+   //      		gname = $("#gname").val();
+
+			// var url = "?stime="+stime+"&etime="+etime+"&brand_name="+brand_name+"&c_id="+c_id+"&machining="+machining+"&gtid="+gtid+"&gtid1="+gtid1+"&gtid2="+gtid2+"&gname="+gname+"&tcaption="+tcaption;
+			// layer.open({
+			// 	type: 2,
+			// 	closeBtn: 0,
+			// 	area: ['0px', '0px'],
+			// 	title: false,
+			// 	content: '__APP__/WholesaleAdmin/Reports/totalSalePrint.html'+url
+			// }); 
+		} 
+
+
+	</script>
+</body>
+</html>

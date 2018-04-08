@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.btn-list.active{position: fixed;right: 0;top: 0;z-index: 20;width: 100%;background: #fff;box-shadow: 0 1px 5px #c5c5c5;padding: 10px 10px 0 0; }
+		.btn-list button{border:none;outline: none;margin-right: 20px;margin-bottom: 10px;}
+		.f-spec-box{width:260px;margin:0 auto;text-align: right;height:250px;}
+		.spec-submit{position:fixed;bottom:0;left:0;width:100%;height:50px;background:#fff;text-align: center;}
+		.nspec-box{width:600px;margin:auto;}
+		/*.nspec-box-spec{float:left;}*/
+		.nspec-box-eq{float:left;width:60px;text-align: center;}
+		input{border: none !important;outline: none;}
+		table{border-collapse: collapse;width: 100%;font-size: 14px;background-color: #f5f5f5;border:1px solid #d0d0d0;}
+		table td{border-left:1px solid #d0d0d0;border-bottom: 1px dashed #d0d0d0;text-align: center;height: 40px;}  
+		tr.gray-bg{background:#e5e4e4;}
+		table tr:nth-child(even){background:#e5e4e4;} 
+		/*入库出库文本框*/
+		.stock-txt{padding: 0 15px;height: 35px;box-sizing: border-box;text-align: center;background:none;}  
+		tr.green-bg{background-color: #59ab76;}
+		tr.green-bg2{background-color: #404040;}
+		.w-50,.w-150,.w-120,.t_remark_p,.w-100,.w-200,.btn-list button{color:#fff; letter-spacing: 1.5px;}
+		.btn-list button{border-radius: 4px; background-color: #59ab76; border:1px solid #3b9f5f; padding: 6px 12px;}
+		table td{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+		/*.btn-style:hover{background-color: #3b9f5f;border-color: #3b9f5f;}*/
+		/*sssssssssssssssssssssssss*/
+		.btn-style:hover{linear-gradient(#3b9f5f,#3b9f5f);
+    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    .btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important;}
+    .btn_color:hover{linear-gradient(#6db81f,#6db81f);
+    background-image: linear-gradient(rgb(109, 184, 31), rgb(109, 184, 31));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    .btn_color2{background-color: #feb235 !important; border:1px solid #e5920b !important;}
+    .btn_color2:hover{linear-gradient(#e5920b,#e5920b);
+    background-image: linear-gradient(rgb(229, 146, 11), rgb(229, 146, 11));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    table tr:nth-child(even){background-color: #e4e4e4;}
+    .headcolor td,.headcolor{background-color: #59ab76; border:1px solid #59ab76; color: #fff;}
+    .headcolor2 td{background-color: #404040; border:1px solid #404040;color: #fff;}
+    select{border: none;}
+    .back_btn{background: #f1f1f1 !important; border: 1px solid #ccc !important;color: #555 !important;}
+    .back_btn:hover{background: #fff !important; border: 1px solid #ccc !important;color: #333 !important;}
+	</style>
+</head>
+<body>
+<div id="body_content">
+	<div class="container-fluid h-60" style="background-color:#fff;">
+		<h3 style="border:none;">合同->编辑</h3>
+	</div>
+	<div class="container-fluid mt20">
+		<div class="cf btn-list">
+			<button class="fr btn-style" onclick="saveContractStock(1)">保存并审核</button>  	
+			<button class="fr btn-style btn2" onclick="saveContractStock(0)">保 存</button>  
+			<button class="fr btn-style btn_color2" onclick="goodsList()">商品查询</button> 
+			<button class="fr back_btn" onclick="backPage()">返 回</button>   
+		</div>
+		<div id="divPrint">
+			<div class="col-xs-12">
+				<table class="">
+					<thead> 
+						<tr class="green-bg headcolor">  
+							<td class="w-200">合同号</td>	
+							<td class="w-200">供应商</td>	
+							<td class="">
+								客户
+								<input type="hidden" id="hid_than" value="{$list[0]['than']}"/>
+							</td>	
+							<td class="w-150">应用开始日期</td>	
+							<td class="w-150">应用结束日期</td>	
+							<td class="w-150">合同价状态</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>   
+							<td><input type="text" class="stock-txt w100" readonly value="{$cgpid}" id="cgpid" name="cgpid" /></td> 
+							<td><input type="text" class="stock-txt w100" placeholder="可不填" value="{$list[0].cgpname}" id="cgpname" name="cgpname" /></td> 
+							<td>
+								<div class="nspec-box-spec pr" >
+									<input type="text" id="txt_cid" value="{$list[0]['cname']}" onkeyup="publicSearch.textCall(this,cbackCall)" name="" data-name="name" data-id="c_id"  data-li-class="select-sreach-list-fl25"  data-page="getClient" class=" select-sreach-input stock-txt width1"/> 
+									<span class="select-sreach-btn" onclick="publicSearch.btnCall(this,cbackCall)"></span>
+									<ul class="select-sreach-list cf none" title="4" id="ul4"></ul>
+									<input type="hidden" class="hid" value="{$list[0]['cid']}"  id="cid"/>
+								</div>
+							</td> 
+							<td>
+								<input type="text" name="" id="stime" value="{$list[0]['stime']|date='Y-m-d',###}" class="stock-txt w100">
+							</td>
+							<td>
+								<input type="text" name="" id="etime" value="{$list[0]['etime']|date='Y-m-d',###}" class="stock-txt w100">
+							</td>
+							<td>
+								<select id="is_enable">
+									<if condition="$list[0]['is_enable'] eq 1">
+										<option value="1" selected="selected">启用</option>
+									<else />
+										<option value="1">启用</option> 
+									</if>
+									<if condition="$list[0]['is_enable'] eq 0">
+										<option value="0" selected="selected">禁用</option>
+									<else />
+										<option value="0">禁用</option> 
+									</if>
+								</select>
+							</td> 
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-xs-12 mt50">
+				<table class="t-table" id="table">
+					<thead>
+						<tr class="green-bg green-bg2 headcolor2">  
+							<td class="w-50">序号</td>  
+							<td class="w-200">商品名称</td> 
+							<td class="w-200">客户商品名称</td>
+							<td class="w-100">默认单位</td>
+							<td class="w-100">税前价</td>
+							<td class="w-100">单价比</td>
+							<td class="w-100">税后价</td>
+							<td class="">备注</td>
+							<td class="w-80">操作</td>
+						</tr>
+					</thead>
+					<tbody>
+					<?php $kkk=0; ?>
+					<foreach name="list" item="vo">
+						<?php $kkk +=1; ?>
+						<tr >
+							<td class="pr"> 
+								<span class="td_xh">{$key+1}</span>
+							</td> 
+							<td class="td_gname">
+								<div class="nspec-box-spec pr" >
+									<input type="text" onblur="IsGoods(this)" value="{$vo.gname}"  onkeyup="selectSpec(1,this)" data-li-class="select-sreach-list-fl50" name="" data-name="name" data-layer="1"  data-id="wgid" data-page="getGoodsInfoByText" class="stock-txt select-sreach-input focus-switch width2"/> 
+									<!-- <span class="select-sreach-btn"  onclick="selectSpec(2,this)"></span> -->
+									<ul class="select-sreach-list cf none" title="4"></ul>
+									<input type="hidden" name="wgids" value="{$vo.wgid}" class="hid"  />
+								</div>
+							</td>  
+							<td class="td_cgname">
+								<input type="text" name="cgnames" value="{$vo.cgname}" class="stock-txt w100 focus-switch">	 
+							</td>
+							<td class="td_unit_id">
+								<select name="nei_unit_id" onchange="specChange(this)"> 
+									<volist name="vo['usub']" id="v" >
+										<if condition="$vo['nei_unit_id'] eq $v['unit_id']">
+											<option data-nei_num="{$v.num}" selected value="{$v.unit_id}">{$v.uname}</option>
+										<else />
+											<option data-nei_num="{$v.num}" value="{$v.unit_id}">{$v.uname}</option>
+										</if>
+									</volist>
+								</select> 
+								<input type="hidden" name="unit_id" value="{$vo.unit_id}" />
+							</td>
+							<td class="td_price">
+								<input type="text" name="prices" value="{$vo.nei_price|keep4}" class="stock-txt w100 t-number focus-switch">
+							</td> 
+							<td class="td_than">
+								<input type="text" name="thans" value="{$vo.than|keep4}" readonly="readonly" class="stock-txt w100 t-number focus-switch">
+							</td> 
+							<td class="td_tax_price">
+								<input type="text" name="tax_prices" value="{$vo.nei_tax_price|keep4}" class="stock-txt w100 t-number focus-switch">
+							</td>
+							<td class="td_remark">
+								<input type="text" name="remarks" value="{$vo.remark}" class="stock-txt w100 focus-switch">
+							</td>  
+							<td>
+								<a href="javascript:;" onclick="removeTr(this)" class="a_del">
+									<img src="__PUBLIC__/img/a-del.png" />
+								</a>
+							</td> 
+						</tr>
+					</foreach>
+					<for start="1" end="500-$kkk">
+						<tr> 
+							<td class="pr"> 
+								<span class="td_xh">{$i+$kkk}</span>
+							</td> 
+							<td class="td_gname">
+								<div class="nspec-box-spec pr" >
+									<input type="text" onblur="IsGoods(this)"  onkeyup="selectSpec(1,this)" data-li-class="select-sreach-list-fl50" name="" data-name="name" data-layer="1"  data-id="wgid" data-page="getGoodsInfoByText" class="stock-txt select-sreach-input focus-switch width2"/> 
+									<!-- <span class="select-sreach-btn"  onclick="selectSpec(2,this)"></span> -->
+									<ul class="select-sreach-list cf none" title="4"></ul>
+									<input type="hidden" name="wgids" class="hid"  />
+								</div>
+							</td>  
+							<td class="td_cgname">
+								<input type="text" name="cgnames" class="stock-txt w100 focus-switch">	 
+							</td>
+							<td class="td_unit_id"><select class="none"></select></td> 
+							<td class="td_price"><input type="text" name="prices" class="stock-txt w100 t-number focus-switch"></td> 
+							<td class="td_than"><input type="text" name="thans" readonly="readonly" class="stock-txt w100 t-number focus-switch"></td> 
+							<td class="td_tax_price"><input type="text" name="tax_prices" class="stock-txt w100 t-number focus-switch"></td>
+							<td class="td_remark"><input type="text" name="remarks" class="stock-txt w100 focus-switch"></td>  
+							<td>
+								<a href="javascript:;" onclick="removeTr(this)" class="a_del none">
+									<img src="__PUBLIC__/img/a-del.png" />
+								</a>
+							</td>
+						</tr> 
+					</for>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- 遮罩层 -->
+	<div id="div_zzc" class="t-zzc none">
+		<!-- 已审核 -->
+		<img src="__PUBLIC__/img/icon-ysh.png"  style="margin-top: 150px;margin-left: 150px;" /> 
+	</div> 
+	<div id="div_zzc1" class="t-zzc none">
+		<!-- 已保存 -->
+		<img src="__PUBLIC__/img/icon-ybc.png"  style="margin-top: 150px;margin-left: 150px;" /> 
+	</div>
+	<div id="div_zzc2" class="t-zzc none">
+		<!-- 审核失败 -->
+		<img src="__PUBLIC__/img/icon-shsb.png"  style="margin-top: 150px;margin-left: 150px;" /> 
+	</div> 
+
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/area.js"></script> 
+	<script type="text/javascript" src="__PUBLIC__/js/areapublic.js"></script> 
+	<script type="text/javascript">
+		function goodsList(){
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['90%', '90%'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Goods/goodsList.html'
+			});
+		}
+		//判断商品是否存在
+		function IsGoods(obj){
+			var td = $(obj).parent();
+			var wgid = td.find("input[name='wgids']").val();
+			if(!wgid && wgid !=""){
+				layer.msg('该商品不存在');
+				obj.value="";
+			} 
+		} 
+		
+		 
+		//页面加载时
+		$(function(){
+			  
+		}); 
+
+		laydate({ 
+            elem: '#stime'
+        });
+		laydate({ 
+            elem: '#etime'
+        });
+         
+		// 滚动条事件-导航栏
+		window.onscroll=function(){
+			var t =document.documentElement.scrollTop||document.body.scrollTop;
+			if(t>130){
+				$(".btn-list").addClass("active");
+			}else{
+				$(".btn-list").removeClass("active");
+			}
+		}
+		
+		//数据列设置
+		$('.data').click(function(){ 
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['700px', '500px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Instock/instockDataSet.html'
+			});
+		});
+
+		//客户框回调行数
+		var cbackCall =function(obj){ 
+			var than =$(obj).attr("data-than");
+			$("#hid_than").val(parseFloat(than));
+		}
+		function selectSpec(num,obj){
+			var e=window.event||event; 
+			if(e.keyCode==27)
+				return;
+			var cid = $("#cid").val();
+			if(!cid){
+				layer.msg("请先选择客户");
+				$(obj).val("");
+				return;
+			} 
+			if(num==1){
+				publicSearch.textCall(obj,backCall);
+			}else{
+				publicSearch.btnCall(obj,backCall);
+			}
+		}
+		//表格中的上下左右键切换input的焦点
+		new tabTableInput("table", "text");
+
+		var backCall = function(obj,ul){
+			//默认单位 渲染到对应的td中
+			var tr = $(ul).parent().parent().parent(); //jq对象 
+			var wgid = $(obj).attr("data-id"); 
+			//判断该商品是否在本次入库单中存在 如果存在则不允许添加
+			if(!checkGid(wgid)){
+	        	setRow(obj,ul,tr,wgid); 
+			}else{  
+				layer.alert('该商品已添加，不能继续添加.',function(index){
+					tr.find(".td_gname input[type='text']").val("");
+					tr.find(".td_gname input[type='hidden']").val("");
+					layer.close(index);
+				});  
+			}
+		}  
+
+		//移除本行
+		function removeTr(obj){
+			var tr = $(obj).parent().parent();
+			tr.remove();
+			$(".td_xh").each(function(index,value){
+				$(value).html(index+1);
+			});
+			//表格中的上下左右键切换input的焦点
+			new tabTableInput("table", "text");
+			calculateSum(); 
+		}
+		var saveState= 0; //0.不需要保持1.需要保持
+		function setRow(obj,ul,tr,wgid){
+			saveState = 1; //设置保持状态为1
+			tr.find(".a_del").removeClass("none");
+			var div =$(ul).parent(); //td 下的div  
+			var td = tr.find('.td_unit_id'); //jq对象
+			resetTrInfo(div);
+			var hidhtml = "<select name='nei_unit_id' onchange='specChange(this)'><option data-nei_num='1' value='"+$(obj).attr('data-unit-id')+"'>"+$(obj).attr('data-unit-name') +"</option></select><input type='hidden' name='unit_id' value='"+$(obj).attr('data-unit-id')+"' /><input type='hidden' class='jcprice' value='"+$(obj).attr("data-price")+"' />";
+    		td.html(hidhtml);      
+    		tr.find(".td_cgname input").val($(obj).attr("data-name"));
+    		var than =$("#hid_than").val() || 1; 
+    		tr.find(".td_than input").val(parseFloat(than)); //单价比
+    		getSpecInfo(wgid,td);
+    		//表格中的上下左右键切换input的焦点
+			new tabTableInput("table", "text");
+		}
+
+		//规格选择
+		function specChange(obj){
+			// var tr = $(obj).parent().parent();
+			// var result = parseFloat(tr.find(".td_unit_id .jcprice").val())  * parseFloat($(obj).find("option:selected").attr("data-nei_num")).toFixed(4);
+			// tr.find('.td_price input').val(result); 
+		}
+
+		//根据批发商商品编号获取规格信息
+		function getSpecInfo(wgid,td){
+		    var url = "/kuyou/Api/Public/getSpecInfo";
+		    $.ajax({
+		        type:"post",
+		        url:url,
+		        data:{"wgid":wgid},
+		        dataType:"json",
+		        success:function(data) {
+		            if (data.resultcode == 0) {  
+		            	var str ="";
+		            	var result =data.result;
+		            	for(var i=0;i<result.length;i++){
+		            		str +="<option data-nei_num='"+result[i].num+"' value='"+result[i].unit_id1+"'>"+result[i].uname+"</option>";
+		            	} 
+		                td.find("select").append(str);
+		            }
+		        },
+		        error:function(){
+		            layer.alert('获取规格时异常',{icon: 2});
+		        }
+		    }); 
+		}
+
+		//判断该商品是否在本次入库单中存在 如果存在则不允许添加
+		function checkGid(gid){
+			var wgids = document.getElementsByName("wgids");
+			var k =0;
+			for(var i=0;i<wgids.length;i++){
+				if(wgids[i].value==gid){
+					k++;
+				}
+				if(k>1){
+					return true;
+				}
+			} 
+			return false;
+		} 
+		 
+		$('.td_price input').change(function(){
+			//判断是否填写数量 
+			var tr = $(this).parent().parent(); 
+			calculateTaxPrice(tr);
+		});  
+
+		$('.td_tax_price input').change(function(){
+			//判断是否填写数量 
+			var tr = $(this).parent().parent(); 
+			calculatePrice(tr);
+		});  
+
+		//重置本行信息
+		function resetTrInfo(div){
+			var tr = div.parent().parent();//tr　　
+			tr.find(".td_price input").val("");
+			tr.find(".td_tax_price input").val(""); 
+			tr.find(".td_than input").val(""); 
+		}  
+		 
+
+		//计算税前金额
+		function calculatePrice(tr){
+			var price = tr.find(".td_price input");
+			var tax_price = tr.find(".td_tax_price input").val();
+			var than = tr.find(".td_than input").val();
+			if(IsNum(tax_price) && IsNum(than)){
+				var s =parseFloat((parseFloat(tax_price) / parseFloat(than)).toFixed(4));
+				price.val(s); 
+			}else{
+				price.val(0); 
+			}  
+		}
+
+		//计算税后单价
+		function calculateTaxPrice(tr){
+			var price = tr.find(".td_price input").val();
+			var tax_price = tr.find(".td_tax_price input");
+			var than = tr.find(".td_than input").val();
+			if(IsNum(price) && IsNum(than)){
+				var s =parseFloat((parseFloat(price) * parseFloat(than)).toFixed(4));
+				tax_price.val(s); 
+			}else{
+				tax_price.val(0); 
+			}
+		}
+
+	</script>
+	<script>
+		//保存
+	function saveContractStock(status){  
+		var cid=$("#cid").val(),
+			stime=$("#stime").val(),
+			etime=$("#etime").val();
+		if(cid==""){
+			layer.tips('请填写客户', '#txt_cid', {tips: 1});
+			return;
+		}
+		if(stime==""){
+			layer.tips('请选择开始应用时间', '#stime', {tips: 1});
+			return;
+		}
+		if(etime==""){
+			layer.tips('请选择结束应用时间', '#etime', {tips: 1});
+			return;
+		}   
+		var cgpid=$("#cgpid").val(), 
+			cgpname=$("#cgpname").val(), 
+			is_enable=$("#is_enable").val(); 
+		var data ={
+			cgpid:cgpid,
+			cgpname:cgpname,
+			cid:cid,
+			stime:stime,
+			etime:etime,
+			is_enable:is_enable, 
+			status:status
+		}  
+		var	arr = [];
+		if(status==1 && is_enable==1){ 
+			var k=0;
+			var errStr ="";
+			$("input[name='wgids']").each(function(index,value){ 
+				var val = $(value).val();
+				if(val){
+					var t_prices = $(value).parent().parent().parent().find("input[name='prices']").val();
+					var t_tax_prices = $(value).parent().parent().parent().find("input[name='tax_prices']").val();
+					if((t_prices=="" || t_prices=='0') && (t_tax_prices=="" || t_tax_prices=='0')){  
+						errStr +=index+1+",";
+						arr.push(index);//未完善数据在第几行
+						k++; 
+					} 	
+				}
+			});
+			if(errStr!=""){
+				errStr = errStr.substr(0,errStr.length-1);
+				errStr = "在第"+errStr+"行，有数据未完善,审核数据将对未完善数据进行移除,是否审核数据?";
+				layer.confirm(errStr, {icon: 3, title:'提示'},function(index){
+					layer.close(index);
+					submitForm(arr,data);
+				},function(index){
+					layer.close(index);
+					return;
+				});
+			}else{
+				submitForm(arr,data);
+			}
+		}else{
+			submitForm(arr,data);
+		} 
+	}
+ 
+	//表单提交
+	function submitForm(arr,data){
+		var wgids = '',// 商品名称
+			cgnames = "", //客户商品名称  
+			unit_ids = '',//默认单位 
+			prices = '',//税前价 
+			tax_prices = '',//税后价
+			thans = '',//单价比
+			nei_unit_ids="",//内装单位
+			nei_nums="", //内装数 
+			remarks =""; 
+		$("input[name='wgids']").each(function(index,value){
+			//审核状态不添加有问题的数据进行提交
+			if(arr.indexOf(index)<0){ 
+				var val=$(value).val();
+				if (val) { 
+					wgids+=val+',';
+					cgnames+= $("input[name='cgnames']").eq(index).val()+',';
+					unit_ids+= $("input[name='unit_id']").eq(index).val()+',';
+					prices+= $("input[name='prices']").eq(index).val()+','; 
+					tax_prices+= $("input[name='tax_prices']").eq(index).val()+',';
+					thans+= $("input[name='thans']").eq(index).val()+',';
+					remarks += $("input[name='remarks']").eq(index).val()+','; 
+					nei_unit_ids += $("select[name='nei_unit_id']").eq(index).val()+','; 
+					nei_nums += $("select[name='nei_unit_id']").eq(index).find("option:selected").attr("data-nei_num")+','; 
+				}
+			}	
+		});
+		data.wgids=wgids.substr(0,wgids.length-1);
+		data.cgnames=cgnames.substr(0,cgnames.length-1);
+		data.unit_ids=unit_ids.substr(0,unit_ids.length-1);
+		data.prices=prices.substr(0,prices.length-1); 
+		data.tax_prices=tax_prices.substr(0,tax_prices.length-1);
+		data.thans=thans.substr(0,thans.length-1); 
+		data.remarks=remarks.substr(0,remarks.length-1);  
+		data.nei_unit_ids=nei_unit_ids.substr(0,nei_unit_ids.length-1);  
+		data.nei_nums=nei_nums.substr(0,nei_nums.length-1);   
+		if(data.wgids==""){
+			layer.msg('请填写数据');
+			return;
+		}
+		var status = data.status;
+		var cgpid =data.cgpid;
+		layer.msg("单据提交中",{time:3000}); 
+		$.ajax({
+			type:"post",
+			url:"{:U('Contract/contractAjaxEdit')}",
+			data:data,
+			dataType:"json",
+			success:function(data) {
+				if(data.resultcode==0){
+					$("input[name='wgids']").each(function(index,value){
+						if(arr.indexOf(index)>=0){
+							$(value).parent().parent().parent().remove();
+						}	
+					});
+					if(status==1){  
+						layer.msg("合同保存成功,正在审核请稍后...");
+						upContractStatus(cgpid,1);
+					}else{
+						layer.alert('合同保存成功',function(index){
+							layer.close(index);
+						});
+						$("#div_zzc1").removeClass("none"); 
+					}
+					window.scrollTo(0,0);  
+					$(".a_del").addClass("none"); //隐藏删除按钮
+				}else if(data.resultcode == 10){
+					layer.alert(data.msg,function(index){
+						if(data.err_row){
+							var err_row = parseInt(data.err_row)-1;
+							$("#table tbody").find("tr").eq(err_row).find(".a_del").removeClass("none");
+						}
+						layer.close(index);
+					}); 
+					
+				}else if(data.resultcode== 8){
+					layer.alert("数据验证错误");
+				}else{
+					layer.msg(data.msg);
+				}
+				$(".td_xh").each(function(index,value){
+					$(value).html(index+1);
+				});
+				saveState=0;
+				publicState=1;//可打印
+			},
+			error:function(){
+				layer.alert('不能重复保存。',{icon: 2});
+			}
+		}); 
+	}
+
+	//修改入库单审核状态
+    function upContractStatus(cgpid,status){
+    	var index = layer.load(2,{time:2000}); 
+    	$.post("{:U('Contract/upContractStatus')}",{cgpid:cgpid,status:status},function(data){
+    		//关闭加载框 
+    		layer.close(index);
+    		if(data==1){ 
+				layer.alert("审核成功"); 
+				$("#div_zzc").removeClass("none");
+			}else{
+				layer.alert("单据已保存，审核失败");
+				$("#div_zzc2").removeClass("none");
+			}
+    	},"json");
+    }
+
+	//打印和导出状态 0.不可打印导出 1.可打印导出
+	var publicState = 0;
+	//excel 导出
+	function exportJoinStock(){
+		if(publicState==1){
+			//根据入库单据号获取供应商地址
+			var index = layer.load(2, {time: 2000});
+			var jsid = $("#jsid").val();
+			$.ajax({
+				type:"post",
+				url:"{:U('Instock/getSaddress')}",
+				data:{'jsid':jsid},
+				dataType:"json",
+				success:function(data) {
+					if(data.resultcode==0){
+						var address = getAddressName(data.result[0].pid)+getAddressName(data.result[0].pid,data.result[0].cid)+getAddressName(data.result[0].pid,data.result[0].cid,data.result[0].did);
+						address += data.result[0]['street'];
+						var url = "{:U('Instock/exportJoinStock')}";
+						url+="?jsid="+jsid+"&address="+address;
+						location.href=url;
+					} 
+				},
+				error:function(){
+					layer.alert('获取地址异常',{icon: 2});
+				}
+			}); 
+			
+		}else{
+			layer.alert("请先保存入库单",{icon: 2});
+		}
+	}
+	//打印 
+	function printme(){    
+		var jsid = $("#jsid").val();
+		if(publicState==1){
+			layer.open({
+				type: 2,
+				closeBtn: 0,
+				area: ['0px', '0px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Instock/instockPrint.html?jsid='+jsid
+			}); 
+		}else{
+			layer.alert("请先保存入库单",{icon: 2});
+		} 
+	}
+	</script>
+</div>
+</body>
+</html>

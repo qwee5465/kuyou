@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" /> 
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+	<title>库友进销存</title>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+    <style>
+		.login_box{position:absolute;left:500px;top:0;right:0;bottom:0;width:280px;height:320px;margin:auto;background:#fff;border-radius: 10px;}
+		.icon-logo{width:120px;} 
+		.login_box_title{border:none;color:#5FC347;height:30px;line-height: 30px;text-align: center; letter-spacing: 2px;}
+		.login_box_content{width:180px;margin:auto;}
+		.getVerify{width:47%;}
+		.b-none{border:none;}
+		.fs16{font-size:16px;}
+		.login_input{height: 30px;border: 1px solid #C2C2C2;border-radius: 5px;padding-left: 35px;}
+		.icon-user:before{background:url(__PUBLIC__/img/username.png);background-repeat: no-repeat;position:absolute;left: 10px;top: 4px;width:20px;height:20px;content:''; }
+		.icon-password:before{background:url(__PUBLIC__/img/password.png);background-repeat: no-repeat;position:absolute;left: 10px;top: 4px;width:20px;height:20px;content:'';}
+		.login_btn{background: #5FC347;width:100%;color:#fff;height:30px;border-radius: 5px;border: 1px solid #3ea824;}
+		body{background-color: #5FC347;}
+    </style>
+</head>
+<body> 
+	<div>
+	<!-- 欢迎栏 -->
+			
+			<div><img src="__PUBLIC__/img/login_picture.png" style="margin-left: 100px;margin-top: 100px;" />
+			</div>
+			<!-- <h4 class="login_box_title" style="width: 280px;">欢迎使用库友进销存管理软件</h4> -->
+		<div class="login_box" style="margin-top: 130px;">
+		
+			<!-- 登录logo -->
+			<div class="text-center">
+				<img src="__PUBLIC__/img/login_logo.png" class="icon-logo" style="margin-top: 20px;" />
+			</div>
+			
+			<div class="login_box_content">
+				<h3 class="b-none text-center fs16">用户登录</h3>
+				<!-- 账号 -->
+				<div class="pr icon-user">
+					<input type="text" class="w100 login_input " id="login_id">
+				</div>
+				<!-- 密码 -->
+				<div class="mt10 pr icon-password">
+					<input type="password" class="w100 login_input" id="password">
+				</div>
+				<!-- 验证码 -->
+				<div class="mt10"> 
+					<input  class="w50 login_input" id="code" onkeyup="checkCode()" type="text"/>
+					<img class="getVerify" id="wait_time" onclick="javascript:this.src=this.src+'?time='+Math.random()" title="点我刷新哦！" src="{:U('Login/verify')}"  /> 
+					<inupt type="hidden" value="" id="hidcode" />
+				</div>
+				<!-- 登录按钮 -->
+				<div class="mt10 text-center">
+					<button class="login_btn" onclick="login()">登 录</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>  	
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>  
+	<script>
+		if(localStorage.wid){
+			window.location.href="{:U('Index/main')}";
+		}
+		function login(){
+            var login_id =$('#login_id').val(); 
+            var password = $('#password').val();
+            var hidcode = $('#hidcode').val();
+            if(!login_id){
+                layer.tips('请填写账号', '#login_id', {tips: 1}); 
+                return false;
+            }
+            if(!password){
+                layer.tips('请填写密码', '#password', {tips: 1}); 
+                return false;
+            } 
+            if(hidcode!=1){
+            	layer.tips('验证码错误', '#hidcode', {tips: 1}); 
+                return false;
+            }
+            $.post("{:U('Login/loginAjax')}", { "login_id": login_id,"password":password},function(data){
+                    if(data.resultcode == 1){
+                    	localStorage.contacts=data.contacts;
+                    	localStorage.info_id=data.info_id;
+                    	localStorage.rid=data.rid;
+                    	localStorage.subid=data.subid;
+                    	localStorage.wid=data.wid;
+                    	window.location.href="{:U('Index/main')}";  
+                    }else{
+                        layer.alert(data.msg,{icon:2});
+                    } 
+                    console.log(data);
+            }, "json");
+            
+        }
+        //验证码
+        function checkCode(){
+        	var val = $('#code');
+        	if(val.val()){  
+                $.post("{:U('Login/checkCode')}", { "code": val.val()},function(data){
+                    if(data != 0){ 
+                        $('#hidcode').val('');
+                    }else{
+                        $('#hidcode').val('1');
+                    } 
+                }, "json"); 
+        	}
+        }
+	</script>
+</body>
+</html>

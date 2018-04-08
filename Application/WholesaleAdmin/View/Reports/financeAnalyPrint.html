@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}财务分析</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		#body_content{    letter-spacing: 0.5px;}
+		.t-caption{text-align: center; color: #000;} 
+		.tb-style{width:99%;margin:auto;}
+		.tb-style td{border: 1px solid #000;height: 25px;    border-bottom: 1px solid #000;}
+		.print-h3{border: none; padding-bottom: 0; margin-top: 0px;text-align: center;font-weight:bold;}
+	</style>
+</head>
+<body style="background: #fff;">
+<div id="body_content"> 
+	 <table class="tb-style">
+		<caption class="t-caption"><h3 class="print-h3" style="margin: 0;">{$tcaption}</h3></caption>
+		<thead> 
+			<tr class="headcolor2">
+				<td>行号</td>
+				<if condition="$finList.gname_s eq 0">
+					<td class="t_gname_p">{$titles.gname}</td>
+					<else />
+					<td class="t_gname_p none">{$titles.gname}</td>
+				</if>
+				<if condition="$finList.uname_s eq 0">
+					<td class="t_uname_p">{$titles.uname}</td>
+					<else />
+					<td class="t_uname_p none">{$titles.uname}</td>
+				</if> 
+				<if condition="$finList.num_s eq 0">
+					<td class="t_num_p">{$titles.num}</td>
+				<else />
+					<td class="t_num_p none">{$titles.num}</td>
+				</if>
+
+				<if condition="$finList.cd_num_s eq 0">
+					<td class="t_cd_num_p">{$titles.cd_num}</td>
+				<else />
+					<td class="t_cd_num_p none">{$titles.cd_num}</td>
+				</if> 
+				<if condition="$finList.cd_cost_s eq 0">
+					<td class="t_cd_cost_p">{$titles.cd_cost}</td>
+				<else />
+					<td class="t_cd_cost_p none">{$titles.cd_cost}</td>
+				</if>
+
+				<if condition="$finList.profit_s eq 0">
+					<td class="t_profit_p">{$titles.profit}</td>
+					<else />
+					<td class="t_profit_p none">{$titles.profit}</td>
+				</if>
+				<if condition="$finList.cost_s eq 0">
+					<td class="t_cost_p">{$titles.cost}</td>
+					<else />
+					<td class="t_cost_p none">{$titles.cost}</td>
+				</if>
+				<if condition="$finList.rate_s eq 0">
+					<td class="t_rate_p">{$titles.rate}</td>
+					<else />
+					<td class="t_rate_p none">{$titles.rate}</td>
+				</if> 
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="list" id="vo">
+			<tr>
+				<td>{$key+1}</td>
+				<if condition="$finList.gname_s eq 0">
+					<td class="t_gname_p">{$vo.gname}</td>
+				<else />
+					<td class="t_gname_p none">{$vo.gname}</td>
+				</if> 
+				<if condition="$finList.uname_s eq 0">
+					<td class="t_uname_p">{$vo.unit_name}</td>
+				<else />
+					<td class="t_uname_p none">{$vo.unit_name}</td>
+				</if>
+				<if condition="$finList.num_s eq 0">
+					<td class="t_num_p">{$vo.num}</td>
+				<else />
+					<td class="t_num_p none">{$vo.num}</td>  
+				</if>
+
+				<if condition="$finList.cd_num_s eq 0">
+					<td class="t_cd_num_p">{$vo.cd_num}</td>
+				<else />
+					<td class="t_cd_num_p none">{$vo.cd_num}</td>  
+				</if> 
+				<if condition="$finList.cd_cost_s eq 0">
+					<td class="t_cd_cost_p"><?php echo keep4(($vo['cost']/$vo['num'])*$vo['cd_num']) ?></td>
+				<else />
+					<td class="t_cd_cost_p none"><?php echo keep4(($vo['cost']/$vo['num'])*$vo['cd_num']) ?></td>  
+				</if>
+
+				<if condition="$finList.profit_s eq 0">
+					<td class="t_profit_p">{$vo.total_amount|keep4}</td>
+				<else />
+					<td class="t_profit_p none">{$vo.total_amount|keep4}</td> 
+				</if>
+				<if condition="$finList.cost_s eq 0">
+					<td class="t_cost_p">{$vo.cost|keep4}</td>
+				<else />
+					<td class="t_cost_p none">{$vo.cost|keep4}</td> 
+				</if>
+				<if condition="$finList.rate_s eq 0">
+					<td class="t_rate_p"><?php echo keep4((($vo['total_amount']-$vo['cost'])/$vo['total_amount'])*100) ?>%</td>
+				<else />
+					<td class="t_rate_p none"><?php echo keep4((($vo['total_amount']-$vo['cost'])/$vo['total_amount'])*100) ?>%</td> 
+				</if>
+			</tr>
+			</volist>
+			<tr>
+				<td colspan="4" class="td_xj">小计</td> 
+				<if condition="$finList.cd_num_s eq 0"> 
+					<td class="td_xj_cdnum t_cd_num_p"></td>
+				<else />
+					<td class="td_xj_cdnum t_cd_num_p none"></td>
+				</if> 
+				<if condition="$finList.cd_cost_s eq 0"> 
+					<td class="td_xj_cdcost t_cd_cost_p"></td>
+				<else />
+					<td class="td_xj_cdcost t_cd_cost_p none"></td>
+				</if>
+				<if condition="$finList.profit_s eq 0"> 
+					<td class="td_xj_ml t_profit_p"></td>
+				<else />
+					<td class="td_xj_ml t_profit_p none"></td>
+				</if>
+				<if condition="$finList.cost_s eq 0">
+					<td class="td_xj_xscb t_cost_p"></td>
+				<else />
+					<td class="td_xj_xscb t_cost_p none"></td>
+				</if>
+				<if condition="$finList.rate_s eq 0">
+					<td class="td_xj_xsmll t_rate_p"></td>
+				<else />
+					<td class="td_xj_xsmll t_rate_p none"></td> 
+				</if>
+			</tr>
+		</tbody>
+	</table>
+</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		
+		//页面加载时
+		$(function(){
+			calculationGrossProfit();
+			calculationCost();
+			calculationRate();
+			calculationCdnum();
+			calculationCdcost();
+			printme();
+		});
+
+		
+
+		//计算小计毛利
+		function calculationGrossProfit(){
+			var sum =0;
+			$(".t_profit_p").each(function(index,value){
+				var val = $(value).html();
+				if(IsNum(val)){
+					sum +=parseFloat(val);
+				}
+			});
+			$(".td_xj_ml").html(sum.toFixed(4));
+		}
+		//计算小计销售成本
+		function calculationCost(){
+			var sum =0;
+			$(".t_cost_p").each(function(index,value){
+				var val = $(value).html();
+				if(IsNum(val)){
+					sum +=parseFloat(val);
+				}
+			});
+			$(".td_xj_xscb").html(sum);
+		}
+		//计算小计货损数量
+		function calculationCdnum(){
+			var sum =0;
+			$(".t_cd_num_p").each(function(index,value){
+				var val = $(value).html();
+				if(IsNum(val)){
+					sum +=parseFloat(val);
+				}
+			});
+			$(".td_xj_cdnum").html(sum);
+		}
+
+		//计算小计货损数量
+		function calculationCdcost(){
+			var sum =0;
+			$(".t_cd_cost_p").each(function(index,value){
+				var val = $(value).html();
+				if(IsNum(val)){
+					sum +=parseFloat(val);
+				}
+			});
+			$(".td_xj_cdcost").html(sum.toFixed(4));
+		}
+
+		//计算小计毛利率
+		function calculationRate(){
+		   var cost =	$(".td_xj_xscb").html();//销售成本
+		   var ml =	$(".td_xj_ml").html();
+		   if(IsNum(ml) && ml!="0" && IsNum(cost)){
+		   		var sum = (((parseFloat(ml)-parseFloat(cost))/parseFloat(ml))*100).toFixed(4);
+		   		$(".td_xj_xsmll").html(sum+"%");
+		   }else if(IsNum(ml) && ml!="0"){ 
+		   		$(".td_xj_xsmll").html("100%");
+		   }
+		}
+
+
+		
+		function printme(){ 
+			window.print(); 
+			setTimeout(function(){
+				parent.layer.closeAll();
+			},50); 
+		}
+	</script>
+</body>
+</html>

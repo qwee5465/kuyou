@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+	<title>库友进销存</title> 
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery.dataTables.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+	<style type="text/css">
+		html,body{height:100%;}
+		.wrap{}
+		.header{height:60px;background-color:#404040;z-index: 2;}
+		.header-ul{list-style-type:none;float:left;width:100%;margin-top:15px;}
+		.header-ul li{float:left;font-size: 15px;}
+		.header-ul:after{content:'';clear:both;} 
+		/*返回按钮*/
+		.back{padding:4px 5px 4px 5px;color:#fff;border:1px solid #fff;margin-left:10px;border-radius: 5px;background: none;}
+		/*日期选择*/
+		.text-date{height: 30px;margin-left:10px;}
+		/*全部和库足按钮*/
+		.header-btn{color: #fff; height: 30px; border:1px solid #999table.dataTable thead th, table.dataTable thead td; background: #C2C2C2; padding: 0 5px;}
+		.header-qbbtn{border-top-left-radius: 5px;border-bottom-left-radius: 5px;}
+		.header-kcbtn{border-top-right-radius: 5px;border-bottom-right-radius: 5px;}
+		.header button.action{background-color:#2AC2CD;border: 1px solid #19abb4;}
+		/*下拉框*/ 
+		.header .sel-box{color:#fff;padding: 5px 4px;height: 30px;display: inline-block;position: relative;}
+		.trigon{position: relative;padding-left:15px;}
+		.r-xian{padding:0 10px 0 8px; border-right: 1px solid #fff;}
+		.trigon:before{position: absolute;top:7px;left:2px;border-width: 8px 6px 0px 6px;border-style: solid; border-color: #fff transparent transparent transparent;content:"";} 
+		.sel-box-ul{background-color: #fff;position: absolute; top: 45px; left: 0; width: 500px; padding-bottom: 10px;}
+		.sel-box-ul li .li-btn{    padding: 5px 10px;background: none;border: 1px solid #D1D1D1;}
+		.sel-box-ul li .li-btn.action{color:#2AC3CB;border-color:#2AC3CB;}
+		/*搜索按钮*/
+		.header .search-btn{border-radius: 5px;padding:0 10px;color:#fff;height:30px;}
+		.user-box{position: absolute;right:20px;top:20px;}
+		.white{color:#fff;}
+		.b-none{border:none;}
+		.p10{padding:5px 10px;}
+		.logo_box{margin-left:20px;margin-top:11px;}
+		.logo_box img{width:90px;height:35px;}
+		.main{background: #fff;height:100%;width:100%;position: absolute;left:0;top:0;z-index:1;padding-top:60px;}
+		.main_content{position:absolute;top:50%;left:50%;margin-left:-200px;margin-top:-100px;width:400px;height:200px;}
+		.a-btn{position: absolute;bottom:20px;left:50%;color:#2CC3CC;border:1px solid #429BA1;background-color: #fff;padding: 3px 10px;border-radius: 10px;font-size:16px;margin-left:-40px;} 
+		.t-table{width:100%;}
+		.t-table thead{background-color: #666;}
+		.t-table thead tr{background-color: #666;height:40px;}
+		.t-table thead tr th{color:#fff;font-weight: 300; letter-spacing: 1.5px;}
+		
+		.t-table tbody tr:nth-child(even){background-color: #e4e4e4;}
+		.t-table.dataTable.no-footer { border-bottom: none; }
+		table.dataTable thead th, table.dataTable thead td {padding: 0px 0px;border-bottom: none;font-weight: 300;color:#fff;letter-spacing: 1.5px;}
+		.cg-btn{background: #2BC1CF;color:#fff;padding: 2px 8px;border:1px solid #18ABB3;border-radius: 5px;}
+		.ycg-btn{background: none;}
+		.main .t-number{height: 32px;background: #fff; border: none;width: 50px; text-align: center;display:inline-block;line-height: 32px;overflow: hidden;}
+		.main .t-number.action{border-color: rgba(170,170,170,1);
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);}
+		.keyboard{position: absolute;bottom:20px;left:50%;margin-left:-120px;width: 240px;height: 230px;background-color:#404040;border-radius: 15px;z-index:1;}
+		.keyboard .k-table{position: absolute;left: 0; top: 0;bottom: 0;right: 0;margin: auto;width: 88%;}
+		.keyboard .k-table button{width: 40px;height: 40px; border-radius: 5px; margin: 6px;background-color:#fff;} 
+    	.keyboard .k-table button:active{ background-color:#eee;padding-top: 2px;}
+    	table.dataTable tbody tr{background: #f5f5f5;}
+    	table.dataTable tbody td{padding: 8px 0px;}
+    	select{background-color: #fff; border: none;margin-right: 5px;padding:6px 20px 6px 5px;}
+    	.ml5{margin-left: 5px;}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="header pr">
+			<div>
+				<ul class="header-ul">
+					<li>
+						<button onclick="location.href='{:U(\'Index/main\')}'" class="back"><img src="__PUBLIC__/img/back_home.png" style="margin-right: 5px;margin-top:-4px;"/>返回</button>
+					</li>
+					<li><input type='text' id="create_time" value="{$create_time}" class="text-date" /><img src="__PUBLIC__/img/date.png" style="position:relative;right:25px;margin-top:-4px;" onclick="click_date()"></li>
+					<li>
+						<button class="header-btn header-qbbtn action ml10" id="btn_qb">全部</button>
+						<button class="header-btn header-kcbtn" id="btn_yckzx" style="margin-left:-4px;">隐藏库足项</button>
+					</li>
+					<li class="pr">
+						<a href="javascript:;" id="a_stid" class="sel-box"><span class="span-text">供应商类型</span><span class="trigon r-xian white"></span><input type="hidden" id="stid" value="" /></a>
+						<ul class="sel-box-ul none" id="ul_stid">
+							<li class="p10"><button class="li-btn action" onclick="getSupplierAjaxInfo('')" data-id="">全部</button></li>  
+						</ul>
+					</li>
+					<li class="pr">
+						<a href="javascript:;" id="a_sid" class="sel-box"><span class="span-text">供应商</span><span class="trigon r-xian white"></span><input type="hidden" id="sid" value="" /></a>
+						<ul class="sel-box-ul none" id="ul_sid">
+							<li class="p10"><button class="li-btn action" data-id="">全部</button></li>  
+						</ul>
+					</li>
+					<li class="pr">
+						<a href="javascript:;" id="a_cgzt" class="sel-box"><span class="span-text">采购状态</span><span class="trigon r-xian white"></span><input type="hidden" id="p_status" value="" /></a>
+						<ul class="sel-box-ul none" style="margin-left:-100px;">
+							<li class="w100 p10 mt10"><button class="li-btn action" data-id="">全部</button></li> 
+							<li class="p10"><button class="li-btn" data-id="1">已采购</button></li>
+							<li class="p10"><button class="li-btn" data-id="0">未采购</button></li> 
+						</ul>
+					</li>
+					<li class="pr">
+						<a href="javascript:;" id="a_yjfl" class="sel-box"><span class="span-text">一级分类</span><span class="trigon r-xian white"></span><input type="hidden" id="gtid" /></a>
+						<ul class="sel-box-ul none" id="ul-gt1" style="margin-left: -187px;">
+							<li class="w100 p10 mt10"><button class="li-btn action" onclick="getTwoTypeInfo('')"  data-id="">全部</button></li> 
+							<volist name="gtlist" id="vo">
+								<li class="p10"><button class="li-btn" onclick="getTwoTypeInfo('{$vo.gtid}')" data-id="{$vo.gtid}">{$vo.type_name}</button></li>
+							</volist> 
+						</ul>
+					</li>
+					<li class="pr">
+						<a href="javascript:;" id="a_ejfl" class="sel-box"><span class="span-text">二级分类</span><span class="trigon r-xian white"></span><input type="hidden" id="gtid1" /></a>
+						<ul class="sel-box-ul none" id="ul-gt2" style="margin-left: -276px;">
+							<li class="w100 p10 mt10"><button class="li-btn action" data-id="">全部</button></li>  
+						</ul>
+					</li>
+					<li class="pr">
+						<a href="javascript:;" id="a_sjfl" class="sel-box"><span class="span-text">三级分类</span><span class="trigon white"></span><input type="hidden" id="gtid2" /></a>
+						<ul class="sel-box-ul none" id="ul-gt3" style="margin-left: -360px;">
+							<li class="w100 p10 mt10"><button class="li-btn action" data-id="">全部</button></li>   
+						</ul>
+					</li>
+					<li><button class="search-btn action" onclick="getPurchaseInfo()">搜 索</button></li>
+				</ul>
+			</div> 
+		</div>
+		<div class="main"> 
+			<table class="t-table" id="example">
+				<thead>
+					<tr>
+						<th style="width:100px; padding-left: 5px;">供应商</th>
+						<!-- <th style="width:80px;">商品类型</th> -->
+						<th style="width:80px;">商品名称</th>
+						<th style="padding-left: 5px;">客户量</th>
+						<th style="width:60px;">合计数</th>
+						<th style="width:60px;">库存数</th>
+						<th style="width:60px; text-align:right;">实购数</th>
+						<th style="width:140px; text-align:center;">采购量</th> 
+						<th style="width:60px; text-align:center;">单价(元)</th>
+						<th style="width:50px; text-align:center;">操作</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+		<!-- 浮动键盘 -->
+		<div class="keyboard none" id="keyboard"> 
+			<table class="k-table">
+				<tbody>
+					<tr>
+						<td><button data-val="7">7</button></td>
+						<td><button data-val="8">8</button></td>
+						<td><button data-val="9">9</button></td>
+						<td><button data-val="backspace">←</button></td>
+					</tr>
+					<tr>
+						<td><button data-val="4">4</button></td>
+						<td><button data-val="5">5</button></td>
+						<td><button data-val="6">6</button></td>
+						<td rowspan="2"><button  data-val="clear" style="height: 94px;">清除</button></td>
+					</tr>
+					<tr>
+						<td><button data-val="1">1</button></td> 
+						<td><button data-val="2">2</button></td>
+						<td><button data-val="3">3</button></td>
+					</tr>
+					<tr>
+						<td><button data-val="0">0</button></td>
+						<td><button data-val=".">.</button></td>
+						<td colspan="2"><button  data-val="00" style="width: 94px;">00</button></td> 
+					</tr>
+				</tbody>
+			</table> 
+		</div>
+	</div>
+    <script type="text/javascript" src="__PUBLIC__/js/ipadCommon.js"></script> 
+	<script type="text/javascript" src='__PUBLIC__/js/jquery.min.js' ></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.dataTables.min.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.dataTables.order.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript"> 
+	function click_date(){
+		$('#create_time').trigger("click");
+
+	}
+	$(function(){ 
+		getSupplierTypeInfo();
+    	getOneTypeInfo();
+    	// getPurchaseInfo();
+    }); 
+
+    $("#btn_yckzx").click(function(){
+    	$(".stockFoot").hide();
+    });
+
+    $("#btn_qb").click(function(){ 
+    	$(".stockFoot").show();
+    });
+
+	function getOneTypeInfo(){ 
+		$.post("{:U('Index/getOneTypeInfo')}", { "wid": localStorage.wid},function(data){
+            if(data.resultcode==0){
+                var result =data.result;
+                var str ='<li class="w100 p10 mt10"><button class="li-btn action" onclick="getTwoTypeInfo(\'\')"  data-id="">全部</button></li> '; 
+                for(var i=0;i<result.length;i++){
+                	str+='<li class="p10"><button class="li-btn" onclick="getTwoTypeInfo('+result[i]['gtid']+')" data-id="'+result[i]['gtid']+'">'+result[i]['type_name']+'</button></li>';
+                }
+                $("#ul-gt1").html(str);
+            } 
+        }, "json");
+    } 
+
+	function getTwoTypeInfo(fid){  
+    	if(fid){
+	        $.post("{:U('Index/getTwoTypeInfo')}", { "fid": fid,"wid": localStorage.wid},function(data){
+	            if(data.resultcode==0){
+	                var result =data.result;
+	                var str ='<li class="w100 p10 mt10"><button onclick="getThreeTypeInfo(\'\')" class="li-btn action" data-id="">全部</button></li>'; 
+	                for(var i=0;i<result.length;i++){
+	                	str+='<li class="p10"><button class="li-btn" onclick="getThreeTypeInfo('+result[i]['gtid']+')" data-id="'+result[i]['gtid']+'">'+result[i]['type_name']+'</button></li>';
+	                }
+	                $("#ul-gt2").html(str);
+	            }else{
+	            	$("#ul-gt2").html('<li class="w100 p10 mt10"><button onclick="getThreeTypeInfo(\'\')"  class="li-btn action" data-id="">全部</button></li> '); 
+		        	$("#a_ejfl .span-text").html("二级分类");
+		        	$("#ul-gt3").html('<li class="w100 p10 mt10"><button class="li-btn action" data-id="">全部</button></li> ');
+		        	$("#a_sjfl .span-text").html("三级分类"); 
+	            }
+	        }, "json");
+        }else{
+        	$("#ul-gt2").html('<li class="w100 p10 mt10"><button onclick="getThreeTypeInfo(\'\')"  class="li-btn action" data-id="">全部</button></li> '); 
+        	$("#a_ejfl .span-text").html("二级分类");
+        	$("#ul-gt3").html('<li class="w100 p10 mt10"><button class="li-btn action" data-id="">全部</button></li> ');
+        	$("#a_sjfl .span-text").html("三级分类");
+        }
+    } 
+
+    //根据二级类型编号获取三级分类
+    function getThreeTypeInfo(fid){  
+    	if(fid!=""){
+	        $.post("{:U('Index/getThreeTypeInfo')}", { "fid": fid,"wid": localStorage.wid},function(data){
+	            if(data.resultcode==0){
+	                var result =data.result;
+	                var str ='<li class="w100 p10 mt10"><button class="li-btn action" data-id="">全部</button></li>';
+	                for(var i=0;i<result.length;i++){
+	                	str+='<li class="p10"><button class="li-btn" data-id="'+result[i]['gtid']+'">'+result[i]['type_name']+'</button></li>';
+	                }
+	                $("#ul-gt3").html(str);
+	            }else{
+	            	$("#ul-gt3").html('<li class="w100 p10 mt10"><button class="li-btn action" data-id="">全部</button></li> ');
+        			$("#a_sjfl .span-text").html("三级分类");
+	            }
+	        }, "json");
+	    }else{
+	    	$("#ul-gt3").html('<li class="w100 p10 mt10"><button class="li-btn action" data-id="">全部</button></li> ');
+        	$("#a_sjfl .span-text").html("三级分类");
+	    }
+    } 
+    function getSupplierTypeInfo(){
+    	data ={"wid":localStorage.wid};
+    	var url ="{:U('Index/getSupplierTypeInfo')}"; 
+    	$.ajax({
+    		type:"POST",
+    		url:url,
+    		data:data,
+    		dataType:"json",
+    		success:function(data){
+    			if(data.resultcode==0){ 
+    				var str ='<li class="p10"><button class="li-btn action" data-id="" onclick="getSupplierAjaxInfo(\'\')">全部</button></li>';
+    				var result = data.result;
+    				for(var i=0;i<result.length;i++){
+    					str +='<li class="p10"><button class="li-btn" onclick="getSupplierAjaxInfo(\''+result[i].stid+'\')" data-id="'+result[i].stid+'">'+result[i].type_name+'</button></li>';
+    				}
+    	 			$("#ul_stid").html(str);  
+    			}else{
+    				var str ='<li class="p10"><button class="li-btn action" data-id="">全部</button></li>'; 
+    	 			$("#ul_sid").html(str); 
+    	 			$("#a_sid .span-text").html("供应商");
+    			}
+    		}
+    	});
+    }
+
+    //获取供应商信息 
+    function getSupplierAjaxInfo(stid){
+    	if(stid){
+    		data ={"wid":localStorage.wid,"stid":stid};
+	    	var url ="{:U('Index/getSupplierAjaxInfo')}"; 
+	    	$.ajax({
+	    		type:"POST",
+	    		url:url,
+	    		data:data,
+	    		dataType:"json",
+	    		success:function(data){
+	    			if(data.resultcode==0){ 
+	    				var str ='<li class="p10"><button class="li-btn action" data-id="">全部</button></li>';
+	    				var result = data.result;
+	    				for(var i=0;i<result.length;i++){
+	    					str +='<li class="p10"><button class="li-btn" data-id="'+result[i].sid+'">'+result[i].name+'</button></li>';
+	    				}
+	    	 			$("#ul_sid").html(str); 
+	    			}
+    	 			$("#a_sid .span-text").html("供应商");
+	    		}
+	    	});
+    	}else{
+    		var str ='<li class="p10"><button class="li-btn action" data-id="">全部</button></li>';
+    		$("#ul_sid").html(str); 
+    		$("#a_sid .span-text").html("供应商");
+    	}
+    	
+    }
+ 
+    function getPurchaseInfo(){
+    	var create_time = $("#create_time").val(),
+        		gtid = $("#gtid").val(),
+        		gtid1 = $("#gtid1").val(),
+        		gtid2 = $("#gtid2").val(),
+        		p_status = $("#p_status").val(),
+        		stid =$("#stid").val(),
+        		sid = $("#sid").val();
+    	if(!create_time){
+    		layer.tips('请选择开始日期', '#create_time', {tips: 1});
+			return;
+    	} 
+        	
+    	data ={"create_time":create_time,"gtid":gtid,"gtid1":gtid1,"gtid2":gtid2,"stid":stid,"sid":sid,"p_status":p_status,"wid": localStorage.wid};
+    	var url ="{:U('Index/getPurchaseInfo')}"; 
+    	var index = layer.msg('正在生成采购单,请稍后!', {
+			    icon: 16,
+			    shade: 0.01,
+			    time: 10*1000
+			}); 
+    	$.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            dataType: "json",
+            success: function(data){  
+            	// console.log(data);
+            	if(data.resultcode == 1){ 
+            		var list = data.data;
+            		for(var i=0;i<list.length;i++){
+            			var str =list[i].tname1; 
+            			if(list[i].tname2){
+            				str +=">"+list[i].tname2;
+            			}
+            			if(list[i].tname3){
+            				str +=">"+list[i].tname3;
+            			}
+            			list[i]['gtname']=str;//商品类型
+            			var ccode ="";var out_ids ="";
+            			var clist = list[i].clist;
+            			for(var j=0;j<clist.length;j++){
+            				ccode+="<span style='margin-left:5px;'>"+clist[j].code+":"+clist[j].num1;
+            				if(clist[j].remark){
+            					ccode +="("+clist[j].remark+")";
+            				}
+            				ccode+=";</span>";
+            				out_ids+=clist[j].out_id + ",";
+            			}
+            			list[i]['ccode']=ccode;
+            			list[i]['out_ids']=out_ids.substr(0,out_ids.length-1);
+            			if(!list[i]['p_price']){
+            				list[i]['p_price']=0;
+            			}
+            		} 
+            		builTable(list,data.slist);
+            	}else{
+            		$("#example tbody").html("<tr><td colspan='9' class='text-center'>无数据</td></tr>");
+            	}
+            },
+            error:function(msg){
+            	layer.msg("请求失败");
+            },complete: function () {
+                layer.close(index);
+            }
+         });
+    }
+
+    function builTable(data,slist){
+    	var h = $(window).height() - 100; 
+    	//object可以如下初始化表格
+	    $('#example').DataTable( {
+	        data: data,	
+	        destroy: true, //销毁已经存在的Datatables实例并替换新的选项
+	        info:false, 
+	        ordering:false, //禁止排序
+	        searching:false,
+	        paging:false,
+	        scrollY: h,
+	        //使用对象数组，一定要配置columns，告诉 DataTables 每列对应的属性
+	        //data 这里是固定不变的，name，position，salary，office 为你数据里对应的属性
+	        columns: [
+	            { data: 'sname',
+	            render:function ( data, type, full, meta ) {
+	            	var str ="<select style='width:100px;margin-left:5px;margin-right:5px;'>"; 
+	            	if(full.p_status==1){
+	            		str ="<select style='width:100px;margin-left:10px;' disabled='disabled'>";
+	            	} 
+	            	for(var i=0;i<slist.length;i++){
+	            		if(full.p_sid==slist[i].sid){
+	            			str+="<option value='"+slist[i].sid+"' selected='selected'>"+slist[i].name+"</option>";
+	            		}else{
+	            			str+="<option value='"+slist[i].sid+"'>"+slist[i].name+"</option>";
+	            		}
+	            	} 
+	            	str+="</select>";	  
+	    			return str; 
+			    },
+			    // "orderDataType": "dom-select",
+			    className:"td_sname" },
+	            // { data: 'gtname',render:function(data,type,full,meta){
+	            // 	if(data.length>5){
+	            // 		data=data.substr(0,5)+"...";
+	            // 	}
+	            // 	return data;
+	            // }},
+	            { data: 'gname'},
+	            { data: 'ccode'},
+	            { data: 'sum_num',className:"text-right"},
+	            { data: 'stock_num',className:"text-right"},
+	            { data: 'sg',className:"text-right",render:function(data,type,full,meta){
+	            	if(full.sg_num>0){
+	            		return data;
+	            	}else{
+	            		return 0;
+	            	} 
+	            }},
+	            { data: 'sg',render:function(data,type,full,meta){
+	            	var str ="<select onchange='upUname(this)'>";
+	            	var ulist =full.ulist;
+	            	var uname="";
+	            	for(var i=0;i<ulist.length;i++){
+	            		if(full.p_unit_id){
+	            			if(full.p_unit_id==ulist[i].unit_id){
+		            			str +="<option selected='selected' value='"+ulist[i].unit_id+"' data-nei-num='"+ulist[i].num+"'>"+ulist[i].uname+"</option>";
+		            			if(full.p_status==1)
+		            				uname=ulist[i].uname;
+		            		}else{
+		            			str +="<option value='"+ulist[i].unit_id+"' data-nei-num='"+ulist[i].num+"'>"+ulist[i].uname+"</option>";
+		            		}
+	            		}else{
+	            			if(full.jcuname==ulist[i].num){
+		            			str +="<option selected='selected' value='"+ulist[i].unit_id+"' data-nei-num='"+ulist[i].num+"'>"+ulist[i].uname+"</option>";
+		            		}else{
+		            			str +="<option value='"+ulist[i].unit_id+"' data-nei-num='"+ulist[i].num+"'>"+ulist[i].uname+"</option>";
+		            		}
+	            		}
+	            		
+	            	}
+	            	str +="</select>"; 
+	            	str +="<input type='hidden' class='hid_unit_id' value='"+ulist[0].unit_id+"' />";
+	            	if(full.sg_num<0){
+	            		full.sg_num = 0;
+	            	}
+	            	if(full.p_status==1){  
+            			var str1 ="<input type='hidden' class='hid_out_ids' value='"+full.out_ids+"' /><div class='div-text'>"; 
+            			if(uname){
+            				str1+=full.sg_num+uname;
+            			}else{
+            				str+=full.sg_num;
+            			}
+            			str1 +="</div><div class='div-select none'><span class='t-number fl ml5' onclick='clickEm(this)'>"+full.sg_num+"</span>"+str+"</div>"; 
+	            		return str1; 
+	            	}else{ 
+	            		return "<input type='hidden' class='hid_out_ids' value='"+full.out_ids+"' /><div class='div-text none'>"+full.sg_num+"</div>"+"<div class='div-select'><span class='t-number fl ml5' onclick='clickEm(this)'>"+full.sg_num+"</span>"+str+"</div>";
+	            	}
+	            },className:"td_sum text-right"},
+	            { data: 'p_price',render:function(data,type,full,meta){
+	            	if(full.p_status==1){
+	            		return "<div class='div-text'>"+data+"</div><div class='div-input none'><span class='t-number' onclick='clickEm(this)'>"+data+"</span></div>";
+	            	}else{
+	            		return "<div class='div-text none'>"+data+"</div><div class='div-input'><span class='t-number' onclick='clickEm(this)'>"+data+"</span></div>";
+	            	}
+	            },className:"td_price text-center"},
+	            { data: 'p_status',render:function ( data, type, full, meta ) { 	
+			      	if(data==1){
+		    			return "<button class='ycg-btn' onclick='upPstatus(this)' data-p-status='"+data+"'>已采购</button>";
+		    		}else{
+		    			return "<button class='cg-btn' onclick='upPstatus(this)' data-p-status='"+data+"'>采购</button>";
+		    		} 
+			    },className:"text-center"}
+	        ],
+	        createdRow: function( row, data, dataIndex ) {
+			    if(data['sg_num'] <= 0) {
+			      	$(row).addClass('stockFoot');
+			    }
+		  	}
+	     //    ,
+	     //    "columnDefs": [ {
+		    //     "targets": [ 0,2,3,4,5,6,7 ],
+	     //  		"orderable": false
+		    // }]
+	    } );
+    }  
+
+    laydate({ 
+        elem: '#create_time' 
+    });
+
+    function upPstatus(obj){
+    	var p_status = $(obj).attr('data-p-status');
+    	var tr = $(obj).parent().parent();
+    	switch(p_status){
+    		case "0":
+    			//将商品状态变成已采购
+    			alreadyPurchase(tr,obj);
+    			break;
+    		case "1":
+    			//将商品状态变成未采购 
+    			notPurchase(tr,obj);
+    			break;
+    	}
+    }
+
+    //已采购操作方法
+    function alreadyPurchase(tr,obj){ 
+    	var out_ids =tr.find('.td_sum .hid_out_ids').val();
+    	var unit_id =tr.find('.td_sum .hid_unit_id').val();
+    	var p_sid =tr.find('.td_sname select').val(); 
+    	var p_num =tr.find('.td_sum .div-select .t-number').html();
+    	var p_price =tr.find('.td_price .div-input .t-number').html();
+    	var p_unit_id =tr.find('.td_sum .div-select select').val();
+    	var p_nei_num =tr.find('.td_sum .div-select select').find("option:selected").attr("data-nei-num");
+    	//判断文本是否填写正确 
+	 	if(!p_num || p_num=="0"){
+    		layer.tips('请填写数量', tr.find('.td_sum .div-select .t-number')[0]);
+    		return;
+    	} 
+	 	if(!p_unit_id){
+    		layer.tips('请选择单位', tr.find('.td_sum .div-select select')[0]);
+    		return;
+    	}
+	 	if(!p_price || p_price=="0"){
+    		layer.tips('请填写单价', tr.find('.td_price .div-input .t-number')[0]);
+    		return;
+    	}
+    	var url ="{:U('Index/alreadyPurchase')}";
+    	var data ={"out_ids":out_ids,"p_sid":p_sid,"p_num":p_num,"p_price":p_price,"p_unit_id":p_unit_id,"unit_id":unit_id,"p_nei_num":p_nei_num};
+    	var index = layer.msg('提交操作,请稍后!', {
+		    icon: 16,
+		    shade: 0.01
+		}); 
+    	$.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            dataType: "json",
+            success: function(data){ 
+            	if(data.resultcode == 1){ 
+            		//1.将供应商下拉列表变为无法更改状态
+			    	tr.find(".td_sname select").attr("disabled","disabled"); 
+			    	//2.将实购数改成文本
+			    	tr.find(".td_sum .div-text").show();
+			    	var text1 = p_num+tr.find('.td_sum .div-select select option:selected').text();
+			    	tr.find(".td_sum .div-text").html(text1);
+			    	tr.find(".td_sum .div-select").hide();
+			    	//3.单价改成文本
+			    	tr.find(".td_price .div-text").html(p_price).show();
+			    	tr.find(".td_price .div-input").hide();
+			    	//4.按钮变成已采购状态
+			    	$(obj).removeClass("cg-btn").addClass("ycg-btn").html("已采购");
+			    	$(obj).attr("data-p-status","1");
+            	}else{
+            		layer.msg(data.msg);
+            	} 
+            },
+            error:function(msg){
+            	layer.msg("请求失败");
+            },complete: function () {
+                layer.close(index);
+            }
+        });  
+    } 
+    //未采购操作方法
+    function notPurchase(tr,obj){
+    	var out_ids =tr.find('.td_sum input[type="hidden"]').val();
+    	var data ={"out_ids":out_ids};
+    	var url="{:U('Index/notPurchase')}";
+    	var index = layer.msg('提交操作,请稍后!', {
+		    icon: 16,
+		    shade: 0.01
+		}); 
+    	$.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            dataType: "json",
+            success: function(data){ 
+            	if(data.resultcode == 1){ 
+            		//1.将供应商下拉列表变为可更改状态
+			    	tr.find(".td_sname select").removeAttr("disabled"); 
+			    	//2.将实购数改成文本框+选择框
+			    	tr.find(".td_sum .div-text").hide();
+			    	tr.find(".td_sum .div-select").show();
+			    	//3.单价改成文本框
+			    	tr.find(".td_price .div-text").hide();
+			    	tr.find(".td_price .div-input").show();
+			    	//4.按钮变成未采购状态 
+			    	$(obj).removeClass("ycg-btn").addClass("cg-btn").html("采购"); 
+			    	$(obj).attr("data-p-status","0");
+            	}else{
+            		layer.msg(data.msg);
+            	} 
+            },
+            error:function(msg){
+            	layer.msg("请求失败");
+            },complete: function () {
+                layer.close(index);
+            }
+        });   
+    }
+
+    //修改价格 
+    function upPrice(obj){
+    	$(obj).parent().parent().find(".div-text").html(obj.value);
+    }
+
+    function clickEm(obj){
+    	var e = event||window.event;
+    	e.stopPropagation();
+    	$(".t-number").removeClass("action");
+    	$(obj).addClass("action");
+    	if($("#keyboard").is(":hidden")){
+    		$("#keyboard").show();
+    	}
+    }
+
+    function clickNum(obj){
+    	var e=event||window.event;
+    	$(this).select();
+    	e.stopPropagation();
+    }
+
+    //监听自定义键盘按钮点击事件 
+    $("#keyboard").click(function(e){
+    	e.stopPropagation();
+    });
+    $("#keyboard button").click(function(e){
+    	e.stopPropagation();
+    	var html = $(".t-number.action").html();
+    	var val = $(this).attr("data-val");
+    	if(IsNum(val)){
+    		if(parseFloat(html)==0 && html.indexOf('.')<0){
+    			html=val;
+    		}else{
+    			html+=val;
+    		} 
+    	}else if(val=="."){
+    		//判断html中是否存在.
+    		if(html.indexOf('.')<0){
+    			if(html==""){
+    				html=0+val;
+    			}else if(parseFloat(html)==0){
+    				html=0+val;
+    			}else{
+    				html+=val;
+    			} 
+    		}else{
+    			
+    		}
+    	}else if(val=="backspace"){
+    		html=html.substr(0,html.length-1);
+    	}else if(val=="clear"){
+    		html="";
+    	}
+    	$(".t-number.action").html(html);
+    });
+
+
+    //修改单位
+    function upUname(obj){
+    	var num = $(obj).parent().find("input").val();
+    	var uname =$(obj).find("option:selected").text();
+    	var str = num+uname;
+    	$(obj).parent().parent().find(".div-text").html(str);
+    }
+    //修改数量
+    function upNum(obj){
+    	var num = $(obj).val();
+    	var uname = $(obj).parent().find("select option:selected").text();
+    	var str = num+uname;
+    	$(obj).parent().parent().find(".div-text").html(str);
+    }
+
+    $(".header-btn").click(function(){
+    	$(this).addClass("action").siblings().removeClass("action");
+    });
+
+    //显示下来框
+    $(".sel-box").click(function(e){
+    	// $(".sel-box-ul").hide(); 
+    	e.stopPropagation();
+    	var _this = this;
+    	var ul = $(_this).parent().find(".sel-box-ul");
+    	// 其他ul隐藏
+    	$(".sel-box-ul").each(function(index,obj){ 
+    		if(ul[0]!==obj && !$(obj).is(":hidden")){
+    			$(obj).hide();
+    		}
+    	});
+    	ul.toggle(); 
+    	ul.click(function(ee){
+    		ee.stopPropagation();
+    		var obj = ee.target;
+    		if(obj.nodeName=="BUTTON"){
+    			$(obj).parent().parent().find(".li-btn").removeClass("action");
+    			$(obj).addClass("action");
+    			var data_id =$(obj).attr("data-id");
+    			$(_this).parent().find("input[type='hidden']").val(data_id);
+    			var text =$(obj).html();
+    			if(text=="全部"){
+    				switch(_this.id){
+    					case "a_stid":
+    						text = "供应商类型"; 
+    						break;
+    					case "a_sid":
+    						text = "供应商"; 
+    						break;
+    					case "a_cgzt":
+    						text = "采购状态"; 
+    						break;
+    					case "a_yjfl":
+    						text = "一级分类"; 
+    						break;
+    					case "a_ejfl":
+    						text = "二级分类"; 
+    						break;
+    					case "a_sjfl":
+    						text = "三级分类"; 
+    						break;
+    				} 
+    				
+    			} 
+    			$(_this).find('.span-text').html(text);
+    			ul.hide();
+    		}
+    		// console.log(ee.target.nodeName);
+    	});
+    });
+
+    $("body").click(function(){
+    	$(".sel-box-ul").hide();
+    	$("#keyboard").hide();	
+    }); 
+	</script>
+</body>
+</html>

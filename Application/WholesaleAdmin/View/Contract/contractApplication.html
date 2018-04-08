@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css" />
+    <style type="text/css">
+    .title-pop,.confirm-pop{background: #59ab76;}
+    </style>
+</head>
+
+<body style="background:#fff;">
+<div class="">
+    <!-- title -->
+    <div class="title-pop">应 用 至 其 他 用 户</div>
+    <!-- 输入位置 -->
+    <form action="__SELF__" method="post">
+        <div class="mt40">
+            <div class="form-group  cf">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <input type="hidden" value="{$cgpid}" id="cgpid" />
+                    <span class="fl w-90 text-right fs-14" style="padding: 15px 15px 0 0;">客户</span>
+                    <div class="fl inline-block mt6 w-180" >
+                        <select name="cid" id="cid" class="form-control w-150 fl ml10 wordspace noradius">
+                            <option value="">全部</option>
+                            <volist name="clist" id="vo">
+                                <option value="{$vo.c_id}">{$vo.name}</option> 
+                            </volist>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt40">
+            <div class="form-group">
+                <div class="w50 text-center fl">
+                    <input type="button" value="取 消"  class="cancel-pop" />
+                </div>
+                <div class="w50 text-center fl">
+                    <input type="button" value="确 定" onclick="return checkForm()" class="confirm-pop" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+<script src='__PUBLIC__/bootstrap/js/bootstrap.min.js' charset="UTF-8"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript">
+    //表单验证
+    
+    $('.cancel-pop').click(function(){ 
+        parent.layer.closeAll('iframe');
+    }); 
+    //表单验证
+    function checkForm(){
+        var cid = $('#cid').val();
+        if(!cid){
+            layer.tips('请选择客户', '#cid', {tips: 1});
+            return false;
+        } 
+        var cgpid =$("#cgpid").val();
+        $.post("{:U('Contract/contractAppOtherClient')}", { "cid": cid,"cgpid":cgpid},function(data){ 
+            if(data.resultcode==0){
+                parent.layer.alert(data.msg,function(){
+                    parent.layer.closeAll();
+                });
+            }else{
+                parent.layer.alert(data.msg,{icon:2},function(){
+                    parent.layer.closeAll();
+                });
+            }
+        }, "json");
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		form{margin: 0 2.5%;width: 95%;background:#fff;box-shadow:0 0 8px #d6d6d6;}
+		.tips{width: 250px;background: #d0a972;top:0;right: 0;padding-bottom: 2px;}
+		.tips_content{width: 246px;;background: #fff;margin: 0 auto 0 2px;word-wrap: break-word;font-size:12px;}
+	</style>
+</head>
+
+<body>
+<div class="nav navbar-default h-60">
+	<div class="container-fluid">
+		<h3 style="border:none">编辑商品</h3>
+	</div>
+</div>
+<form action="__SELF__" method="post" enctype="multipart/form-data">
+	<div class="container-fluid mt20 pb20  pr" style="padding-left:0;padding-right:0;">  
+		<div class="mt20">
+			<div class="form-group mb20 cf">
+				<div class="col-xs-12 col-sm-4 col-md-4">
+					<span class="l-title pr">商品名称:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+								<input type="text" name="name" onchange="isName(this)" value="{$list.name}" id="name" class="form-control w100"  />
+						</span>
+				</div>
+			</div> 
+		</div>
+		<div class="mt20">
+			<div class="form-group mb20 cf">
+				<div class="col-xs-12 col-sm-6 col-md-6  bg-gap">
+					<span class="l-title pr">商品类型:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+							<select name="gtid" id="gtid">
+								<foreach name="goodsTypeList" item="vo">
+									<option value="{$vo.gtid}">{$vo.type_name}</option>
+								</foreach>
+							</select>
+						</span>
+				</div>
+			</div>
+		</div>
+		<div class="mt20">
+			<div class="form-group mb20">
+				<div class="col-xs-12 col-sm-4 col-md-4">
+					<span class="l-title pr">商品图片:<strong class="l-titl-star">*</strong></span>
+					<span class="fl pr h-100 mb20">
+						<input type="file" name="pic" id="file_upload" class="w-120 inline-block pa" style="z-index:1;opacity: 0;left:0;top:0;width: 150px;height: 100px;">
+						<div class="pa " style="text-align: center;width: 150px;height: 100px;top: 0;left: 0;border:2px dashed #d0d0d0;padding-top: 30px;">
+						</div>
+						<img id="preview" src="__PUBLIC__/{$list.pic}" class="pa" height="50" style="top: 20px;left: 35px;display: block;width: 80px;height: 60px;"> 
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="mt20">
+			<div class="form-group mb20 cf">
+				<div class="col-xs-12 col-sm-4 col-md-4 bg-gap">
+					<span class="l-title pr">品牌:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+							<select name="brand_id" id="brand_id">
+								<foreach name="brandList" item="vo">
+									<option value="{$vo.brand_id}">{$vo.brand_name}</option>
+								</foreach>
+							</select>
+						</span>
+				</div>
+			</div>
+		</div> 
+		<div class="mt20">
+			<div class="form-group mb20 cf">
+				<div class="col-xs-12 col-sm-12 col-md-12">
+					<span class="l-title pr">单位:<strong class="l-titl-star">*</strong></span>
+                    <span class="fl">
+						<select name="unit_id" id="unit_id1">
+							<foreach name="unitList" item="vo">
+								<option value="{$vo.unit_id}">{$vo.unit_name}</option>
+							</foreach>
+						</select>
+					</span>
+					<span class="l-title pr">单价:<strong class="l-titl-star">*</strong></span>
+                    <span class="fl">
+						<input type="number" step="0.01" value="{$list.price}" name="price" id="price" class="form-control w50"  />
+					</span>
+				</div> 	
+			</div>
+		</div> 
+		<div class="pa tips">
+			<p class="fs-16 text-center h-40 lh-40" style="color:#b35800;">温馨提示</p>
+			<div class="tips_content fs-14">
+				<div class="p10">*为了提供更好的服务，请认真填写资料</div>
+				<div class="p10">*另：凡是带有“谨慎操作”提示的选项，非管理员授权的情况下，一律不允许添加。</div>
+			</div>
+		</div>
+	</div>
+	<div class="h-70"></div> 
+	<div class="mt20 bottom-style">
+		<div class="form-group" style="margin-left:30%;padding-top:15px;">
+				<input type="submit" onclick="return checkForm();" value="保存" class="h-40 w-100 preserve" />
+				<a href="javascript:window.history.go(-1)" class="btn w-100 h-40 return">返回</a>
+		</div>
+	</div>
+</form>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/area.js"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript">
+	 $(function(){
+        //图片选择放入img中
+		$("#file_upload").change(function() {
+	        var $file = $(this);
+	        var fileObj = $file[0];
+	        var windowURL = window.URL || window.webkitURL;
+	        var dataURL;
+	        var $img = $("#preview");
+
+	        if (fileObj && fileObj.files && fileObj.files[0]) {
+	            dataURL = windowURL.createObjectURL(fileObj.files[0]);
+	            $img.attr('src', dataURL);
+	        } else {
+	            dataURL = $file.val();
+	            var imgObj = document.getElementById("preview");
+	            // 两个坑:
+	            // 1、在设置filter属性时，元素必须已经存在在DOM树中，动态创建的Node，也需要在设置属性前加入到DOM中，先设置属性在加入，无效；
+	            // 2、src属性需要像下面的方式添加，上面的两种方式添加，无效；
+	            imgObj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+	            imgObj.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = dataURL;
+	        }
+	    }); 
+	    $('#brand_id').val('{$list.brand_id}');    //品牌
+		$('#gtid').val('{$list.gtid}');				//商品类型
+		$('#unit_id1').val('{$list.unit_id}');     //单位 
+	});
+	//表单验证
+	function checkForm(){ 
+		var name =$('#name').val();
+		var price =$('#price').val();
+		if(!name){
+			layer.tips('请填写商品名称', '#name', {tips: 2}); 
+			return false;
+		}
+		if(!price){
+			layer.tips('请填写进价', '#price', {tips: 2}); 
+			return false;
+		}
+		return true; 
+	}
+
+	//商品名称唯一性验证
+	function isName(obj){
+		var name = obj.value;
+		var gid = {$gid};
+		$.post("{:U('Goods/isName')}", {"gid":gid, "name": name},function(data){
+			if(data != 1){
+				layer.tips('该商品名称已存在', '#name', {tips: 2}); 
+				obj.value="";
+			}
+		}, "json");
+	}
+</script>
+</body>
+
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}采购单</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.t-caption{text-align: center;border: 1px solid #ccc;  background: #fff;}
+		.headcolor2 td{background-color: #404040 !important; border:1px solid #404040 !important;color: #fff;}
+		/*table tr:nth-child(even){background-color: #e4e4e4;}
+		table tr:nth-child(odd){background-color: #F5F5F5;}*/
+		.tb-style{background-color: #f5f5f5; font-size:14px;}
+		.tb-style td{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+		.navbar-default {background-color: #fff;}
+		.btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important; letter-spacing: 1.5px;}
+	    .btn_color:hover{background-color: #6db81f !important; border:1px solid #6db81f !important;}
+	    .tb-style tbody tr:hover{    background-color: #C5EDB1;}
+	    .t-caption{background-color: #59ab76; border: 1px solid #59ab76; color: #fff;}
+	    .btn-style{background-color: #59ab76; border: 1px solid #3b9f5f;}
+	    .btn-style:hover{background: linear-gradient(#3b9f5f,#3b9f5f);
+	    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+	    background-position-x: initial;
+	    background-position-y: initial;
+	    background-size: initial;
+	    background-repeat-x: initial;
+	    background-repeat-y: initial;
+	    background-attachment: initial;
+	    background-origin: initial;
+	    background-clip: initial;
+	    background-color: initial;}
+	    .a-jiantou-top{position: absolute; top: 2px;right: -15px;width:0;height:0;   border-left:5px solid transparent;   border-right:5px solid transparent;   border-bottom:5px solid #fff;}
+	    .a-jiantou-bottom{position: absolute; bottom: 2px;right: -15px;width:0;height:0;   border-left:5px solid transparent;   border-right:5px solid transparent;   border-top:5px solid #fff;}
+	    .noradius{border-radius: 0px;}
+	    .ml5{margin-left: 5px;}
+	    .ml20{margin-left: 20px;}
+	    .col-md-2{width: auto;}
+	    .col-xs-6{width: auto;}
+	    .nav,select{letter-spacing: 1.5px;} 
+	    .code-tr td{width:35px;} 
+	    h3 a{color: #59ab76;}
+	    h3 a:hover{color:#59ab76;}
+	    .tr1 {background-color:#F5F5F5;}
+	    .tr2 {background-color:#E4E4E4;}
+
+	</style>
+</head>
+<body>
+<div id="body_content">
+	<div class="nav navbar-default">
+		<div class="container-fluid"> 
+			<h3 class="pr">采购单->按客户采购 &nbsp;<a href="{:U('Purchase/purchaseReport')}" class="pa r0 t0" />按商品采购</a>  </h3>
+			<div>
+				<form id="form1" action="__SELF__" method="post">
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="ml15">
+								<span class="fl mt8">日期</span>
+								<input type="text" name="create_time" value="{$create_time}" id="date" class="form-control w-130 fl ml5 noradius">
+							</div> 
+							<div>
+								<span class="fl fs-14 mt8 ml20">是否加工</span>
+								<select class="w-115 fl ml5" name="machining" id="machining">
+									<option value="">全部</option>
+									<option value="0">不加工</option>
+									<option value="1">加工</option>
+								</select>
+							</div>
+							<div>
+								<span class="fl mt8 ml20">客户类型</span>
+								<select class="w-115 fl ml5" onchange="getCilentInfo(this.value)" name="ctid" id="ctid">
+									<option value="">全部类型</option>
+									<volist name="ctlist" id='vo'>
+										<option value="{$vo.ctid}">{$vo.type_name}</option>
+									</volist>
+								</select> 
+							</div>
+							<div>
+								<span class="fl mt8 ml20">客户名称</span>
+								<select class="w-115 fl ml5" name="c_id" id="c_id">
+									<option value="">全部</option>
+								</select> 
+							</div> 
+							<div> 
+								<input type="text" name="brand_name" id="brand_name" placeholder="品牌名称" value="{$brand_name}" class="form-control w-120 fl ml5">
+							</div> 
+							<div>
+								<input type="text" name="gname" id="gname" value="{$gname}" placeholder="商品名" class="form-control w-120 fl ml5">
+							</div> 
+						</div>
+					</div> 
+					<div class="form-group ml15">
+						<div> 
+							<span class="fl mt8">商品类别</span>
+							<select class="w-115 fl ml5" name="gtid" id="gtid" onchange="getTwoTypeInfo(this.value)">
+								<option value="">一级全部</option>
+								<volist name="tlist" id='vo'>
+									<option value="{$vo.gtid}">{$vo.type_name}</option>
+								</volist>
+							</select>
+							<select name="gtid1" id="gtid1"  class="w-115 fl ml5" onchange="getThreeTypeInfo(this.value)">
+								<option value="">二级全部</option>
+							</select>
+							<select name="gtid2" id="gtid2" class="w-115 fl ml5">
+								<option value="">三级全部</option> 
+							</select>  
+							<span class="fl mt8 ml10" >供应商类型</span>
+							<select class="w-115 fl ml5" name="stid" id="stid" onchange="getSupplierInfo(this.value)">
+								<option value="">全部类型</option>
+								<volist name="stlist" id='vo'>
+									<option value="{$vo.stid}">{$vo.type_name}</option>
+								</volist>
+							</select>
+							<span class="fl mt8 ml10">供应商</span>
+							<select class="w-115 fl ml5" name="sid" id="sid">
+								<option value="">全部供应商</option> 
+							</select> 
+							<input type="hidden" name="hid_order" id="hid_order" value="{$hid_order}" />
+							<input type="submit" onclick="return checkFrom()" class="btn btn-style ml20" value="搜 索" />
+							<!-- <input type="button" class="btn btn-success ml20" onclick="printme()" value='打 印'/>  -->
+							<!-- <input type="button" value="数据列设置" class="btn data w-100 btn-success btn_color ml20"/> -->
+							<!-- <input type="button" class="btn btn-success ml20" onclick="exportPurchase()" value='导 出' />  -->
+						</div>   
+					</div>
+				</form>
+			</div>	
+		</div>
+	</div>
+	<div class="container-fluid">  
+		<table class="tb-style t-table">
+			<caption class="t-caption" ><input type="text" id="tcaption" style="background: none;border: none;text-align: center; letter-spacing: 1.5px;" value="采购单" /></caption>
+			<thead>
+				<tr class="headcolor2">
+					<td style="width:35px;">行号</td>  
+					<td style="width:180px;">客户类型</td>
+					<td style="width:180px;">客户名称</td> 
+					<td style="width:280px;">商品名称</td>
+					<td style="width:100px;">数量/单位</td>
+					<td>备注</td> 
+				</tr>
+			</thead>
+			<tbody id="tbody"> 
+				<foreach name="list" item="vo">
+					<tr data-name="{$vo.ctname}">
+						<td>{$key+1}</td>
+						<td class="td_ctname">{$vo.ctname}</td>
+						<td class="td_cname">{$vo.cname}</td> 
+						<td>{$vo.gname}</td>
+						<td>
+							<if condition="$vo['p_remark']">
+								{$vo.p_remark}
+							<else />
+								{$vo.num1|keep4}{$vo.uname}
+							</if> 
+						</td>
+						<td style="text-align: left;">&nbsp;&nbsp;&nbsp;{$vo.remark}</td> 
+					</tr>  
+				</foreach>
+			</tbody>
+		</table> 
+	</div>
+</div>
+
+
+
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/scrolltop.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript"> 
+         
+		//页面加载时
+		$(function(){ 
+			$("#machining").val("{$machining}");
+			$("#c_id").val("{$c_id}");
+			$("#gtid").val("{$gtid}");
+			$("#ctid").val("{$ctid}");
+			$("#stid").val("{$stid}");
+			getTwoTypeInfo("{$gtid}"); 
+			getCilentInfo("{$ctid}");
+			getSupplierInfo("{$stid}");  
+			setTrColor();
+		});
+		$("#a_gname1").click(function(){
+        	$("#hid_order").val("gname|asc");
+        	document.getElementById("form1").submit();
+        });
+        $("#a_gname2").click(function(){
+        	$("#hid_order").val("gname|desc");
+        	document.getElementById("form1").submit();
+        });
+        $("#a_sname1").click(function(){
+        	$("#hid_order").val("sname|asc");
+        	document.getElementById("form1").submit();
+        });
+        $("#a_sname2").click(function(){
+        	$("#hid_order").val("sname|desc");
+        	document.getElementById("form1").submit();
+        });
+
+        //按客户类型 隔行变色
+        function setTrColor(){
+        	var temp="",num = 1; //0:tr1 1.tr2
+        	$("#tbody tr").each(function(index,obj){
+        		var ctname = $(obj).attr("data-name");
+        		if(temp==""){
+        			$(obj).addClass("tr"+num);
+        		}else if(temp==ctname){ 
+        			$(obj).addClass("tr"+num);
+        		}else{  
+        			num++;
+        			if(num>2){
+        				num=1;
+        			}else{ 
+        				$(obj).addClass("tr"+num);
+        			}
+        		}
+        		temp = ctname;
+        	});
+        }
+
+        function setTd(){
+        	var tempSname =""; //中级变量
+			var firstRow =0; 
+			var kk = 1;
+			var length = $(".td_sname").length;
+			$(".td_sname").each(function(index,obj){
+				var value =$(obj).html();
+				if(tempSname==""){ 
+					$(obj).attr("id","td"+firstRow);
+				}else if(tempSname==value){
+					//相同不处理 
+					$(obj).remove();//移除本td
+					kk++;
+					if(index==length-1){ //最后一个
+						$("#td"+firstRow).attr("rowspan",kk);
+					}
+				}else{
+					//不相同处理td rowspan
+					$("#td"+firstRow).attr("rowspan",kk);
+					kk=1;
+					firstRow++;
+					$(obj).attr("id","td"+firstRow);
+				}
+				tempSname =value;
+			});
+        }
+
+		//根据客户类型获取客户信息
+		function getCilentInfo(ctid){
+			if(ctid){
+				$.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">全部类型</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['c_id']+'">'+result[i]['cname']+'</option>';
+		                }
+		                $("#c_id").html(str);  
+		                var c_id = "{$c_id}";
+		                $("#c_id").val(c_id);
+		            }else{ 
+				    	$("#c_id").html('<option value="">全部类型</option>');  
+		            }
+		        }, "json");
+	        }else{
+	        	$("#c_id").html('<option value="">全部类型</option>');  
+	        }
+		}
+
+		var index =0,index1=0;	
+		//根据1级类型编号获取二级分类
+	    function getTwoTypeInfo(fid){ 
+	    	var gtid1 = "{$gtid1}";
+	    	if(fid){
+		        $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">二级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		                if(gtid1 && gtid1!="0"){
+		                	if(index==0){
+			                	$("#gtid1").val(gtid1);
+			                	getThreeTypeInfo(gtid1);
+			                	index++;
+		                	}
+		                }
+		            }else{
+		            	var str ='<option value="">二级全部</option>';
+				    	$("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		            }
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">二级全部</option>';
+		    	$("#gtid1").html(str); 
+                $("#gtid2").html('<option value="">三级全部</option>');
+		    }
+	    }
+
+	    //根据二级类型编号获取三级分类
+	    function getThreeTypeInfo(fid){ 
+	    	var gtid2 ="{$gtid2}";
+	    	if(fid){
+		        $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">三级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid2").html(str);
+		                if(gtid2 && gtid2!="0"){
+		                	if(index1==0){
+		                		$("#gtid2").val(gtid2);
+		                		index1++;
+		                	}
+		                } 
+		            }else{
+		            	var str ='<option value="">三级全部</option>';
+		    			$("#gtid2").html(str);
+		            }
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">三级全部</option>';
+		    	$("#gtid2").html(str);
+		    }
+	    } 
+
+
+	    //根据供应商类型获取供应商信息
+	    function getSupplierInfo(stid){ 
+	    	if(stid){
+		    	$.post("{:U('Purchase/getSupplierInfo')}", { "stid": stid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">全部供应商</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['sid']+'">'+result[i]['name']+'</option>';
+		                }
+		                $("#sid").html(str);
+		                var sid = "{$sid}";
+		                if(sid && sid!="0"){ 
+	                		$("#sid").val(sid); 
+		                } 
+		            }else{
+		            	var str ='<option value="">全部供应商</option>';
+		    			$("#sid").html(str);
+		            }
+		        }, "json"); 
+	        }else{
+	        	var str ='<option value="">全部供应商</option>';
+    			$("#sid").html(str);
+	        }
+	    }
+
+		function checkFrom(){
+			var create_time=$("#date").val();
+			if(!create_time){
+				layer.tips('请填写日期', '#date', {tips: 1});
+				return false;
+			}
+			return true;
+		}
+		laydate({ 
+            elem: '#date' 
+        });
+
+		//数据列设置
+		$('.data').click(function(){
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['700px', '500px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Reports/daySaleDataSet.html'
+			});
+		});
+		
+
+		//打印
+		function printme(){
+			var create_time = $("#date").val(), 
+        		brand_name = $("#brand_name").val(),
+        		ctid =$("#ctid").val(),
+        		c_id = $("#c_id").val(),
+        		machining = $("#machining").val(),
+        		gtid = $("#gtid").val(),
+        		gtid1 = $("#gtid1").val(),
+        		gtid2 = $("#gtid2").val(),
+        		tcaption = $("#tcaption").val(),
+        		stid = $("#stid").val(),
+        		sid = $("#sid").val(),
+        		gname = $("#gname").val(),
+        		hid_order = $("#hid_order").val();   
+
+			var url = "?create_time="+create_time+"&brand_name="+brand_name+"&c_id="+c_id+"&machining="+machining+"&gtid="+gtid+"&gtid1="+gtid1+"&gtid2="+gtid2+"&gname="+gname+"&tcaption="+tcaption+"&ctid="+ctid+"&stid="+stid+"&sid="+sid+"&hid_order="+hid_order; 
+			layer.open({
+				type: 2,
+				closeBtn: 0,
+				area: ['0px', '0px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Purchase/purchasePrint.html'+url
+			}); 
+		}
+		//导出excel
+        function exportPurchase(){
+        	var create_time = $("#date").val(), 
+        		brand_name = $("#brand_name").val(),
+        		ctid =$("#ctid").val(),
+        		c_id = $("#c_id").val(),
+        		machining = $("#machining").val(),
+        		gtid = $("#gtid").val(),
+        		gtid1 = $("#gtid1").val(),
+        		gtid2 = $("#gtid2").val(),
+        		tcaption = $("#tcaption").val(),
+        		gname = $("#gname").val();   
+
+			var url = "?create_time="+create_time+"&brand_name="+brand_name+"&c_id="+c_id+"&machining="+machining+"&gtid="+gtid+"&gtid1="+gtid1+"&gtid2="+gtid2+"&gname="+gname+"&tcaption="+tcaption+"&ctid="+ctid; 
+			//location.href='__APP__/WholesaleAdmin/Purchase/exportPurchase.html'+url;
+        } 
+
+	</script>
+</body>
+</html>

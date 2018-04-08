@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}供应商销售总汇</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.t-caption{text-align: center;border: 1px solid #59ab76; border-bottom: none; background: #59ab76; color: #fff;height:35px;}
+		.headcolor2 td{background-color: #404040; border:1px solid #404040;color: #fff;border-left: 1px solid #404040 !important; border-bottom: 1px solid #404040 !important;}
+		table tbody tr:nth-child(even){background-color: #e4e4e4;}
+		.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;width:95%;margin:auto;}
+		.navbar-default {background-color: #fff;}
+		.noradius{border-radius: 0px;}
+		.ml5{margin-left: 5px;}
+		.ml20{margin-left: 20px;}
+		.col-md-2{width: auto;}
+		.col-xs-6{width: auto;}
+		.fs-14,select{letter-spacing: 1.5px;}
+		.btn-success{background-color: #59ab76;border:1px solid #3b9f5f; letter-spacing: 1.5px; border-radius: 4px;}
+		.btn-success:hover{background-color:#3b9f5f; border:1px solid #3b9f5f;}
+		.btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important;}
+	    .btn_color:hover{background-color: #6db81f !important; border:1px solid #6db81f !important;}
+	    .tb-style td{border-left: 1px solid #d2d2d2; border-bottom: 1px solid #d2d2d2;} 
+	    th{height:40px;}
+	</style>
+	<style type="text/css" id="style1">
+		table {
+			border-collapse: collapse;
+		    width: 100%;
+		    font-size: 16px;
+		    background-color: #fff;
+		    border: 1px solid #d0d0d0;
+		}
+		td,th {
+			text-align: center;
+			border: 1px solid #d0d0d0;  
+		}
+		td span{margin-left:10px;} 
+	</style>
+</head>
+<body>
+	<div id="body_content">
+		<div class="nav navbar-default">
+			<div class="container-fluid">
+				<h3>供应商销售总汇表</h3>
+				<div>
+					<form action="__SELF__" method="post">
+						<div class="form-group ml15">
+							<div class="row">
+								<div class="col-xs-12 col-md-12">
+									<span class="fl fs-14 mt8">日期&nbsp;&nbsp;&nbsp;从</span>
+									<input type="text" name="stime" id="stime" value="{$stime}" class="form-control w-115 fl ml5 noradius">
+									<span class="fl fs-14 ml5 mt8">到</span>
+									<input type="text" name="etime" id="etime" value="{$etime}" class="form-control w-120 fl ml5 noradius">
+									<span class="fl fs-14 ml10 mt8">供应商类型</span>
+									<select id="stid" class="fl ml10" onchange="getSupplierInfoByStid(this.value)">
+										<option value=''>全部类型</option>
+										<volist name='stlist' id='vo'>
+											<option value='{$vo.stid}'>{$vo.type_name}</option> 
+										</volist>
+									</select>
+									<span class="fl fs-14 ml10 mt8">供应商名称</span>
+									<select id="sid" class="fl ml10">
+										<option value=''>全部供应商</option>
+									</select>
+									<input type="button" onclick="getSupplierTotalSale()" value="搜 索" class="btn btn-success ml20" /> 
+									<!-- <input type="button" value="数据列设置" class="btn data w-100 btn-success ml20 btn_color"/> -->
+									<input type="button" class="btn btn-success ml20" onclick="printme()" value='打 印' /> 
+								</div> 
+							</div> 
+						</div>  
+					</form>
+				</div>	
+			</div>
+		</div>
+		<div class="contianer-fluid"> 
+			<div id="divPrint">
+				<table class="tb-style t-table">
+					<thead> 
+						<tr class="t-caption">
+							<th colspan="6">供应商销售汇总表</th>
+						</tr>
+						<tr>
+							<th colspan="3">小计</th>
+							<th id="th1"></th> 
+						</tr>
+						<tr>
+							<th>行号</th>
+							<th>供应商类型</th> 
+							<th>供应商名称</th> 	
+							<th>销售合计金额</th>  
+						</tr>
+					</thead>
+					<tbody id="tbody">
+						<tr>
+							<td colspan="6">请先搜索,暂无数据!</td> 
+						</tr>
+					</tbody>
+				</table> 
+			</div>
+		</div>
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/scrolltop.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/LodopFuncs.js"></script>
+
+	<script type="text/javascript">  
+		//页面加载时
+		$(function(){
+			 
+		});
+
+		//根据供应商类型获取供应商信息
+		function getSupplierInfoByStid(stid){ 
+			if(stid){
+				$.post("{:U('Reports/getSupplierInfoByStid')}", { "stid": stid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">全部供应商</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['sid']+'">'+result[i]['name']+'</option>';
+		                }
+		                $("#sid").html(str);   
+		            }else{ 
+				    	$("#sid").html('<option value="">全部供应商</option>');  
+		            }
+		        }, "json");
+	        }else{
+	        	$("#sid").html('<option value="">全部供应商</option>');  
+	        }
+		} 
+
+		laydate({
+
+            elem: '#stime'
+
+        });
+        laydate({
+
+            elem: '#etime'
+
+        });
+
+        //获取供应商销售汇总
+        function getSupplierTotalSale(){
+        	var stime = $("#stime").val(),
+        		etime = $("#etime").val(),
+        		stid = $("#stid").val(),
+        		sid = $("#sid").val();
+        	if(!stime){
+        		layer.tips('请选择开始日期', '#stime', {tips: 1});
+				return;
+        	}
+        	if(!etime){
+        		layer.tips('请选择结束日期', '#etime', {tips: 1});
+				return;
+        	}
+        	var index = layer.msg('正在生成供应商销售汇总,请稍后!', {
+			    icon: 16,
+			    shade: 0.01,
+			    time:10000
+			}); 
+        	data ={"stime":stime,"etime":etime,"stid":stid,"sid":sid};
+        	var url ="{:U('Reports/getSupplierTotalSale')}";
+        	$.ajax({
+	            type: "POST",
+	            url: url,
+	            data: data,
+	            dataType: "json",
+	            success: function(data){ 
+	            	if(data.resultcode==0){
+	            		var str ="";
+	            		var list = data.result.result;
+	            		var sum = data.result.sum;
+	            		for(var i=0;i<list.length;i++){
+	            			str +="<tr><td>"+(i+1)+"</td><td>"+list[i].tname+"</td>"; //供应商类型
+	            			str +="<td>"+list[i].sname+"</td>";
+	            			str +="<td>"+list[i].total+"</td></tr>";
+	            		}
+	            		$("#tbody").html(str);
+	            		$("#th1").html(sum.sum_total); 
+	            	}else if(data.resultcode == 1){
+	            		$("#tbody").html("<tr><td colspan='6'>无数据</td></tr>");
+	            		$("#th1").html(""); 
+	            	}
+                    // console.log(data);
+	            },
+	            error:function(msg){
+	            	layer.msg("请求失败");
+	            },complete: function () {
+                    layer.close(index);
+                }
+	         });
+
+        }	
+
+		//导出excel
+        function exportTotalSale(){
+        	var stime = $("#stime").val(),
+        		etime = $("#etime").val(),
+        		brand_name = $("#brand_name").val(),
+        		c_id = $("#c_id").val(),
+        		machining = $("#machining").val(),
+        		gtid = $("#gtid").val(),
+        		gtid1 = $("#gtid1").val(),
+        		gtid2 = $("#gtid2").val(),
+        		tcaption = $("#tcaption").val(),
+        		gname = $("#gname").val();
+        	var url ="{:U('Reports/exportTotalSale')}";
+        	url+="?stime="+stime+"&etime="+etime+"&brand_name="+brand_name+"&c_id="+c_id+"&machining="+machining+"&gtid="+gtid+"&gtid1="+gtid1+"&gtid2="+gtid2+"&gname="+gname+"&tcaption="+tcaption;
+        	location.href=url;
+        } 
+
+         
+							
+        //数据列设置
+		$('.data').click(function(){ 
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['700px', '500px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Reports/reportsDataSet.html'
+			});
+		});
+
+		//打印 
+		function printme(){      
+			var index = layer.msg('请稍后', {
+			    icon: 16,
+			    shade: 0.01,
+			    time: 3000
+			});
+			$("table tr").each(function(index,value){
+				if(index%2==0){
+					$(value).css("background-color","#e4e4e4");
+				}else{
+					$(value).css("background-color","#fff"); 
+				}
+
+			});
+			var strBodyStyle="<style>"+$("#style1").html()+"</style>";
+			var strFormHtml=strBodyStyle+"<body>"+$("#divPrint").html()+"</body>";
+
+			LODOP=getLodop();  
+			LODOP.PRINT_INIT("supplierTotalSale供应商销售汇总表");
+			LODOP.ADD_PRINT_TABLE(0,0,"100%","95%",strFormHtml);
+			// LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",iRadioValue);		
+			LODOP.PREVIEW();
+		} 
+
+
+	</script>
+</body>
+</html>

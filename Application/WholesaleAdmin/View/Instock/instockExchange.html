@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style>
+		.btn-list.active{position: fixed;right: 0;top: 0;z-index: 20;width: 100%;background: #F8F8F8;box-shadow: 0 1px 5px #c5c5c5;padding: 15px 15px 0;}
+	</style>
+</head>
+<body>
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>入库退货单</h3>
+			<div class="btn-list">
+				<form action="__SELF__" method="post">
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-6 col-md-4">
+								<span class="fl mt8">日期 从</span>
+								<input type="text"  id="date1" name="stime" value="{$stime}" class="form-control w-115 fl ml10">
+								<span class="fl ml20 mt8">到</span>
+								<input type="text"  id="date2" name="etime" value="{$etime}" class="form-control w-120 fl ml20">
+							</div>  
+							<div class="col-xs-6 col-md-2 pr">  
+								<span class="fl mt8">供应商</span>	
+								<input type="text" onkeyup="publicSearch.textCall(this)" name="sname" value="{$sname}" data-name="name" data-id="sid" data-page="getSupplierInfoByText" class="form-control" style="width:120px;margin-left:13px;" /> 
+								<span class="select-sreach-btn" style="right: 20px;" onclick="publicSearch.btnCall(this)"></span>
+								<ul class="select-sreach-list cf none" title="4" id="ul4" style="width: 120px;right: 20px;"></ul>
+								<input type="hidden" class="hid" name="sid" value="{$sid}" id="sid"/> 
+							</div>
+							<div class="col-xs-6 col-md-4">
+								<span class="fl mt8">入库单据号</span>
+								<input type="text" name="jsid" value="{$jsid}" class="form-control w-200 fl ml15">
+							</div> 
+							<div class="col-xs-12 col-md-2 text-center">
+								<input type="submit" value="查询" class="btn btn-style w-100" />
+							</div>
+						</div>
+					</div> 
+				</form>
+			</div>	
+		</div>
+	</div>
+	<div class="container-fluid mt20">
+		<div class="col-xs-12">
+			<table class="tb-style">
+				<thead>
+					<tr>
+						<td colspan="7">入库单据表</td>
+					</tr>
+					<tr>
+						<td>行号</td>
+						<td>入库单据号</td>
+						<td>供应商</td>
+						<!-- <td>仓库</td> -->
+						<td>录入时间</td>
+						<td>审核状态</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="list" id="vo">
+					<tr>
+						<td>{$key+1}</td>
+						<td data-id="{$vo.jsid}"><a href="javascript:;"  class="t_open">{$vo.jsid}</a></td>
+						<td>{$vo.s_name}</td>
+						<!-- <td>默认仓库</td> -->
+						<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+						<td>{$vo.status|getStatus}</td>
+						<td>
+							<!-- <if condition="$vo.status eq 0">
+								<a href="javascript:;" onclick="upInstockStatus('{$vo.jsid}',1,this)">审核</a>
+								&nbsp;&nbsp;&nbsp;
+								<a href="{:U('Instock/instockEdit',array('jsid'=>$vo['jsid']))}" >编辑</a>
+								&nbsp;&nbsp;&nbsp;
+								<a href="javascript:;" onclick="backMark('{$vo.jsid}',this);">退货</a>
+							<else />
+								<a href="javascript:;" onclick="upInstockStatus('{$vo.jsid}',0,this)">反审核</a>&nbsp;&nbsp;&nbsp;
+							</if> -->
+							
+							
+						</td>
+					</tr> 
+					</volist>
+				</tbody>
+			</table>
+		</div> 
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		laydate({
+            elem: '#date1'
+        });
+        laydate({
+            elem: '#date2'
+        });
+
+        //文档加载完成
+        $(function(){
+        	$("#status").val("{$status}");
+        });
+
+        // 滚动条事件-导航栏
+		window.onscroll=function(){
+			var t =document.documentElement.scrollTop||document.body.scrollTop;
+			if(t>170){
+				$(".btn-list").addClass("active");
+			}else{
+				$(".btn-list").removeClass("active");
+			}
+		}
+
+        //修改入库单审核状态
+        function upInstockStatus(jsid,status,obj){
+        	$.post("{:U('Instock/upInstockStatus')}",{jsid:jsid,status:status},function(data){
+        		if(data==0){
+        			location.reload();
+        		}
+        	},"json");
+        }	
+
+        function backMark(jsid,obj){
+        	console.log(obj);
+        	layer.confirm('您确定要删除吗？', {
+				btn: ['确认','取消'], //按钮
+				shade: [0.4, '#393D49'] //显示遮罩
+				}, function(){
+					$.post("{:U('Instock/backMark')}",{jsid:jsid},function(data){
+		        		if(data==0){
+		        			layer.msg('删除成功', { icon: 1, time: 1000 }, function(){
+								$(obj).parent().parent().remove();
+							}); 
+		        		}
+		        	},"json");
+				},function(){}
+			); 
+        }
+
+        $('.t_open').click(function(){
+			var id =$(this).parent().attr('data-id');
+			var url ="{:U('Instock/instockDetail')}";
+		    url +="?jsid="+id;
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['1000px', '500px'],
+				title: false,
+				content: url
+			});
+		}); 
+	</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.wrap{box-shadow:0 0 8px #d6d6d6;}
+		.nav-top-li:first-child.active{background: #52b38c;color: #fff;box-shadow: inset -2px -2px 3px #288f66;}
+		.nav-top-li:last-child.active{background: #52b38c;color: #fff;box-shadow: inset 2px -2px 3px #288f66;}
+		.f-spec-box{width:260px;margin:0 auto;text-align: right;height:250px;}
+		.spec-submit{position:fixed;bottom:0;left:0;width:100%;height:50px;background:#fff;text-align: center;}
+		.nspec-box{width:600px;margin:auto;}
+		.nspec-box-spec{width:255px;float:left;}
+		.nspec-box-eq{float:left;width:60px;text-align: center;}
+	</style>
+</head>
+<body>
+	<div class="nav navbar-default h-60" style="background-color: #52b38c;">
+		<h3 style="border:none;text-align: center;color: #fff;">新增商品规格</h3>
+	</div>
+	<div class="container-fluid">
+		<div class="col-xs-12 col-md-12">
+			<div class="wrap mt10" style="background:#fff;">
+				<div class="nav-top h-40" style="margin-bottom:50px;">
+					<ul>
+						<li title="0" class="nav-top-li fl w50 text-center fs-16 lh-40">内装</li>
+						<li title="1" class="nav-top-li fl w50 text-center fs-16 lh-40 active">非内装</li> 
+					</ul> 
+				</div>
+				<form action="__SELF__" method="post">
+					<!-- 内装类型隐藏域 -->
+					<input type="hidden" name="inside_type" id="inside_type" value="0" /> 
+					<input type="hidden" name="wgid" id="wgid" value="{$wgid}" /> 
+					<div class="set_spec">
+						<div>
+							<p class="text-center fs-14">规格设置(<span style="color:#880e0b;">请按照由小到大顺序排列</span>)</p>
+							<div class="nspec-box mt20 pb20 cf">
+								<div class="nspec-box-spec pr" >
+									<span>规格2：</span>
+									<input type="number" value="1" readonly class="form-control w-70 text-center"  />
+									<input type="text"  data-name="unit_name" data-id="unit_id" onkeyup="publicSearch.textCall(this,backcall)" data-page="getUnitInfoByText" class="form-control select-sreach-input" style="width:126px;" /> 
+									<span class="select-sreach-btn"  onclick="publicSearch.btnCall(this,backcall)" readonly></span>
+									<ul class="select-sreach-list cf none" title="2" id="ul2" style="width: 126px;"></ul>
+									<input type="hidden" class="hid" name="unit_id2" id="unit_id2" />
+								</div>
+								<div class="nspec-box-eq">
+									<span style="font-size:25px;">=</span> 
+								</div> 
+								<div class="nspec-box-spec pr" >
+									<span>规格1：</span>
+									<input type="number" class="form-control w-70 text-center" name="num1" id="num1" />
+									<input type="text" name="" value="{$data.unit_name}" readonly data-name="unit_name" data-page="getUnitInfoByText" class="form-control select-sreach-input" style="width:126px;" />   
+									<input type="hidden" class="hid" value="{$data.unit_id}" name="unit_id1" id="unit_id1" />  
+								</div>
+							</div> 
+							 <div class="nspec-box mt20 pb20 cf">
+								<div class="nspec-box-spec pr" >
+									<span>规格3：</span>
+									<input type="number" value="1" readonly class="form-control w-70 text-center" name="" />
+									<input type="text" name=""  onkeyup="publicSearch.textCall(this,backcall)" data-name="unit_name" data-id="unit_id"  data-page="getUnitInfoByText" class="form-control select-sreach-input" style="width:126px;" /> 
+									<span class="select-sreach-btn"  onclick="publicSearch.btnCall(this,backcall)" readonly></span>
+									<ul class="select-sreach-list cf none" title="3" id="ul3" style="width: 126px;"></ul>
+									<input type="hidden" class="hid" name="unit_id3" id="unit_id3" />
+								</div>
+								<div class="nspec-box-eq">
+									<span style="font-size:25px;">=</span> 
+								</div> 
+								<div class="nspec-box-spec pr" >
+									<span>规格2：</span>
+									<input type="number" class="form-control w-70 text-center" name="num2" id="num2" />
+									<input type="text" name="" id="txt2" readonly data-name="unit_name" data-page="getUnitInfoByText"  data-id="unit_id" class="form-control select-sreach-input" style="width:126px;" />   
+								</div>
+							</div> 
+							<div class="nspec-box mt20 pb20 cf">
+								<div class="nspec-box-spec pr" >
+									<span>规格4：</span>
+									<input type="number" value="1" readonly class="form-control w-70 text-center" name="" />
+									<input type="text" name="" onkeyup="publicSearch.textCall(this,backcall)" data-name="unit_name"  data-id="unit_id" data-page="getUnitInfoByText" class="form-control select-sreach-input" style="width:126px;" /> 
+									<span class="select-sreach-btn" onclick="publicSearch.btnCall(this,backcall)" readonly></span>
+									<ul class="select-sreach-list cf none" title="4" id="ul4" style="width: 126px;"></ul>
+									<input type="hidden" class="hid" name="unit_id4" id="unit_id4" />
+								</div>
+								<div class="nspec-box-eq">
+									<span style="font-size:25px;">=</span> 
+								</div> 
+								<div class="nspec-box-spec pr" >
+									<span>规格3：</span>
+									<input type="number" class="form-control w-70 text-center" name="num3" id="num3" /> 
+									<input type="text" name="" id="txt3" readonly data-name="unit_name"  data-id="unit_id" data-page="getUnitInfoByText" class="form-control select-sreach-input" style="width:126px;" />  
+								</div>
+							</div>  
+							<div class="h-60"></div>
+						</div>
+						<div class="f-spec-box none"> 
+							<div class="mb20">
+								<span>规格1：</span>
+								<input type="text" name="" value="{$data.unit_name}" class="form-control w-200" readonly /> 
+								<input type="hidden" name="f_unit_id1" value="{$data.unit_id}" />
+							</div>
+							<div class="mb20 pr" >
+								<span>规格2：</span>
+								<input type="text" name="" data-name="unit_name" onkeyup="publicSearch.textCall(this)"  data-id="unit_id" data-page="getUnitInfoByText" class="form-control select-sreach-input w-200 " /> 
+								<span class="select-sreach-btn" onclick="publicSearch.btnCall(this)"></span>
+								<ul class="select-sreach-list cf none" style="width: 200px;margin-left: 60px;"></ul>
+								<input type="hidden" class="hid" name="f_unit_id2" id="f_unit_id2" />
+							</div>
+							<div class="mb20 pr" >
+								<span>规格3：</span>
+								<input type="text" name="" onkeyup="publicSearch.textCall(this)"  data-name="unit_name"  data-id="unit_id" data-page="getUnitInfoByText" class="form-control select-sreach-input w-200 " /> 
+								<span class="select-sreach-btn" onclick="publicSearch.btnCall(this)"></span>
+								<ul class="select-sreach-list cf none" style="width: 200px;margin-left: 60px;"></ul>
+								<input type="hidden" class="hid" name="f_unit_id3" id="f_unit_id3" />
+							</div>
+							<div class="mb20 pr" >
+								<span>规格4：</span>
+								<input type="text" name="" onkeyup="publicSearch.textCall(this)"  data-name="unit_name"  data-id="unit_id" data-page="getUnitInfoByText" class="form-control select-sreach-input w-200 " /> 
+								<span class="select-sreach-btn" onclick="publicSearch.btnCall(this)"></span>
+								<ul class="select-sreach-list cf none" style="width: 200px;margin-left: 60px;"></ul>
+								<input type="hidden" class="hid" name="f_unit_id4" id="f_unit_id4" /> 
+							</div> 
+						</div> 
+					</div>
+
+					<div class="spec-submit">
+						<input type="submit" onclick="return checkFrom()" value="保存" class="preserve form-control w-100 mt10" /> 
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+
+	<script type="text/javascript">
+		$(function(){
+			$(".nav-top-li").click(function(){
+				var title = this.title;
+				$('#inside_type').val(title);
+				$(this).removeClass("active").siblings().addClass("active");
+				$(".set_spec > div").eq($(this).index()).show().siblings().hide(); 
+			}); 
+			// $(".select-sreach-list li").click(function(e){ 
+			// 	var li =e.target;
+			// 	var title = this.title;
+			// 	if(li.nodeName=='LI' && title){
+			// 		$('#txt'+title).val($(li).html());
+			// 	}
+			// });
+		}); 
+
+		function backcall(obj){
+			var li = obj;
+			var title = $(obj).parent().attr("title");
+			if(li.nodeName=='LI' && title){
+				$('#txt'+title).val($(li).html());
+			} 
+		}
+
+
+		//表单验证
+		function checkFrom(){  
+			var inside_type = $("#inside_type").val(); 
+			//内装 
+			if(inside_type=="0"){ 
+				var unit_id2=$("#unit_id2").val();
+				if(!unit_id2){ 
+		            layer.msg('请填写规格2单位');
+		            return false; 
+				}
+				var num1=$("#num1").val();
+				if(!num1){  
+		            layer.msg('请填写规格1数量');
+		            return false; 
+				}
+			}else{ 
+				//非内装
+				var f_unit_id2 =$("#f_unit_id2").val();
+				var f_unit_id3 =$("#f_unit_id3").val();
+				var f_unit_id4 =$("#f_unit_id4").val();
+				if(!f_unit_id2 && !f_unit_id3 && !f_unit_id3){ 
+					layer.msg('请填写规格单位'); 
+		            return false; 
+				}
+			}
+			return true;
+		}  
+	</script>
+</body>
+</html>

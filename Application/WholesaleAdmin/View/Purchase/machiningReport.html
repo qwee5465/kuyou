@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}加工单</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css"> 
+		.headcolor2 td{background-color: #404040 !important; border:1px solid #404040 !important;color: #fff;}
+		table tr:nth-child(even){background-color: #e4e4e4;}
+		table tr:nth-child(odd){background-color: #F5F5F5;}
+		.tb-style{background-color: #f5f5f5; font-size:14px;}
+		.tb-style td,.tb-style th{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;    text-align: center;height: 30px;}
+		.navbar-default {background-color: #fff;}
+		.btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important; letter-spacing: 1.5px;}
+	    .btn_color:hover{background-color: #6db81f !important; border:1px solid #6db81f !important;} 
+	    .btn-style{background-color: #59ab76; border: 1px solid #3b9f5f;}
+	    .btn-style:hover{background: linear-gradient(#3b9f5f,#3b9f5f);
+	    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+	    background-position-x: initial;
+	    background-position-y: initial;
+	    background-size: initial;
+	    background-repeat-x: initial;
+	    background-repeat-y: initial;
+	    background-attachment: initial;
+	    background-origin: initial;
+	    background-clip: initial;
+	    background-color: initial;}
+	    .a-jiantou-top{position: absolute; top: 2px;right: -15px;width:0;height:0;   border-left:5px solid transparent;   border-right:5px solid transparent;   border-bottom:5px solid #fff;}
+	    .a-jiantou-bottom{position: absolute; bottom: 2px;right: -15px;width:0;height:0;   border-left:5px solid transparent;   border-right:5px solid transparent;   border-top:5px solid #fff;}
+	    .noradius{border-radius: 0px;}
+	    .ml5{margin-left: 5px;}
+	    .ml20{margin-left: 20px;}
+	    .col-md-2{width: auto;}
+	    .col-xs-6{width: auto;}
+	    .nav,select{letter-spacing: 1.5px;} 
+	    .code-tr td{width:35px;} 
+	    .stock-txt{padding: 0 0px;height:35px;width: 73px;box-sizing: border-box;text-align: center;background:none;font-size:12px;border:1px solid #ccc;}
+	    td select{width:73px;}
+	    .t-tr{background-color: #59ab76 !important;height:35px; border: 1px solid #59ab76; color: #fff;}
+	</style>
+	<style type="text/css" id="style1">
+		table {
+			border-collapse: collapse;
+		    width: 100%;
+		    font-size: 20px;
+		    background-color: #fff;
+		    border: 1px solid #d0d0d0;
+		}
+		td,th {
+			text-align: center;
+			border: 1px solid #d0d0d0; 
+		}
+		td span{margin-left:10px;} 
+	</style>
+</head>
+<body>
+<div id="body_content">
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>加工单</h3>
+			<div>
+				<form id="form1" action="__SELF__" method="post">
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="ml15">
+								<span class="fl mt8">日期</span>
+								<input type="text" name="create_time" value="{$create_time}" id="date" class="form-control w-130 fl ml5 noradius">
+								<span class="fl mt8 ml10">商品类别</span>
+								<select class="w-115 fl ml5" name="gtid" id="gtid" onchange="getTwoTypeInfo(this.value)">
+									<option value="">一级全部</option>
+									<volist name="tlist" id='vo'>
+										<option value="{$vo.gtid}">{$vo.type_name}</option>
+									</volist>
+								</select>
+								<select name="gtid1" id="gtid1"  class="w-115 fl ml5" onchange="getThreeTypeInfo(this.value)">
+									<option value="">二级全部</option>
+								</select>
+								<select name="gtid2" id="gtid2" class="w-115 fl ml5">
+									<option value="">三级全部</option> 
+								</select> 
+								<input type="hidden" name="hid_order" id="hid_order" value="{$hid_order}" />
+								<input type="button" onclick="getMachiningInfo()" class="btn btn-style ml20" value="搜 索" />  
+								<input type="button" onclick="printme()" class="btn btn-success ml20" value='打印'/> 
+								<input type="button" onclick="buildOutStockInfo()" class="btn btn-success ml20" value='提交货损数'/> 
+							</div>   
+						</div>
+					</div>  
+				</form> 
+			</div>	
+		</div>
+	</div>
+	<div class="container-fluid"> 
+		<div id="divPrint">
+			<table class="tb-style t-table" id="table"> 
+				<thead id="thead">
+					<tr class="t-tr"><th colspan="7" id="th_title">加工单</th></tr>
+					<tr>
+						<th style="width:50px;">序号</th>
+						<th style="width:120px;">商品名称</th>
+						<th>客户量</th>
+						<th style="width:80px;">合计数</th>
+						<th style="width:80px;">出库数</th>
+						<th style="width:80px;">入库数</th>
+						<th style="width:150px;" id="thhsnum">货损数</th>
+					</tr>  
+				</thead>
+				<tbody id="tbody"> 
+					<tr>
+						<td colspan="7">暂无数据,请先搜索。</td>
+					</tr>
+				</tbody>
+			</table> 
+		</div> 
+	</div>
+</div>
+
+
+
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/scrolltop.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/LodopFuncs.js"></script>
+	<script type="text/javascript"> 
+		//页面加载时
+		$(function(){ 
+			 
+		});
+
+		//请求数据 并渲染到页面中
+		function getMachiningInfo(){
+			var create_time = $("#date").val(),  
+        		gtid = $("#gtid").val(),
+        		gtid1 = $("#gtid1").val(),
+        		gtid2 = $("#gtid2").val(); 
+
+			if(!create_time){
+				layer.tips('请选择日期', '#date', {tips: 1});
+				return false;
+			} 
+        	var url ="{:U('Purchase/getMachiningInfo')}";
+        	data ={
+        		create_time:create_time, 
+        		gtid:gtid,
+        		gtid1:gtid1,
+        		gtid2:gtid2
+        	}; 
+        	var index = layer.msg('正在生成加工单,请稍后!', {
+			    icon: 16,
+			    shade: 0.01
+			});
+        	$.ajax({
+	            type: "POST",
+	            url: url,
+	            data: data,
+	            dataType: "json",
+	            success: function(data){
+	            	if(data==0){  
+	            		$("#tbody").html("<tr><td colspan='7'>"+create_time+"日,无加工数据</td></tr>");
+	            	}else{ 
+	            		$("#th_title").html(create_time+"加工单");
+	            		//内容拼接
+	            		var str ="";
+	            		var list = data.data;
+	            		var system_param = data.system_param; //单位转换 规则 
+	            		for(var i=0;i<list.length;i++){
+	            			str +="<tr><td>"+(i+1)+"</td>";
+	            			str +="<td>"+list[i].gname+"</td>";
+	            			str +="<td style='text-align:left;'>";
+	            			var clist = list[i].clist;
+	            			var hjnum =0;
+	            			for(var j=0;j<clist.length;j++){
+	            				str+="<span>"+clist[j].code+":"+clist[j].num+"("+clist[j].remark+");</span>";
+	            				hjnum += parseFloat(clist[j].num); 
+	            			}
+	            			hjnum = hjnum.toFixed(2);
+	            			str +="</td><td>"+hjnum+clist[0]['jcuname']+"</td>";
+	            			str +="<td></td><td></td><td><input class='t-number stock-txt not-print' type='text' value='"+list[i].cd_num+"' data-wgid='"+list[i].wgid+"' name='wgids' /><select class='not-print' name='nei_unit_id'>";
+	            			var ulist =list[i].ulist;
+	            			for(var j=0;j<ulist.length;j++){
+	            				if(ulist[j].unit_id==list[i].unit_id){
+	            					str +="<option selected='selected'  value='"+ulist[j].unit_id+"' data-nei_num='"+ulist[j].num+"'>"+ulist[j].uname+"</option>";
+	            				}else{
+	            					str +="<option value='"+ulist[j].unit_id+"' data-nei_num='"+ulist[j].num+"'>"+ulist[j].uname+"</option>";
+	            				}
+	            			}
+	            			str +="</select><input type='hidden' name='unit_id' value='"+ulist[0].unit_id+"' /></td>"; 
+	            			str +="</tr>";
+	            		}
+	            		$("#tbody").html(str);  
+	            		$(".t-number").keypress(function(e){   
+						    var e=e||event;
+						    var val = $(this).val();
+						    if(e.keyCode==46){
+						        if(val.indexOf('.')>=0){
+						            return false;
+						        }
+						    }
+						    //console.log(e.keyCode);
+						    return (/[\d.]/.test(String.fromCharCode(event.keyCode)));
+						}); 
+						//表格中的上下左右键切换input的焦点
+						new tabTableInput("table", "text");
+	            	}
+                    // console.log(data);
+	            },
+	            error:function(msg){
+	            	layer.msg("请求失败");
+	            },complete: function () {
+                    layer.close(index);
+                }
+	        });
+		} 
+ 
+		//根据1级类型编号获取二级分类
+	    function getTwoTypeInfo(fid){  
+	    	if(fid){
+		        $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">二级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>'); 
+		            }else{
+		            	var str ='<option value="">二级全部</option>';
+				    	$("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		            }
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">二级全部</option>';
+		    	$("#gtid1").html(str); 
+                $("#gtid2").html('<option value="">三级全部</option>');
+		    }
+	    }
+
+	    //根据二级类型编号获取三级分类
+	    function getThreeTypeInfo(fid){  
+	    	if(fid){
+		        $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">三级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid2").html(str); 
+		            }else{
+		            	var str ='<option value="">三级全部</option>';
+		    			$("#gtid2").html(str);
+		            }
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">三级全部</option>';
+		    	$("#gtid2").html(str);
+		    }
+	    } 
+
+		function checkFrom(){
+			
+		}
+ 		
+ 		var LODOP; //声明为全局变量
+        var iRadioValue=1;
+
+		//打印
+		function printme(){
+			var index = layer.msg('请稍后', {
+			    icon: 16,
+			    shade: 0.01,
+			    time: 3000
+			});
+			$(".not-print").hide(); 
+			$(".not-print").parent().css("width","80px");
+			$("#thhsnum").css("width","80px");
+			$("table tr").each(function(index,value){
+				if(index%2==0){
+					$(value).css("background-color","#e4e4e4");
+				}else{
+					$(value).css("background-color","#fff"); 
+				}
+
+			});
+			var strBodyStyle="<style>"+$("#style1").html()+"</style>";
+			var strFormHtml=strBodyStyle+"<body>"+$("#divPrint").html()+"</body>";
+
+			LODOP=getLodop();  
+			LODOP.PRINT_INIT("machiningReport加工单");
+			LODOP.ADD_PRINT_TABLE(0,0,"100%","95%",strFormHtml);
+			// LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",iRadioValue);		
+			LODOP.PREVIEW();
+			if (LODOP.CVERSION){
+				CLODOP.On_Return = function(TaskID, Value) {
+		            if(Value==0 || Value==1){
+		            	$(".not-print").show(); 
+						$(".not-print").parent().css({"width":"150px"});
+						$("#thhsnum").css("width","150px");
+		            }
+		        }
+			} 
+		} 
+
+		laydate({ 
+            elem: '#date' 
+        });
+
+		//数据列设置
+		$('.data').click(function(){
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['700px', '500px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Reports/daySaleDataSet.html'
+			});
+		}); 
+	</script>
+	<script>
+		//提交货损数据
+		function buildOutStockInfo(){   
+			var wgids = '',// 商品名称
+				unit_ids = '',//默认单位    
+				cdnums = '',//货损数量 
+				nei_unit_ids="",//内装单位
+				nei_nums="", //内装数
+				create_time=$("#date").val(),
+				data={}; //是否加工
+			$("input[name='wgids']").each(function(index,value){  
+				var val=$(value).val();
+				if(IsNum(val) && val!="0"){
+					var td =$(value).parent();
+					wgids+=$(value).attr("data-wgid")+',';
+					unit_ids+= td.find("input[name='unit_id']").val()+',';
+					nei_nums+= td.find("select[name='nei_unit_id']").find("option:selected").attr("data-nei_num")+','; 
+					cdnums+= val+','; 
+					nei_unit_ids += td.find("select[name='nei_unit_id']").val()+',';  
+				} 
+			});
+
+			data.wgids=wgids.substr(0,wgids.length-1); 
+			data.unit_ids=unit_ids.substr(0,unit_ids.length-1); 
+			data.cdnums=cdnums.substr(0,cdnums.length-1); 
+			data.nei_unit_ids=nei_unit_ids.substr(0,nei_unit_ids.length-1);  
+			data.nei_nums=nei_nums.substr(0,nei_nums.length-1);
+			data.create_time=create_time;
+			if(data.wgids==""){
+				layer.msg('至少要填写一条货损数据!');
+				return;
+			}
+			layer.confirm('将生成已审核的货损出库单，确定提交吗?', {
+				btn: ['确 认','取消'], //按钮
+				shade: [0.4, '#393D49'] //显示遮罩
+			}, function() {    
+				var index = layer.msg('正在提交数据,请稍后!', {
+				    icon: 16,
+				    shade: 0.01
+				});
+				var url ="{:U('Purchase/buildOutStockInfo')}";  
+				$.ajax({
+		            type: "POST",
+		            url: url,
+		            data: data,
+		            dataType: "json",
+		            success: function(data){  
+	                    if(data.resultcode==0){ 
+	                    	layer.close(index);
+	                    	var index = layer.msg('数据已保存，正在执行审核操作，请稍后!', {
+							    icon: 16,
+							    shade: 0.01
+							});
+	                    	/*--------审核操作---------*/
+	                    	$.post("{:U('Outstock/upOutstockStatus')}",{osid:data.osid,status:1},function(data1){
+								//关闭加载框
+								layer.close(index);
+								if(data1.resultcode==0){ 
+									layer.alert("操作"+data1.msg+",出库单据号为："+data.osid); 
+								}else{
+									layer.alert("操作失败,"+data1.msg+",出库单据号为："+data.osid,{icon:2});
+								}
+							},"json"); 
+	                    }else if(data.resultcode==10){
+	                    	layer.alert("操作失败,"+data1.msg+",出库单据号为："+data.osid,{icon:2});
+	                    }
+		            },
+		            error:function(msg){
+		            	layer.close(index);
+		            	console.log("提交货损数失败了",msg);
+		            } 
+		        });
+			}, function() {}); 
+		}	
+		 
+
+	</script>
+</body>
+</html>

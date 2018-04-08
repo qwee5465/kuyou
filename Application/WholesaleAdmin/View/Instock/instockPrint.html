@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}入库单</title>
+	<meta charset="utf-8">  
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/area.js"></script> 
+	<script type="text/javascript" src="__PUBLIC__/js/areapublic.js"></script> 
+	<style>
+		#body_content{    letter-spacing: 0.5px;}
+		.bill-ul{background:#fff;margin-bottom: 0;}
+		.bill-ul-li{float:left;padding: 5px 0px 0px 5px;}
+		.bill-ul-li-title{display: inline-block;font-weight: 300;float: left;}
+		.bill-ul-li-content{display: inline-block;border-bottom:1px solid #000;padding: 0 10px;margin-right: 30px;height: 20px;min-width:100px;text-align: center;}
+		.bill-ul-li-content.bbk{border-bottom:1px solid #000;}  
+		.tb-style td{border: 1px solid #000;height: 25px;}
+		.print-h3{border: none; padding-bottom: 0; margin-top: 0px;text-align: center;font-weight:bold;}
+	</style>
+</head>
+<body style="background: #fff;">
+	<div id="body_content" style="padding:0 5px;"> 
+		<!-- 头部 -->
+		<ul class="cf bill-ul"> 
+			<if condition="$jsList.jsname_p eq 0">
+				<li class="bill-ul-li w100 t_jsname_p">
+					<h3 class="print-h3">{$list[0].jsname}</h3>
+				</li> 
+			</if>
+			<if condition="$jsList.jsid_p eq 0">
+				<li class="bill-ul-li t_jsid_p">
+					<label class="bill-ul-li-title">{$titles.jsid}：</label> 
+					<span class="bill-ul-li-content">{$jsid}</span>
+				</li> 
+			</if> 
+			<if condition="$jsList.ctime_p eq 0">
+				<li class="bill-ul-li t_ctime_p">
+					<label class="bill-ul-li-title">{$titles.ctime}：</label> 
+					<span class="bill-ul-li-content">{$list[0].create_time|date='Y-m-d',###}</span>
+				</li>
+			</if>
+			<if condition="$jsList.audit_p eq 0">
+				<li class="bill-ul-li t_audit_p">
+					<label class="bill-ul-li-title">{$titles.audit}：</label> 
+					<span class="bill-ul-li-content">{$audit}</span>
+				</li>
+			</if>
+			<if condition="$jsList.sname_p eq 0">
+				<li class="bill-ul-li t_sname_p">
+					<label class="bill-ul-li-title">{$titles.sname}：</label> 
+					<span class="bill-ul-li-content">{$list[0].sname}</span>
+				</li>
+			</if>
+			<if condition="$jsList.saddress_p eq 0">
+				<li class="bill-ul-li t_saddress_p">
+					<label class="bill-ul-li-title">{$titles.saddress}：</label> 
+					<span class="bill-ul-li-content" id="span_saddress"> 
+						{$list[0].street}  
+					</span>
+				</li>
+			</if>
+			<if condition="$jsList.stel_p eq 0">
+				<li class="bill-ul-li t_stel_p">
+					<label class="bill-ul-li-title">{$titles.stel}：</label> 
+					<span class="bill-ul-li-content">{$list[0].phone}</span>
+				</li>
+			</if>
+			<!-- 公司 --> 
+			<if condition="$jsList.company_p eq 0">
+				<li class="bill-ul-li t_stel_p">
+					<label class="bill-ul-li-title">{$titles.company}：</label> 
+					<span class="bill-ul-li-content">{$company}</span>
+				</li>
+			</if>
+			<!-- 公司地址 --> 
+			<if condition="$jsList.company_address_p eq 0">
+				<li class="bill-ul-li t_stel_p">
+					<label class="bill-ul-li-title">{$titles.company_address}：</label> 
+					<span class="bill-ul-li-content" id="span_company_address"></span>
+				</li>
+			</if>
+			<!-- 公司电话 -->
+			<if condition="$jsList.company_phone_p eq 0">
+				<li class="bill-ul-li t_stel_p">
+					<label class="bill-ul-li-title">{$titles.company_phone}：</label> 
+					<span class="bill-ul-li-content">{$company_phone}</span>
+				</li>
+			</if>
+
+			<if condition="$jsList.total_p eq 0">
+				<li class="bill-ul-li t_total_p">
+					<label class="bill-ul-li-title">{$titles.total}：</label> 
+					<span class="bill-ul-li-content">{$list[0].total|customDecimal="sum",###}</span>
+				</li> 
+			</if>
+			<if condition="$jsList.cfee_p eq 0">
+				<li class="bill-ul-li t_cfee_p">
+					<label class="bill-ul-li-title">{$titles.cfee}：</label> 
+					<span class="bill-ul-li-content">{$list[0].carry_fee|customDecimal="price",###}</span>
+				</li>
+			</if>
+			<if condition="$jsList.ufee_p eq 0">
+				<li class="bill-ul-li t_ufee_p">
+					<label class="bill-ul-li-title">{$titles.ufee}：</label> 
+					<span class="bill-ul-li-content">{$list[0].unloading_fee|customDecimal="price",###}</span>
+				</li>
+			</if>
+			<if condition="$jsList.afee_p eq 0">
+				<li class="bill-ul-li t_afee_p">
+					<label class="bill-ul-li-title">{$titles.afee}：</label> 
+					<span class="bill-ul-li-content">{$list[0].agency_fee|customDecimal="price",###}</span>
+				</li>
+			</if>
+			<if condition="$jsList.remark_p eq 0">
+				<li class="bill-ul-li t_remark_p">
+					<label class="bill-ul-li-title">{$titles.remark}:</label> 
+					<span class="bill-ul-li-content" style="width:200px">&nbsp;{$list[0].remark}</span>
+				</li>
+			</if>
+		</ul>
+		<div style="height:10px;background:#fff;"></div>
+		
+		<table class="tb-style">
+			 <thead>
+				<tr>
+					<td>序号</td>
+					<if condition="$jsbList.gname_p eq 0">
+						<td class="b_gname_p">{$t_list.gname}</td>
+					</if> 
+					<if condition="$jsbList.bname_p eq 0">
+						<td class=" b_bname_p">{$t_list.bname}</td>
+					</if>
+					<if condition="$jsbList.uname_p eq 0">
+						<td class=" b_uname_p">{$t_list.uname}</td>
+					</if>
+					<if condition="$jsbList.num_p eq 0">
+						<td class=" b_num_p">{$t_list.num}</td>
+					</if>
+					<if condition="$jsbList.price_p eq 0">
+						<td class=" b_price_p">{$t_list.price}</td> 
+					</if>
+					<if condition="$jsbList.shelf_p eq 0">
+						<td class=" b_shelf_p">{$t_list.shelf}</td> 
+					</if>
+					<if condition="$jsbList.totalb_p eq 0">
+						<td class="b_totalb_p">{$t_list.totalb}</td>
+					</if>
+				</tr>
+			 </thead>
+			 <tbody>
+				<foreach name="list" item="vo">
+					<tr>
+						<td>{$key+1}</td>
+						<if condition="$jsbList.gname_p eq 0">
+							<td class="b_gname_p">{$vo.gname}</td> 
+						</if> 
+						<if condition="$jsbList.bname_p eq 0">
+							<td class="b_bname_p">{$vo.bname}</td>
+						</if>
+						<if condition="$jsbList.uname_p eq 0">
+							<td class="b_uname_p">{$vo.uname}</td>
+						</if>
+						<if condition="$jsbList.num_p eq 0">
+							<td class="b_num_p">{$vo['num1']/$vo['nei_num']|customDecimal="num",###}</td>
+						</if>
+						<if condition="$jsbList.price_p eq 0">
+							<td class="b_price_p">{$vo.price|customDecimal="price",###}</td>  
+						</if>
+						<if condition="$jsbList.shelf_p eq 0">
+							<td class="b_shelf_p">{$vo.shelf_life}</td>   
+						</if>
+						<if condition="$jsbList.totalb_p eq 0">
+							<td class="b_totalb_p">{$vo.total_cost|customDecimal="sum",###}</td> 
+						</if>
+					</tr>
+				</foreach>
+			 </tbody>
+		</table> 		
+	</div>   
+	<script>   
+		//页面加载时
+		$(function(){
+		 	var address = getAddressName('{$list[0].pid}')+getAddressName('{$list[0].pid}','{$list[0].cid}')+getAddressName('{$list[0].pid}','{$list[0].cid}','{$list[0].did}');
+			$("#span_saddress").html(address+$("#span_saddress").html());
+			$("#span_company_address").html(getAddressName('{$info_list.pid}')+getAddressName('{$info_list.pid}','{$info_list.cid}')+getAddressName('{$info_list.pid}','{$info_list.cid}','{$info_list.did}')+"{$info_list['street']}"); 
+			var tdCount = $(".tb-style tbody tr").eq(0).find("td").length; 
+			var html="<tr><td id='td_heje' colspan='"+tdCount+"'>合计</td></tr>"; 
+			$(".tb-style").last().find("tbody").append(html);
+			$("#td_heje").html("合计：{$heje}"); 
+			printme(); //打印
+		});
+
+		//打印 
+		function printme(){     
+			window.print();
+			setTimeout(function(){
+				parent.layer.closeAll();
+			},50);
+		} 
+	</script>
+</body>
+</html>

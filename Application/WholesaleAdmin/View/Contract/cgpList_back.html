@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+    <style type="text/css">
+.headcolor2 td{background-color: #404040; border:1px solid #404040;color: #fff;border-left: 1px solid #404040 !important;border-bottom: 1px solid #404040 !important;}
+    table tr:nth-child(even){background-color: #e4e4e4;}
+    .tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;}
+    .tb-style td{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+    .navbar-default {background-color: #fff;}
+    .btn-style-y{background: #59ab76; border:1px solid #3b9f5f;}
+    .btn:hover{color: #fff;}
+    .layui-layer-title{background: #59ab76 !important; color: #fff !important; letter-spacing: 1.5px !important;}
+    .layui-layer-dialog .layui-layer-content{letter-spacing: 1.5px;}
+    .layui-layer-btn .layui-layer-btn0{background: #59ab76 !important; border:1px solid #3b9f5f !important;}
+    .layui-layer-btn a{height: auto !important;line-height: inherit !important;padding: 6px 12px !important;border-radius: 4px !important;}
+    </style>
+</head>
+
+<body>
+    <div class="nav navbar-default">
+        <div class="container-fluid pb10">
+            <div>
+                <h3>客户商品价格列表</h3>
+            </div>
+            <div class="row">
+                <div class="col-md-2 ml15  ">
+                    <span class="fl mt8">客户名称</span>
+                    <span class="nspec-box-spec pr">
+					<select name="c_id" id="c_id" class="ml10 w-120" onchange="selectInput(this)">
+							<option value="">请选择</option>
+							<volist name="result" id="vo">
+								<option value="{$vo.c_id}">{$vo.name}</option>
+							</volist>
+						</select>
+				</span>
+                </div>
+                <div class="col-md-2">
+                    <span class="fl mt8">商品名称</span>
+                    <span class="nspec-box-spec pr">
+						<input type="text" id="txt_wgid" onkeyup="selectSpec(1,this)" data-li-class="select-sreach-list-fl50" name="name" data-name="name" data-layer="1" autocomplete="off"  data-id="wgid" data-page="getGoodsInfoByText" class="select-sreach-input form-control w-120 ml10"/>
+						<!-- <span class="select-sreach-btn" style="top:-6px;"  onclick="selectSpec(2,this)"></span> -->
+                        <ul class="select-sreach-list cf none" title="4" style="width:200px;"></ul>
+                        <input type="hidden" name="wgid" id="wgid" class="hid" />
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <span class="fl mt8 ">单价/元</span>
+                    <input type="text" class="form-control w-115 fl ml10" id="price" name="price" onchange="checkPrice(this)">
+                    <button class="btn btn-style-y ml20" onclick="keeps()">保 存</button>
+                </div>
+            </div>
+            <div class="row">
+                <form action="__SELF__" method="get">
+                    <div class="form-group">
+                        <div class="col-xs-6 col-md-2 ml15">
+                            <span class="fl mt10">客户类型</span>
+                            <select name="ctid" id="ctid" class="ml10 w-120" onclick="clientName()">
+                                <option value="0">全部</option>
+                                <volist name="list_type" id="vo">
+                                    <option value="{$vo.ctid}">{$vo.type_name}</option>
+                                </volist>
+                            </select>
+                        </div>
+                        <div class="col-xs-6 col-md-2">
+                            <span class="fl mt8">客户名称</span>
+                            <select name="c_id" id="c_name" class="ml10 w-120">
+                                <option value='0'>全部</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-6 col-md-3">
+                            <button class="btn btn-style-y" onclick="return checkForm()">搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mt10">
+        <div class="col-xs-12">
+            <table class="tb-style" id="bg">
+                <thead>
+                    <tr class="headcolor2">
+                        <td class="w-80">序号</td>
+                        <td>客户名称</td>
+                        <td>商品标题</td>
+                        <td class="w-100">单价/元</td>
+                        <td class="w-150">操作</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <volist name="list" id="vo">
+                        <tr >
+                            <td class="td_num">{$key+$s_num}</td>
+                            <td>{$vo.cname}</td>
+                            <td>【{$vo.name}-{$vo.unit_name}-{$vo.brand_name}】</td>
+                            <td>{$vo.price}</td>
+                            <td class="text-center" data-id='{$vo.cid}'>
+                                <if condition="analysis_code('P64')">
+                                    <a class="del" href="javascript:;">删除</a>
+                                </if>
+                            </td>
+                        </tr>
+                    </volist>
+                </tbody>
+            </table>
+            <!-- 分页栏 -->
+            <div class="row paging" style="margin: 10px -15px;">
+                <!-- 右边 -->
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right pr">
+                    {$page}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        var ctid ="{$ctid}";
+        if(ctid)
+            $("#ctid").val(ctid);
+        var c_id="{$c_id}";
+        if(c_id)
+            $("#c_name").val(c_id);
+        clientName();
+    });
+    function selectSpec(num, obj) {
+        if (num == 1) {
+            publicSearch.textCall(obj);
+        } else {
+            publicSearch.btnCall(obj);
+        }
+    }
+
+    function checkPrice(obj){
+
+    	var price =obj.value;
+    	if(price){
+    		if(!IsNum(price)){
+    			layer.tips('单价不正确', '#price', {
+	                tips: 1
+	            });
+	            obj.value="";
+	            return false;
+    		}
+    	} 
+    }
+
+    //商品添加
+    function keeps() {
+        var c_id = $("#c_id").val();
+        var wgid = $("#wgid").val();
+        var price = $("#price").val();
+        var txt_cid = $("#txt_cid").val();
+        var txt_wgid = $("#txt_wgid").val();
+        if (!c_id) {
+            layer.tips('请选择客户名称', '#c_id', {
+                tips: 1
+            });
+            return false;
+        }
+        if (!txt_wgid) {
+            layer.tips('请选择商品名称', '#txt_wgid', {
+                tips: 1
+            });
+            return false;
+        }
+        if (!price) {
+            layer.tips('请填写单价', '#price', {
+                tips: 1
+            });
+            return false;
+        }
+        $.ajax({
+            type: "post",
+            url: "__APP__/WholesaleAdmin/Cgp/cgpAdd",
+            data: {
+                c_id: c_id,
+                wgid: wgid,
+                price: price
+            },
+            dataType: "json",
+            success: function(json) { 
+                layer.msg('添加成功');
+                $("#bg tbody").prepend("<tr>" +
+                                        "<td class='td_num'>0</td>" +
+                                        "<td>"+json[0]['cname']+"</td>" +
+                                        "<td>【"+json[0]['name']+"-"+json[0]['unit_name']+"-"+json[0]['brand_name']+"】</td>" +
+                                        "<td>"+json[0]['price']+"</td>" +
+                                        "<td data-id='"+json[0]['cid']+"'><a class='del' href='javascript:;'>删除</a></td>" +
+                                        "</tr>");
+                $('.del').click(function() { 
+                    var _this = this;
+                    var id = $(this).parent().attr('data-id');
+                    layer.confirm('您确定要删除吗？', {
+                        btn: ['确 认'], //按钮
+                        shade: [0.4, '#393D49'] //显示遮罩
+                    }, function() {
+                        $.post("{:U('Cgp/cgpDel')}", {
+                            "cid": id
+                        }, function(data) {
+                            if (data == 0) {
+                                layer.msg('删除成功', {
+                                    icon: 1,
+                                    time: 1000
+                                }, function() {
+                                    $(_this).parent().parent().remove();
+                                });
+                            } else {
+                                layer.msg('删除失败', {
+                                    icon: 2,
+                                    time: 2000
+                                });
+                            }
+                        }, "json");
+                    }, function() {});
+                });
+                $(".td_num").each(function(index,value){
+                	value.innerHTML = parseInt(value.innerHTML)+1;
+                });
+            }
+        });
+    }
+    //删除
+    $('.del').click(function() { 
+        var _this = this;
+        var id = $(this).parent().attr('data-id');
+        layer.confirm('您确定要删除吗？', {
+            btn: ['确 认'], //按钮
+            shade: [0.4, '#393D49'] //显示遮罩
+        }, function() {
+            $.post("{:U('Cgp/cgpDel')}", {
+                "cid": id
+            }, function(data) {
+                if (data == 0) {
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1000
+                    }, function() {
+                        $(_this).parent().parent().remove();
+                    });
+                } else {
+                    layer.msg('删除失败', {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            }, "json");
+        }, function() {});
+    });
+
+    //客户名称
+    function clientName() { 
+        var ctid ="{$ctid}" || $('#ctid').val();
+        if(ctid){
+            $.ajax({
+                type: "post",
+                url: "__APP__/WholesaleAdmin/Cgp/clientName",
+                data: {
+                    ctid: ctid
+                },
+                dataType: "json",
+                success: function(json) {
+                    if (json.length > 0) {
+                        var str = "<option value='0'>全部</option>";
+                        for (var i = 0; i < json.length; i++) {
+                            str += "<option value='" + json[i]['c_id'] + "'>" + json[i]['name'] + "</option>"
+                        }
+                        $("#c_name").html(str);
+                    } else {
+                        $("#c_name").html("<option value='0'>全部</option>");
+                    }
+                }
+            });
+        } 
+    }
+
+    //搜索
+    function checkForm() {
+        var ctid = $("#ctid").val();
+        var c_name = $("#c_name").val();
+        if (!ctid) {
+            layer.tips('请选择客户类型', '#ctid', {
+                tips: 1
+            });
+            return false;
+        }
+        if (!c_name) {
+            layer.tips('请选择客户名称', '#c_name', {
+                tips: 1
+            });
+            return false;
+        }
+    }
+    </script>
+</body>
+
+</html>

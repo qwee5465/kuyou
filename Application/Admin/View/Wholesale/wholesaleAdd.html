@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+    <style type="text/css">
+        form{margin: 0 2.5%;width: 95%;background:#fff;box-shadow:0 0 8px #d6d6d6;}
+        .tips{width: 250px;background: #d0a972;top:0;right: 0;padding-bottom: 2px;}
+        .tips_content{width: 246px;;background: #fff;margin: 0 auto 0 2px;word-wrap: break-word;}
+    </style>
+</head>
+
+<body>
+    <div class="nav navbar-default h-60">
+        <div class="container-fluid">
+            <h3 style="border: none;">新增批发商用户信息</h3>
+        </div>
+    </div>
+    <form action="__SELF__" method="POST" style="margin: 0 2.5%;width: 95%;">
+        <div class="container-fluid mt20 pb20 pr"  style="padding-left:0;padding-right:0;">
+            <div class="mt20">
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <span class="l-title pr">账号/电话:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+							<input type="text" onchange="isPhone(this)" name="phone" id="phone" class="form-control w100" /> 
+                            <input type="hidden" value="0" name="hid_phone" id="hid_phone" />
+						</span>
+                    </div>
+                </div>
+            </div> 
+            <div class="mt20"> 
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-12 col-md-12 bg-gap">
+                        <span class="l-title pr">密码:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+                            <input type="password" name="password" id="password" class="form-control w-200" />   
+                        </span>
+                        <span class="l-title pr">确认密码:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+                            <input type="password" name="password1" id="password1" value="" class="form-control w-200" />  
+                        </span>
+                       
+                    </div>
+                </div>
+            </div>  
+            <div class="mt20"> 
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-4 col-md-4 bg-gap">
+                        <span class="l-title pr">单位名称:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+								<input type="text" name="unit_name" id="unit_name" class="form-control w100" /> 
+						</span>
+                    </div>
+                </div>
+            </div> 
+            <div class="mt20"> 
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-4 col-md-4">
+                        <span class="l-title pr">联系人:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+								<input type="text" name="contacts" id="contacts" class="form-control w100" /> 
+						</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt20">
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-12 col-md-12 bg-gap">
+                        <span class="l-title pr">地址:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+								<select name="pid" onchange="provinceOpt(this)" id="pid" class="w-110 mr20">
+									<option>请选择省份</option>
+									<option>浙江省</option> 
+								</select>
+								<select name="cid" id="cid" onchange="cityOpt(this)"  class="w-110 mr20">
+									<option>请选择城市</option>
+									<option>杭州市</option> 
+								</select>
+								<select name="did" id="did"  class="w-110 mr20">
+									<option>请选择县区</option>
+									<option>西湖区</option> 
+								</select> 
+						</span>
+						<span class="l-title pr">街道信息:<strong class="pa l-titl-star">*</strong></span>
+                        <span class="fl">
+								<input type="text" name="street" id="street" class="form-control w-200" /> 
+						</span>
+                    </div>  
+                </div>
+            </div>  
+            <div class="mt20">
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <span class="l-title pr">备注:</span>
+                        <span class="fl">
+    						<textarea class="form-control w-300" name="remark" id="remark"></textarea>
+    					</span>
+                    </div> 
+                </div>
+            </div>  
+            <div class="mt20">
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-12 col-md-12 bg-gap">
+                        <span class="l-title pr">用户角色:</span>
+                        <span class="fl">
+                            <select name="rid" id="rid" class="mr20">
+                                <option value="">请选择角色</option>
+                                <volist name="rlist" id="v">
+                                    <option value="{$v.rid}">{$v.name}</option> 
+                                </volist>
+                            </select>
+                        </span>
+                    </div> 
+                </div>
+            </div>
+            <div style="height:40px;"></div>
+            <div class="mt20 bottom-style">
+                <div class="form-group" style="margin-left:30%;padding-top:15px;">
+                        <input type="submit" onclick="return checkForm();" value="保存" class="h-40 w-100 preserve" />
+                        <a href="javascript:window.history.go(-1)" class="btn w-100 h-40 return">返回</a>
+                </div>
+            </div>
+            <div class="pa tips">
+                <p class="fs-16 text-center h-40 lh-40" style="color:#b35800;">温馨提示</p>
+                <div class="pa tips">
+                    <p class="fs-16 text-center h-40 lh-40" style="color:#b35800;">温馨提示</p>
+                    <div class="tips_content fs-14">
+                        <div class="p10">*为了提供更好的服务，请认真填写资料</div>
+                        <div class="p10">*另：凡是带有“谨慎操作”提示的选项，非管理员授权的情况下，一律不允许添加。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+     <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/area.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script> 
+    <script type="text/javascript">
+    	$(function(){
+             var area = _dataArea; //地址json对象
+             var pstr = '<option value="">请选择省份</option>';
+             var cstr = '<option value="">请选择城市</option>';
+             var dstr = '<option value="">请选择县区</option>';
+             for(var i=0;i<area.length;i++){
+             	pstr += '<option value="'+i+'">'+area[i].name+'</option>';
+             }
+             $('#pid').html(pstr); 
+    	});
+    	//省份选择事件
+    	function provinceOpt(obj){ 
+    		//根据val查询城市信息 
+    		var city = _dataArea[obj.value].son; //城市json
+    		var cstr ="<option value=''>请选择城市</option>";
+    		for(var i=0;i<city.length;i++){
+    			cstr += '<option  value="'+i+'">'+city[i].name+'</option>'; 
+    		}
+    		$('#cid').html(cstr); 
+    	}
+    	//城市选择事件
+    	function cityOpt(obj){
+    		var pid_value = $("#pid").val();
+    		var district = _dataArea[pid_value].son[obj.value].son; //城市json
+    		var dstr ="<option value=''>请选择城市</option>";
+    		for(var i=0;i<district.length;i++){
+    			dstr += '<option  value="'+i+'">'+district[i].name+'</option>'; 
+    		}
+    		$('#did').html(dstr); 
+    	}
+        //判断账号是否存在
+        function isPhone(obj){
+            var phone = obj.value;
+            if(IsPhone(phone)){
+                $.post("{:U('Wholesale/isPhone')}", { "phone": phone},function(data){
+                    if(data == 0){
+                        layer.tips('账号已存在', '#phone', {tips: 1}); 
+                    }else{
+                        $("#hid_phone").val(1);
+                    }
+                }, "json");
+            } 
+        }
+    	//表单验证
+    	function checkForm(){
+            var phone =$('#phone').val();
+            var hid_phone = $("#hid_phone").val(); 
+            var password =$('#password').val();
+            var password1 =$('#password1').val();
+    		var unit_name =$('#unit_name').val();
+    		var contacts =$('#contacts').val();
+    		var pid =$('#pid').val();
+    		var cid =$('#cid').val();
+    		var did =$('#did').val();
+            var street =$('#street').val();
+            var rid =$('#rid').val();
+            if(!phone){
+                layer.tips('请填写手机号码', '#phone', {tips: 1}); 
+                return false;
+            } 
+            if(!IsPhone(phone)){
+                layer.tips('格式不正确', '#phone', {tips: 1}); 
+                return false;
+            }
+            if(hid_phone!=1){ 
+                layer.tips('该账号\手机已存在，请更换.', '#phone', {tips: 1}); 
+                return false; 
+            }
+            if(!password){
+                layer.tips('请填写密码', '#password', {tips: 1}); 
+                return false;
+            }
+            if(!password1){
+                layer.tips('请填写确认密码', '#password1', {tips: 1}); 
+                return false;
+            }
+            if(password != password1){
+                layer.tips('两次密码不同', '#password1', {tips: 1}); 
+                return false;
+            }
+            if(password.length<6){
+                layer.tips('密码必需大于6位数', '#password', {tips: 1}); 
+                return false;
+            }
+    		if(!unit_name){
+    			layer.tips('请填写单位名称', '#unit_name', {tips: 1}); 
+    			return false;
+    		}
+    		if(!contacts){
+    			layer.tips('请填写联系人', '#contacts', {tips: 1}); 
+    			return false;
+    		}
+    		if(!pid){
+    			layer.tips('请选择省份', '#pid', {tips: 1}); 
+    			return false;
+    		}
+    		if(!cid){
+    			layer.tips('请选择城市', '#cid', {tips: 1}); 
+    			return false;
+    		}
+    		if(!did){
+    			layer.tips('请选择县区', '#did', {tips: 1}); 
+    			return false;
+    		}
+            if(!street){
+                layer.tips('请填写详情', '#street', {tips: 1}); 
+                return false;
+            }
+            if(!rid){
+                layer.tips('请选择角色', '#rid', {tips: 1}); 
+                return false;
+            }
+    		return true; 
+    	}
+
+        // $('.del').click(function(){
+        //     var _this =this;
+        //     var id =$(this).parent().attr('data-id');
+        //     layer.confirm('您确定要删除吗？', {
+        //         btn: ['确认','取消'], //按钮
+        //         shade: [0.4, '#393D49'] //显示遮罩
+        //     }, function(){ 
+        //          $.post("{:U('Power/powerDel')}", { "pid": id},function(data){
+        //             if(data == 0){
+        //                 layer.msg('删除成功', { icon: 1, time: 1000 }, function(){
+        //                         $(_this).parent().parent().remove();
+        //                     });
+        //             }else{
+        //                 layer.msg('删除失败', {icon: 2, time: 2000 }); 
+        //             }
+        //         }, "json");
+        //     },function(){
+        //     }); 
+        // });
+        // //编辑按钮
+        // $('.edit').click(function(){
+        //     var id =$(this).parent().attr('data-id');
+        //     layer.open({
+        //         type: 2,
+        //         closeBtn: 2,
+        //         area: ['400px', '340px'],
+        //         title: '编辑权限',
+        //         content: './powerEdit.html?pid='+id
+        //     });
+        // }); 
+		
+    </script>
+</body>
+
+</html>

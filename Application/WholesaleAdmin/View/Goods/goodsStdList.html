@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+</head>
+<body>
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>商品标准库</h3>
+			<div class="col-xs-12 col-md-3 _ml15">
+				<form class="navbar-form" action="" method="post">
+					<div class="form-group has-feedback">
+						<label class="sr-only" for="kw">搜索</label>
+						<input id="search" class="form-control w-300" placeholder="搜索..."  name="search" type="text">
+						<span class="glyphicon glyphicon-search form-control-feedback search-style"></span>
+						<input type="submit" name="" value="" class="search">
+					</div>
+				</form>
+			</div>
+			<div class="col-xs-6 col-md-1 col-md-offset-7 mt10">
+				<button class="btn btn-style" id="full_import">导入</button>
+			</div>	
+			<div class="col-xs-6 col-md-1 mt10">
+				<button class="btn btn-style" id="one_import">全部导入</button>
+			</div>	
+		</div>
+	</div>
+	<div class="container-fluid mt20">
+		<div class="col-xs-12">
+			<table class="tb-style">
+				<thead>
+				<tr>
+					<td>
+						<div class="w-60" style="margin:0 auto;">
+							<input type="checkbox" name="cbAll" id="cbAll" class="fl h-15 w-15">
+							<span class="fl sp-s-p"> 编号</span>
+						</div>
+					</td>
+					<td>商品类型名称</td>
+					<td>商品名称</td>
+					<td>图片</td>
+					<td>品牌</td>
+					<td>进价(元)</td>
+					<td>单位</td>
+					<td>录入时间</td>
+					<td>操作</td>
+				</tr>
+				</thead>
+				<tbody>
+					<foreach name="data" item="vo">
+						<tr>
+							<td>
+								<div class="w-60" style="margin:0 auto;">
+									<input type="checkbox" value="{$vo.gid}" name="cbid" id="cbid" class="fl h-15 w-15" />
+									<span class="fl sp-s-p"> {$key + $p}</span>
+								</div>
+							</td>
+							<td>{$vo.type_name}</td>
+							<td>{$vo.name}</td>
+							<td><img src="__PUBLIC__{$vo.pic}" class="list-img" /></td>
+							<td>{$vo.brand_name}</td>
+							<td>{$vo.price}</td>
+							<td>{$vo.unit_name}</td>
+							<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+							<td data-id="{$vo.gid}"> 
+								<if condition="$vo.wgid eq null">
+									<a class="import" href="javascript:;">导入</a>
+								</if>
+							</td>
+						</tr>
+					</foreach>
+				</tbody>
+			</table>
+			<!-- 分页栏 -->
+			<div class="row paging" style="margin: 10px -15px;">
+				<!-- 右边 -->
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right pr">
+					{$page}
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#search").val('{$search}');
+			// 数据设置事件
+			$(".data").click(function() {
+				$(".data-setting").show();
+				$(".mask").show();
+				$("body").addClass("active");
+			});
+			// 数据列表设置取消
+			$(".cancel").click(function() {
+				$(".data-setting").hide();
+				$(".mask").hide();
+				$("body").removeClass("active");
+			});
+			// 数据设置顶部导航
+			$(".nav-top-li").click(function() {
+				$(this).addClass("active").siblings().removeClass("active");
+				$(this).children(".triangle").show().end().siblings().children(".triangle").hide();
+				$(".wrap").children().eq($(this).index()).show().siblings().hide();
+			});
+
+		});
+
+		//导入
+		$('.import').click(function() {
+			var _this = this;
+			var id = $(this).parent().attr('data-id');
+			layer.confirm('确定要导入吗？', {
+				btn: ['确认'], //按钮
+				shade: [0.4, '#393D49'] //显示遮罩
+			}, function() {
+				$.post("{:U('Goods/goodsStdAdd')}", {
+					"gid": id
+				}, function(data) {
+					if (data == 0) {
+						layer.msg('导入成功', {
+							icon: 1,
+							time: 1000
+						}, function() {
+							$(_this).parent().parent().remove();
+						});
+					} else {
+						layer.msg('导入失败', {
+							icon: 2,
+							time: 2000
+						});
+					}
+				}, "json");
+			}, function() {});
+		});
+
+		$('#cbAll').click(function() {
+			var _this = this;
+			$("[name='cbid']").each(function(index, value) {
+				value.checked = _this.checked;
+			});
+		});
+
+		//导入多商品
+		$('#full_import').click(function() {
+			layer.confirm('确定要导入吗？', {
+				btn: ['确认'], //按钮
+				shade: [0.4, '#393D49'] //显示遮罩
+			}, function() {
+				$("[name='cbid']").each(function(index,value){
+					if(value.checked){
+						$.post("{:U('Goods/goodsStdAdd')}", {"gid": value.value}, function(data) {
+							if (data == 0) {
+								layer.msg('导入成功', {
+									icon: 1,
+									time: 1000
+								}, function() {
+									$(value).parent().parent().parent().remove();
+								});
+							} else {
+								layer.msg(data, {
+									icon: 2,
+									time: 2000
+								});
+							}
+						}, "json");
+					}
+				});
+			}, function() {
+
+			});
+		});
+
+		//一键导入
+		$('#one_import').click(function() {
+			layer.confirm('确定要导入吗？', {
+				btn: ['确认'], //按钮
+				shade: [0.4, '#393D49'] //显示遮罩
+			}, function() { 
+				$.post("{:U('Goods/goodsImportAll')}", {}, function(data) {
+					if (data.resultcode == 0) { 
+						layer.msg('导入成功', {
+							icon: 1,
+							time: 1000
+						}, function() {
+							location.reload();
+						});
+					} else {
+						layer.msg('已全部导入，不需要继续导入.', {
+							icon: 2,
+							time: 2000
+						});
+					}
+				}, "json"); 
+			}, function() {
+
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+     <style type="text/css">
+        form{margin: 0 2.5%;width: 95%;background:#fff;box-shadow:0 0 8px #d6d6d6;}
+        .tips{width: 250px;background: #d0a972;top:0;right: 0;padding-bottom: 2px;}
+        .tips_content{width: 246px;;background: #fff;margin: 0 auto 0 2px;word-wrap: break-word;}
+    </style>
+</head>
+
+<body>
+    <div class="nav navbar-default h-60">
+        <div class="container-fluid">
+            <h3 style="border: none;">编辑平台用户信息</h3>
+        </div>
+    </div>
+    <form action="__SELF__" method="POST" style="margin: 0 2.5%;width: 95%;">
+        <div class="container-fluid mt20 pb20 pr"  style="padding-left:0;padding-right:0;">
+            <div class="mt20">
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <span class="l-title pr">账号:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+                                <input type="text" onchange="check_Login()" name="login_id" id="login_id" class="form-control w100" /> 
+                            </span>
+                    </div>
+                </div>
+            </div> 
+            <div class="mt20"> 
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-4 col-md-4 bg-gap">
+                        <span class="l-title pr">姓名:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+                                <input type="text" name="name" id="name" class="form-control w100" /> 
+                        </span>
+                    </div>
+                </div>
+            </div> 
+            <div class="mt20"> 
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-4 col-md-4">
+                        <span class="l-title pr">电话:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+                                <input type="text" name="tel" id="tel" class="form-control w100" /> 
+                        </span>
+                    </div>
+                </div>
+            </div>  
+            <div class="mt20"> 
+                <div class="form-group mb20 cf">
+                    <div class="col-xs-12 col-sm-4 col-md-4 bg-gap">
+                        <span class="l-title pr">设置角色:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+                            <select name="rid" id="rid">
+                                <foreach name="list" item="vo">
+                                    <option value="{$vo.rid}">{$vo.name}</option>
+                                </foreach>
+                            </select>   
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt20 bottom-style">
+                <div class="form-group" style="margin-left:30%;padding-top:15px;">
+                        <input type="submit" onclick="return checkForm();" value="保存" class="h-40 w-100 preserve" />
+                        <a href="javascript:window.history.go(-1)" class="btn w-100 h-40 return">返回</a>
+                </div>
+            </div>
+            <div class="pa tips">
+                <p class="fs-16 text-center h-40 lh-40" style="color:#b35800;">温馨提示</p>
+                <div class="pa tips">
+                    <p class="fs-16 text-center h-40 lh-40" style="color:#b35800;">温馨提示</p>
+                    <div class="tips_content fs-14">
+                        <div class="p10">*为了提供更好的服务，请认真填写资料</div>
+                        <div class="p10">*另：凡是带有“谨慎操作”提示的选项，非管理员授权的情况下，一律不允许添加。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+     <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/area.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script> 
+    <script type="text/javascript"> 
+
+        //表单验证
+        function checkForm(){
+            var login_id =$('#login_id').val();
+            var name =$('#name').val();
+            var tel =$('#tel').val();  
+            if(!login_id){
+                layer.tips('请填写账号', '#login_id', {tips: 1}); 
+                return false;
+            }
+            if(!name){
+                layer.tips('请填写姓名', '#name', {tips: 1}); 
+                return false;
+            }
+            if(!tel){
+                layer.tips('请填写电话', '#tel', {tips: 1}); 
+                return false;
+            } 
+            return true; 
+        } 
+        function check_Login(){
+            var login_id = $('#login_id');
+             $.post("{:U('Admin/check_Login')}", { "login_id": login_id.val()},function(data){
+                if(data == 0){
+                    layer.tips('账号已存在', '#login_id', {tips: 1}); 
+                    login_id.val('');
+                }
+            }, "json");
+        }
+        
+    </script>
+</body>
+
+</html>

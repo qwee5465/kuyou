@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+</head>
+<body>
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>日销售明细</h3>
+			<div>
+				<form>
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-6 col-md-2">
+								<span class="fl mt8">日期</span>
+								<input type="text" name="" id="date" class="form-control w-130 fl ml25">
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl ml14 mt8">仓库</span>
+								<input type="text" name="" class="form-control w-120 fl ml10">
+							</div>
+						</div>
+					</div>
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-6 col-md-2">
+								<span class="fl mt8">商品类别</span>
+								<select class="w-115 fl ml14"></select>
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl mt8">商品名</span>
+								<input type="text" name="" class="form-control w-120 fl ml10">
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl mt8">供应商</span>
+								<input type="text" name="" class="form-control w-120 fl ml15">
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<button class="btn w-120 btn-style">数据列设置</button>
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<button class="btn w-120 h-50 btn-style" style="line-height:40px;margin-top:-10px;">查询</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>	
+		</div>
+	</div>
+	<div class="container-fluid">
+		<div class="col-xs-12 mt20">
+			<table class="tb-style">
+				<thead>
+					<tr>
+						<td colspan="16">出库单据记录明细表</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 行号</span>
+							</div>
+						</td>
+						<td>商品名称</td>
+						<td>净重数量</td>
+						<td>默认单位</td>
+						<td>单价比</td>
+						<td>价格</td>
+						<td>货损</td>
+						<td>总金额</td>
+						<td>规格2数量</td>
+						<td>规格2</td>
+						<td>规格3数量</td>
+						<td>规格3</td>
+						<td>规格4数量</td>
+						<td>规格4</td>
+						<td>客户名称</td>
+						<td>备注</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 1</span>
+							</div>
+						</td>
+						<td>蔬菜</td>
+						<td>1</td>
+						<td>斤</td>
+						<td>66</td>
+						<td>1</td>
+						<td>1</td>
+						<td>66</td>
+						<td>20</td>
+						<td>袋</td>
+						<td>20</td>
+						<td>件</td>
+						<td>20</td>
+						<td>箱</td>
+						<td>xxx</td>
+						<td>要鲜的</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 2</span>
+							</div>
+						</td>
+						<td>蔬菜</td>
+						<td>1</td>
+						<td>斤</td>
+						<td>66</td>
+						<td>1</td>
+						<td>1</td>
+						<td>66</td>
+						<td>20</td>
+						<td>袋</td>
+						<td>20</td>
+						<td>件</td>
+						<td>20</td>
+						<td>箱</td>
+						<td>xxx</td>
+						<td>要鲜的</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+
+
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript">
+		laydate({
+
+            elem: '#date'
+
+        });
+	</script>
+</body>
+</html>

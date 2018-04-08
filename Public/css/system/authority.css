@@ -1,0 +1,6 @@
+body{overflow:auto;background-color:#eee;}
+h3{font-size: 20px;color: #585858;padding-left: 15px;margin-top: -5px;width: 100%;height: 60px;background-color: #fff;line-height: 60px;}
+.front_mg{height: 50px;background-color: #f5f5f5;width: 99%;padding-top: 15px;margin-top: 10px;}
+.content_mg{width: 99%;height: 270px;background-color: #fff;margin-top: 20px;padding-top: 15px;}
+.user_mg{width: 99%;height: 370px;background-color: #fff;margin-top: 20px;padding-top: 15px;}
+.user_mg li{margin-top: 10px;}

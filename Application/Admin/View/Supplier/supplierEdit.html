@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		form{margin: 0 2.5%;width: 95%;background:#fff;box-shadow:0 0 8px #d6d6d6;}
+		.tips{width: 250px;background: #d0a972;top:0;right: 0;padding-bottom: 2px;}
+		.tips_content{width: 246px;;background: #fff;margin: 0 auto 0 2px;word-wrap: break-word;}
+	</style>
+</head>
+
+<body>
+<div class="nav navbar-default h-60">
+	<div class="container-fluid">
+		<h3 style="border:none">编辑供应商</h3>
+	</div>
+</div>
+<form action="__SELF__" method="post">
+	<div class="container-fluid mt20 pb20 mb60 pr" style="padding-left:0;padding-right:0;">
+		<div class="mt20">
+			<div class="form-group mb20 cf">
+				<div class="col-xs-12 col-sm-6 col-md-6">
+					<span class="l-title pr">供应商名称:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+								<input type="text" name="name" id="name" value="{$list.name}" class="form-control w100"  />
+						</span>
+				</div>
+			</div>
+		</div>
+		<div class="mt20">
+			<div class="form-group mb20 cf">
+				<div class="col-xs-12 col-sm-6 col-md-6 bg-gap">
+					<span class="l-title pr">电话:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+								<input type="text" name="phone" id="phone" value="{$list.phone}"  class="form-control w100"
+									   onchange="supplierVerify()" />
+							</span>
+				</div>
+			</div>
+		</div>
+		<div class="mt20">
+			<div class="form-group mb20 cf">
+				<div class="col-xs-12 col-sm-4 col-md-4">
+					<span class="l-title pr">供应商类型:<strong class="l-titl-star">*</strong></span>
+					<select class="f1 w-110" name="stid" id="stid">
+						<volist name="list_type" id="vo">
+							<option value="{$vo.stid}">{$vo.type_name}</option>
+						</volist>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="mt20">
+			<div class="form-group mb20 cf">
+				<div class="col-xs-12 col-sm-12 col-md-12 bg-gap">
+					<span class="l-title pr">地址:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+								<select name="pid" onchange="provinceOpt(this)" id="pid" class="w-110 mr20">
+									<option>请选择省份</option>
+									<option>浙江省</option>
+								</select>
+								<select name="cid" id="cid" onchange="cityOpt(this)"  class="w-110 mr20">
+									<option>请选择城市</option>
+									<option>杭州市</option>
+								</select>
+								<select name="did" id="did"  class="w-110 mr20">
+									<option>请选择县区</option>
+									<option>西湖区</option>
+								</select>
+						</span>
+					<span class="l-title pr">街道信息:<strong class="l-titl-star">*</strong></span>
+                        <span class="fl">
+								<input type="text" name="street" id="street" value="{$list.street}" class="form-control w-200" />
+						</span>
+				</div>
+			</div>
+		</div>
+		<div class="mt20">
+			<div class="col-xs-12 col-sm-12 col-md-12">
+				<span class="l-title pr">备注:</span>
+                        <span class="fl">
+							<textarea class="form-control w-300" name="remark" id="remark">{$list.remark}</textarea>
+						</span>
+			</div>
+		</div>
+		<div class="mt20 bottom-style">
+			<div class="form-group" style="margin-left:30%;padding-top:15px;">
+				<input type="submit" onclick="return checkForm();" value="保存" class="h-40 w-100 preserve" />
+				<a href="javascript:window.history.go(-1)" class="btn w-100 h-40 return">返回</a>
+			</div>
+		</div>
+		<div class="pa tips">
+			<p class="fs-16 text-center h-40 lh-40" style="color:#b35800;">温馨提示</p>
+			<div class="pa tips">
+				<p class="fs-16 text-center h-40 lh-40" style="color:#b35800;">温馨提示</p>
+				<div class="tips_content fs-14">
+					<div class="p10">*为了提供更好的服务，请认真填写资料</div>
+					<div class="p10">*另：凡是带有“谨慎操作”提示的选项，非管理员授权的情况下，一律不允许添加。</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/area.js"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var area = _dataArea; //地址json对象
+		var pstr = '',cstr = '',dstr = '';
+		for (var i = 0; i < area.length; i++) {
+			pstr += '<option value="' + i + '">' + area[i].name + '</option>';
+		}
+		$('#pid').html(pstr);
+		var pid = {$list.pid};
+		var cid = {$list.cid};
+		var did = {$list.did};
+		$('#pid').val(pid);
+		var city = _dataArea[pid].son;
+		for (var i = 0; i < city.length; i++) {
+			cstr += '<option value="' + i + '">' + city[i].name + '</option>';
+		}
+		$('#cid').html(cstr);
+		$('#cid').val(cid);
+		var district = _dataArea[pid].son[cid].son;
+		for (var i = 0; i < district.length; i++) {
+			dstr += '<option value="' + i + '">' + district[i].name + '</option>';
+		}
+		$('#did').html(dstr);
+		$('#did').val(did);
+	});
+	//省份选择事件
+	function provinceOpt(obj) {
+		//根据val查询城市信息
+		var city = _dataArea[obj.value].son; //城市json
+		var cstr = "";
+		for (var i = 0; i < city.length; i++) {
+			cstr += '<option  value="' + i + '">' + city[i].name + '</option>';
+		}
+		$('#cid').html(cstr);
+		cityOpt(0);
+	}
+	//城市选择事件
+	function cityOpt(obj) {
+		var pid_value = $("#pid").val();
+		var val = (obj == 0) ? 0 : obj.value;
+		var district = _dataArea[pid_value].son[val].son; //城市json
+		var dstr = "";
+		for (var i = 0; i < district.length; i++) {
+			dstr += '<option  value="' + i + '">' + district[i].name + '</option>';
+		}
+		$('#did').html(dstr);
+	}
+	//表单验证
+	function checkForm(){
+		var phone =$('#phone').val();
+		var name =$('#name').val();
+		var pid =$('#pid').val();
+		var cid =$('#cid').val();
+		var did =$('#did').val();
+		var street =$('#street').val();
+		if(!phone){
+			layer.tips('请填写手机号码', '#phone', {tips: 1});
+			return false;
+		}
+		if(!name){
+			layer.tips('请填写单位名称', '#name', {tips: 1});
+			return false;
+		}
+		if(!pid){
+			layer.tips('请选择省份', '#pid', {tips: 1});
+			return false;
+		}
+		if(!cid){
+			layer.tips('请选择城市', '#cid', {tips: 1});
+			return false;
+		}
+		if(!did){
+			layer.tips('请选择县区', '#did', {tips: 1});
+			return false;
+		}
+		if(!street){
+			layer.tips('请填写详情', '#street', {tips: 1});
+			return false;
+		}
+		return true;
+	}
+
+	$('#stid').val('{$list.stid}');
+
+	//验证电话
+	function supplierVerify(){
+		var phone = $('#phone');
+		$.post("{:U('Supplier/supplierVerify')}", { "phone": phone.val()},function(data){
+			if(data == 0){
+				layer.tips('电话已存在', '#phone', {tips: 1});
+				phone.val('');
+			}
+		}, "json");
+	}
+</script>
+</body>
+
+</html>

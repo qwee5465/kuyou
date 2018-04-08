@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}分拣核对单</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		#body_content{ }
+		.t-caption{text-align: center; color: #000;} 
+		.tb-style{width:99%;margin:auto;font-size:18px;font-weight: 100 !important;}
+		.tb-style td,.tb-style th{border: 1px solid #000;height: 40px; text-align: center;   border-bottom: 1px solid #000;font-weight: 300;}
+		.print-h3{border: none; padding-bottom: 0; margin-top: 0px;text-align: center;font-weight:400;}
+		.code-tr td{min-width:35px;}
+		.tt-table .code-tr td{border-top:none;}
+		.tt-table .num-tr td{border-bottom:none;}
+		.rbnone{border-right:none !important;}
+		.page-next{page-break-after:always;}
+	</style>
+</head>
+<body>
+<div id="body_content"> 
+	<div class="container-fluid"> 
+		<div id="divPrint">
+			<table class="tb-style t-table">
+				<caption class="t-caption" ><input type="text" id="tcaption" style="background: none;border: none;text-align: center; letter-spacing: 1.5px;" value="{$tcaption}" /></caption>
+				<thead id="thead">
+					
+				</thead>
+				<tbody id="tbody"> 
+					 
+				</tbody>
+			</table>
+		</div> 
+	</div>
+</div>
+
+
+
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript"> 
+		//页面加载时
+		$(function(){ 
+			 getSortingCheckInfo();
+		});
+
+		//请求数据 并渲染到页面中
+		function getSortingCheckInfo(){
+			var create_time = "{$create_time}",  
+        		ctid = "{$ctid}",
+        		machining = "{$machining}",
+        		gtid = "{$gtid}",
+        		gtid1 = "{$gtid1}",
+        		gtid2 = "{$gtid2}";
+
+        	var url ="{:U('Purchase/getSortingCheckInfo')}";
+        	data ={
+        		create_time:create_time, 
+        		machining:machining,
+        		gtid:gtid,
+        		gtid1:gtid1,
+        		gtid2:gtid2,
+        		ctid:ctid 
+        	}; 
+        	$.ajax({
+	            type: "POST",
+	            url: url,
+	            data: data,
+	            dataType: "json",
+	            success: function(data){
+            		$("#hid_json").val(JSON.stringify(data));
+            		//拼接表头  
+            		var header="<tr><th>品名\\客户</th>"; 
+            		var clist = data.clist;
+            		for(var i=0;i<clist.length;i++){
+            			header+="<th id='th_"+clist[i].c_id+"'>"+clist[i].code+"</th>";
+            		}
+            		header +="</tr>";
+            		$("#thead").html(header);
+            		//内容拼接
+            		var str ="";
+            		var list = data.data;
+            		var temp ="";
+            		var k=0;//用于识别td
+            		for(var i=0;i<list.length;i++){
+            			//当第一次循环时或者当前商品名称和上一次商品名称不同时
+            			if(i==0 || temp!=list[i].gname){
+            				str +="<tr><td>"+list[i].gname+"</td>";
+            				//表格先放好
+	            			for(var j=0;j<clist.length;j++){ 
+            					str +="<td id='td_"+k+"'>&nbsp;</td>"; 
+            					k++;
+	            			}
+            			}  
+            			//当前循环次数为最后一次或当前品名和上一次品名不相同就结束本行
+            			if(i==list.length-1 || temp!=list[i].gname){
+            				str+="</tr>";  
+            			}
+            		}
+            		$("#tbody").html(str);
+            		k=0;
+            		var system_param = data.system_param; 
+            		for(var i=0;i<list.length;i++){ 
+            			for(var j=0;j<clist.length;j++){ 
+            				if(clist[j].c_id==list[i].c_id){
+            					//单位转换 
+            					switch(system_param.param_is_convert_unit){
+            						case "0":
+            							$("#td_"+k).html(parseFloat(list[i].num)+list[i].uname);
+            							break;
+            						case "1":
+            							if(list[i].uname=="公斤"){
+            								$("#td_"+k).html(parseFloat(list[i].num*2)+"斤");
+            							}else{
+            								$("#td_"+k).html(parseFloat(list[i].num)+list[i].uname);
+            							}
+            							break;
+            						case "1":
+            							if(list[i].uname=="斤"){
+            								$("#td_"+k).html(parseFloat(list[i].num/2)+"斤");
+            							}else{
+            								$("#td_"+k).html(parseFloat(list[i].num)+list[i].uname);
+            							}
+            							break;
+            					} 
+            				}
+            				k++;
+            			}  
+            		} 
+            		window.print(); 
+					setTimeout(function(){
+						parent.layer.closeAll();
+					},50);
+	            }
+	         });
+
+		}
+	</script>
+</body>
+</html>

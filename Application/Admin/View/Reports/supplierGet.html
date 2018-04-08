@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+</head>
+<body>
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>供应商所得</h3>
+			<div>
+				<form>
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-6 col-md-2">
+								<span class="fl mt8">日期 从</span>
+								<input type="text" name="" id="date1" class="form-control w-115 fl ml23">
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl ml28 mt8">到</span>
+								<input type="text" name="" id="date2" class="form-control w-120 fl ml10">
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl ml14 mt8">仓库</span>
+								<input type="text" name="" class="form-control w-120 fl ml14">
+							</div>
+						</div>
+					</div>
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-6 col-md-2">
+								<span class="fl mt8">商品类别</span>
+								<select class="w-115 fl ml14"></select>
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl mt8">商品名</span>
+								<input type="text" name="" class="form-control w-120 fl ml10">
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl mt8">供应商</span>
+								<input type="text" name="" class="form-control w-120 fl ml15">
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<button class="btn w-120 btn-style">数据列设置</button>
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<button class="btn w-120 h-50 btn-style" style="line-height:40px;margin-top:-10px;">查询</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>	
+		</div>
+	</div>
+	<div class="contianer-fluid mt20">
+		<div class="col-xs-12 col-md-8 ml15">
+			<table class="tb-style">
+				<thead>
+					<tr>
+						<td colspan="10">供应商所得</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 行号</span>
+							</div>
+						</td>
+						<td>商品名称</td>
+						<td>商品数量</td>
+						<td>商品单位</td>
+						<td>总金额</td>
+						<td>货损</td>
+						<td>卸车费</td>
+						<td>代理费</td>
+						<td>运费</td>
+						<td>供应商所得</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 1</span>
+							</div>
+						</td>
+						<td>白菜</td>
+						<td>斤</td>
+						<td>200</td>
+						<td>240</td>
+						<td>1.2</td>
+						<td>20</td>
+						<td>30</td>
+						<td>10</td>
+						<td>2000</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 2</span>
+							</div>
+						</td>
+						<td>白菜</td>
+						<td>斤</td>
+						<td>200</td>
+						<td>240</td>
+						<td>1.2</td>
+						<td>20</td>
+						<td>30</td>
+						<td>10</td>
+						<td>2000</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 3</span>
+							</div>
+						</td>
+						<td>白菜</td>
+						<td>斤</td>
+						<td>200</td>
+						<td>240</td>
+						<td>1.2</td>
+						<td>20</td>
+						<td>30</td>
+						<td>10</td>
+						<td>2000</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 4</span>
+							</div>
+						</td>
+						<td>白菜</td>
+						<td>斤</td>
+						<td>200</td>
+						<td>240</td>
+						<td>1.2</td>
+						<td>20</td>
+						<td>30</td>
+						<td>10</td>
+						<td>2000</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-xs-12 col-md-2">
+			<button class="btn w-100 btn-style">打印</button>
+		</div>
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript">
+		laydate({
+
+            elem: '#date1'
+
+        });
+        laydate({
+
+            elem: '#date2'
+
+        });
+	</script>
+</body>
+</html>

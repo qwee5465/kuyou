@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+</head>
+<body>
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>入库单</h3>
+			<div>
+				<form action="__SELF__" method="post">
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-6 col-md-4">
+								<span class="fl mt8">日期 从</span>
+								<input type="text" name="stime" value="{$stime}" id="date1" class="form-control w-115 fl ml10">
+								<span class="fl ml28 mt8">到</span>
+								<input type="text" name="etime" value="{$etime}" id="date2" class="form-control w-120 fl ml10">
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl ml14 mt8">客户</span>
+								<select name="cid" id="cid" class="ml23 w-100">
+									<option value="">请选择客户</option>
+									<volist name="clist" id="vo">
+										<option value="{$vo.c_id}">{$vo.name}</option> 
+									</volist>
+								</select>
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl ml14 mt8">操作员</span>
+								<input type="text" name="" class="form-control w-100 fl ml10">
+							</div>
+						</div>
+					</div>
+					<div class="form-group ml15">
+						<div class="row"> 
+							<div class="col-xs-6 col-md-4">
+								<span class="fl mt8">出库单据号</span>
+								<input type="text" name="osid" value="{$osid}" class="form-control w-200 fl ml15">
+							</div>
+							<div class="col-xs-6 col-md-2">
+								<span class="fl mt8">审核状态</span>
+								<select name="status" id="status" class=" w-100 fl ml10">
+									<option value="">全部</option>
+									<option value="0">未审核</option>
+									<option value="1">审核</option>
+								</select>
+							</div>
+							<div class="col-xs-12 col-md-2 col-md-offset-2">
+								<button class="btn btn-style w-100 h-40" style="line-height:30px;margin-top:-10px;">查询</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>	
+		</div>
+	</div>
+	<div class="container-fluid mt20">
+		<div class="col-xs-12">
+			<table class="tb-style">
+				<thead>
+					<tr>
+						<td colspan="7">入库单据表</td>
+					</tr>
+					<tr>
+						<td>行号</td>
+						<td>出库单据号</td>
+						<td>客户名称</td> 
+						<td>录入时间</td>
+						<td>审核状态</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="list" id="vo">
+					<tr>
+						<td>{$key+1}</td>
+						<td data-id="{$vo.osid}"><a href="javascript:;"  class="t_open">{$vo.osid}</a></td>
+						<td>{$vo.cname}</td>
+						<!-- <td>默认仓库</td> -->
+						<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+						<td>{$vo.status|getStatus}</td>
+						<td> 
+						</td>
+					</tr> 
+					</volist>
+				</tbody>
+			</table>
+		</div> 
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		laydate({
+
+            elem: '#date1'
+
+        });
+        laydate({
+
+            elem: '#date2'
+
+        });
+        //文档加载完成
+        $(function(){
+        	$("#status").val("{$status}");
+        	$("#cid").val("{$cid}");
+        });
+
+        // 滚动条事件-导航栏
+		window.onscroll=function(){
+			var t =document.documentElement.scrollTop||document.body.scrollTop;
+			if(t>170){
+				$(".btn-list").addClass("active");
+			}else{
+				$(".btn-list").removeClass("active");
+			}
+		} 
+
+        $('.t_open').click(function(){
+			var id =$(this).parent().attr('data-id');
+			var url ="{:U('Outstock/outStockDetail')}";
+		    url +="?osid="+id;
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['1000px', '500px'],
+				title: false,
+				content: url
+			});
+		});
+	</script>
+</body>
+</html>

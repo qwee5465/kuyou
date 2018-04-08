@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.form-control,.btn-style,td{letter-spacing: 1.5px;}
+   		.btn-style{background-color: #59ab76;border-color: #3b9f5f;}
+   		.btn-success.active{background-color: #feb235; border-color: #e5920b;}
+		.btn-success.active:hover{background-color: #e5920b; border-color: #e5920b;}
+		.headcolor2 td{background-color: #404040 !important; border:1px solid #404040 !important;color: #fff;}
+		table tr:nth-child(even){background-color: #e4e4e4;}
+		.tb-style{background-color: #f5f5f5;}
+		.tb-style td{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+		.navbar-default {background-color: #fff;}
+		.btn-style:hover{linear-gradient(#3b9f5f,#3b9f5f);
+    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    .btn-success{background-color: #59ab76;border-color: #3b9f5f;}
+    .btn-success:hover{background-color: #3b9f5f;border-color: #3b9f5f;}
+    select{margin-left: 10px;}
+    .layui-layer-title{background: #59ab76 !important; color: #fff !important; letter-spacing: 1.5px !important;}
+    .layui-layer-dialog .layui-layer-content{letter-spacing: 1.5px !important;}
+	.layui-layer-btn .layui-layer-btn0{background-color: #59ab76 !important;border-color: #3b9f5f !important;padding: 6px 12px !important; height: auto !important; line-height: inherit !important; border-radius: 4px !important;}
+	.layui-layer-btn .layui-layer-btn0:hover{background-color: #3b9f5f !important;border-color: #3b9f5f !important;}
+	.btn-style{background: #83c73c !important; border: 1px solid #6db81f !important;}
+	.btn-style:hover{background: #6db81f !important; border: 1px solid #6db81f !important;}
+	</style>
+</head>
+<body>
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<div>
+				<h3>商品列表</h3>
+			</div>
+			<div class="col-xs-12 col-md-12 _ml15">
+				<form class="navbar-form" action="__SELF__" method="get">
+					<div class="form-group has-feedback"> 
+						<span>商品类型</span>
+						<select class="" name="gtid" id="gtid" onchange="getTwoTypeInfo(this.value)">
+							<option value="">一级全部</option>
+							<foreach name="gtlist" item="vo">
+								<option value="{$vo.gtid}">{$vo.type_name}</option>
+							</foreach>
+						</select>
+						<select name="gtid1" id="gtid1"  class="ml10" onchange="getThreeTypeInfo(this.value)">
+							<option value="">二级全部</option>
+						</select>
+						<select name="gtid2" id="gtid2" class="ml10">
+							<option value="">三级全部</option> 
+						</select>
+						<span>供应商</span>
+						<select name="stid" style="width:120px;" id="stid" onchange="getSupplierInfo(this.value)">
+							<option value="">全部类型</option>
+							<foreach name="stList" item="vo">
+								<option value="{$vo.stid}">{$vo.type_name}</option>
+							</foreach>
+						</select>
+						<select name="sid" id="sid"  class="ml10">
+							<option value="">全部供应商</option>
+						</select> 
+						<input id="search" style="width: 120px;" class="form-control w-100 ml10" placeholder="商品名称"  name="search" type="text"> 
+						<input type="submit" name="" value="搜 索" class="btn btn-success ml20">
+						<a href="{:U('Goods/goodsAdd')}" class="btn btn-success active fr ml30 ">新 增</a>
+						<input type="button" class="btn fr ml30 data btn-style" value="数据列设置" />
+					</div> 
+					
+					<!-- <a href="{:U('Goods/goodsStdList')}" class="btn btn-style fr">商品标准库</a> -->
+				</form>
+			</div> 
+		</div>
+	</div>
+	<div class="container-fluid mt10">
+		<div class="row ml0">
+			<div class="col-xs-12">
+				<table class="tb-style">
+					<thead>
+					<tr class="headcolor2"> 
+						<td>序号</td> 
+						<if condition="$gcList.gname_s eq 0">
+							<td>{$titles.gname}</td>
+						</if>
+						<if condition="$gcList.gtname_s eq 0">
+							<td>{$titles.gtname}</td>
+						</if>
+						<td>供应商</td>
+						<if condition="$gcList.pic_s eq 0">	
+							<td>{$titles.pic}</td>
+						</if>
+						<if condition="$gcList.bname_s eq 0">
+							<td>{$titles.bname}</td>
+						</if>
+						<if condition="$gcList.price_s eq 0">
+							<td>{$titles.price}</td>
+						</if>
+						<if condition="$gcList.uname_s eq 0">
+							<td>{$titles.uname}</td>  
+						</if>  
+						<if condition="$gcList.ctime_s eq 0">
+							<td>{$titles.ctime}</td>
+						</if>
+						<td>操作</td>
+					</tr>
+					</thead> 
+					<tbody>
+						<volist name="list" id="vo">
+							<tr>
+								<td>{$key+$p}</td>
+								<if condition="$gcList.gname_s eq 0">
+									<td>{$vo.name}</td>
+								</if>
+								<if condition="$gcList.gtname_s eq 0">
+									<td>
+										{$vo.type_name}
+										<if condition="$vo['type_name1']">
+											>{$vo.type_name1}
+										</if>
+										<if condition="$vo['type_name2']">
+											>{$vo.type_name2}
+										</if>
+									</td>
+								</if>
+								<td>{$vo.sname}</td>
+								<if condition="$gcList.pic_s eq 0">	
+									<td>
+										<if condition="$vo.pic eq ''">
+											<img src="__PUBLIC__{$vo.bpic}" class="list-img">
+										<else /> 
+											<img src="__PUBLIC__{$vo.pic}" class="list-img">
+										</if>
+									</td>
+								</if>
+								<if condition="$gcList.bname_s eq 0">
+									<td>{$vo.brand_name}</td>
+								</if>
+								<if condition="$gcList.price_s eq 0">
+									<td>{$vo.price}</td>
+								</if>
+								<if condition="$gcList.uname_s eq 0">
+									<td>
+										<if condition="$vo['usub']"> 
+											<!-- 默认单位({$vo.unit_name})
+											<volist name="vo['usub']" id="v">
+												1{$v.unit_name}={$v.num}{$vo.unit_name}&nbsp;;
+											</volist>  --> 
+											{$vo.unit_name}
+											<volist name="vo['usub']" id="v">
+												\{$v.unit_name}
+											</volist> 
+										<else />
+											{$vo.unit_name}
+										</if>
+									</td> 
+								</if> 
+									 
+								<if condition="$gcList.ctime_s eq 0">
+									<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+								</if>
+								<td data-id="{$vo.wgid}">   
+									<a href="{:U('Goods/goodsEdit',array('wgid'=>$vo['wgid']))}">编辑</a>
+									&nbsp;|&nbsp;
+									<if condition="$vo['disable'] eq 0">
+										<a href="javascript:;" title="1" class="disable">停用</a>
+									<else />
+										<a href="javascript:;" title="0" class="disable">启用</a>
+									</if>
+									&nbsp;|&nbsp;
+									<a href="javascript:;" class="del">删除</a>
+								</td>
+							</tr>
+						</volist>
+					</tbody>
+				</table>
+				<!-- 分页栏 -->
+				<div class="row paging" style="margin: 10px -15px;">
+					<!-- 右边 -->
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right pr">
+						{$page}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+	$(function () {
+		$("#search").val('{$search}');
+		$("#gtid").val("{$gtid}");
+		$("#stid").val("{$stid}");
+		getTwoTypeInfo({$gtid});
+		getSupplierInfo("{$stid}");
+	});
+	//根据供应商类型编号获取供应商类型
+	function getSupplierInfo(stid){
+		if(stid!=""){
+			$.post("{:U('Goods/getSupplierInfo')}", {"stid": stid}, function(data) {
+				if(data.resultcode == 0) { 
+					var str = "<option value=''>全部供应商</option>";
+					var slist = data.result;
+					for(var i=0;i<slist.length;i++){
+						str += "<option value='"+slist[i].sid+"'>"+slist[i].name+"</option>";
+					}
+					$("#sid").html(str);
+					var sid ="{$sid}";
+					if(sid!=""){
+						$("#sid").val(sid);
+					}
+				}else{
+					var str = "<option value=''>全部供应商</option>";
+					$("#sid").html(str); 
+				}
+			}, "json");
+		}else{
+			var str = "<option value=''>全部供应商</option>";
+			$("#sid").html(str); 
+		}
+		
+	}
+
+	//停用启用
+	$(".disable").click(function(){
+		var _this = this;
+		var disable = _this.title;
+		var id = $(this).parent().attr('data-id');
+		$.post("{:U('Goods/goodsDisable')}", {"wgid": id,"disable":disable}, function(data) {
+			if(data == 0) {
+				layer.msg('操作成功', {icon: 1,time:1000});
+				if(disable==1){
+					_this.title="0";
+					$(_this).html("启用");
+				}else{ 
+					_this.title="1";
+					$(_this).html("停用");
+				}
+				
+			}else{
+				layer.msg('操作失败', {icon: 2,time:2000});
+			}
+		}, "json");
+	});
+
+	//删除
+	$('.del').click(function() {
+		var _this = this;
+		var id = $(this).parent().attr('data-id');
+		layer.confirm('您确定要删除吗？', {
+			btn: ['确 认'], //按钮
+			shade: [0.4, '#393D49'] //显示遮罩
+		}, function() {
+			$.post("{:U('Goods/goodsDel')}", {
+				"wgid": id
+			}, function(data) {
+				if (data == 0) {
+					layer.msg('删除成功', {
+						icon: 1,
+						time: 1000
+					}, function() {
+						$(_this).parent().parent().remove();
+					});
+				} else if(data == 2) {
+					layer.msg('已经被引用,无法删除', {
+						icon: 2,
+						time: 2000
+					});
+				}else{
+					layer.msg('删除失败', {
+						icon: 2,
+						time: 2000
+					});
+				}
+			}, "json");
+		}, function() {});
+	});
+	var index =0,index1=0;	
+	//根据1级类型编号获取二级分类
+    function getTwoTypeInfo(fid){ 
+    	var gtid1 = "{$gtid1}";
+    	if(fid){
+	        $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid},function(data){
+	            if(data.resultcode==0){
+	                var result =data.result;
+	                var str ='<option value="">二级全部</option>';
+	                for(var i=0;i<result.length;i++){
+	                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+	                }
+	                $("#gtid1").html(str); 
+	                $("#gtid2").html('<option value="">三级全部</option>');
+	                if(gtid1 && gtid1!="0"){
+	                	if(index==0){
+		                	$("#gtid1").val(gtid1);
+		                	getThreeTypeInfo(gtid1);
+		                	index++;
+	                	}
+	                }
+	            }else{
+		        	$("#gtid1").html('<option value="">二级全部</option>'); 
+		        	$("#gtid2").html('<option value="">三级全部</option>');
+	            }
+	        }, "json");
+        }else{
+        	$("#gtid1").html('<option value="">二级全部</option>'); 
+        	$("#gtid2").html('<option value="">三级全部</option>');
+        }
+    }
+
+    //根据二级类型编号获取三级分类
+    function getThreeTypeInfo(fid){ 
+    	var gtid2 ="{$gtid2}";
+    	if(fid!=""){
+	        $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid},function(data){
+	            if(data.resultcode==0){
+	                var result =data.result;
+	                var str ='<option value="">三级全部</option>';
+	                for(var i=0;i<result.length;i++){
+	                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+	                }
+	                $("#gtid2").html(str);
+	                if(gtid2 && gtid2!="0"){
+	                	if(index1==0){
+	                		$("#gtid2").val(gtid2);
+	                		index1++;
+	                	}
+	                } 
+	            }else{
+	            	$("#gtid2").html("<option value=''>三级全部</option>");
+	            }
+	        }, "json");
+	    }else{
+	    	$("#gtid2").html("<option value=''>三级全部</option>");
+	    }
+    }
+
+	//全选按钮
+	$('#cbAll').click(function() {
+		var _this = this;
+		$("[name='cbid']").each(function(index, value) {
+			value.checked = _this.checked;
+		});
+	});
+
+	//删除多商品
+	$('#del_goods').click(function() {
+		layer.confirm('您确定要删除吗？', {
+			btn: ['确认', '取消'], //按钮
+			shade: [0.4, '#393D49'] //显示遮罩
+		}, function() {
+			$("[name='cbid']").each(function(index,value){
+				if(value.checked){
+					$.post("{:U('Goods/goodsDel')}", {"wgid": value.value}, function(data) {
+						if (data == 0) {
+							layer.msg('删除成功', {
+								icon: 1,
+								time: 1000
+							}, function() {
+								$(value).parent().parent().parent().remove();
+							});
+						} else {
+							layer.msg('删除失败', {
+								icon: 2,
+								time: 2000
+							});
+						}
+					}, "json");
+				}
+			});
+		}, function() {
+
+		});
+	}); 
+
+	//跳转设置规格页
+	$(".specSreach").click(function(){ 
+		var wgid = $(this).attr('data-id');
+		location.href="__APP__/WholesaleAdmin/Goods/goodsSpecList.html?wgid="+wgid;
+	});
+
+	$('.specList').click(function(){
+		var wgid = $(this).attr('data-id');
+		layer.open({
+			type: 2,
+			closeBtn: 2,
+			area: ['800px', '500px'],
+			title:false,
+			content: "__APP__/WholesaleAdmin/Goods/goodsSpecAdd.html?wgid="+wgid
+		});
+	});
+
+	//数据列设置
+	$('.data').click(function(){ 
+		layer.open({
+			type: 2,
+			closeBtn: 1,
+			area: ['700px', '500px'],
+			title: false,
+			content: '__APP__/WholesaleAdmin/Goods/goodsDataSet.html'
+		});
+	});
+</script>
+</body>
+</html>

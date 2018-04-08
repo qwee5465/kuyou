@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>库友进销存管理平台</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/fonts/iconfont.css" />
+</head>
+
+<body style="overflow: hidden;">
+    <div class="container-full" style="padding-left:0 !important;padding-right:0 !important;">
+        <!-- 顶部 -->
+        <div class="row header">
+            <div class="col-xs-2 col-sm-2 col-md-2 text-left">
+                <img src="__PUBLIC__/img/logo.png" class="img-logo" />
+            </div>
+            <!-- 顶部导航 -->
+            <div class="col-xs-8 col-sm-8 col-md-8 nav-top">
+                <div class="fl font-page active"  data-href="__APP__/Admin/Main/main" >
+                    <a href="#" class="font-page-a"><img src="__PUBLIC__/img/front-page.png">
+                        <p class="">首页</p>
+                    </a>
+                </div>
+                <ul>
+                    <foreach name='data' item='vo'>
+                        <if condition="$key eq 0">
+                            <li class="fl nav-top-li">
+                        <else/>
+                            <li class="fl nav-top-li">
+                        </if>
+                            <a href="#" class="nav-top-li-a"><img src="__PUBLIC__/{$vo.pic}">
+                                <p class="">{$vo.name}</p>
+                            </a>
+                        </li> 
+                    </foreach> 
+                </ul>
+            </div>
+            <!-- 设置中心 -->
+            <div class="col-xs-2 col-sm-2 col-md-2 setting">
+                <ul>
+                    <li class="fl setting-li ml75 w-50"><a class="setting-li-a" href="javascript:logon()"><i class="iconfont fs-20">&#xe610;</i></a></li>
+                    <li class="fl setting-li  w-50"><a href="#" class="setting-li-a account" data-href="__APP__/Admin/AccountInfo/accountInfo" ><i class="iconfont fs-20">&#xe688;</i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- 内容 -->
+    <div class="content pa" id="content">
+        <!-- 首页 -->
+        <div class="main">
+             <iframe src="__APP__/Admin/Main/main" id="iframe_main" style="width: 100%;border:none;"></iframe>
+        </div>
+        <!-- 首页结束 --> 
+        <!-- 左边nav --> 
+        <div class="nav-left fl none" id="nav-left">
+            <foreach name="data" item="vo" key="key">  
+            <if condition="$key eq 0">
+                <ul class="">
+            <else/>
+               <ul class="none">
+            </if>   
+                <foreach name="vo.sub" item="v" key="k"> 
+                    <if condition="$k eq 0">
+                        <li class="nav-left-li pt8 active" data-href='__APP__/{$v.url}'>
+                    <else/>
+                        <li class="nav-left-li pt8" data-href='__APP__/{$v.url}'> 
+                    </if> 
+                        <a href='#' class="nav-left-li-a"><img src="__PUBLIC__/{$v.pic}" style="margin-bottom:3px;">
+                            {$v.name}</a>
+                        </li>
+                </foreach> 
+            </ul>
+            </foreach> 
+        </div>
+        <div class="fl none" style="width:100%;margin-right:-100px;padding-right:95px;">
+            <iframe src="__APP__/{$data[0]['sub'][0]['url']}" id="iframe_content"></iframe>
+        </div>
+    </div>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/main.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script> 
+    <script>
+    //注销账号
+    function logon(){
+         layer.confirm('确定注销吗？', {
+                btn: ['确认','取消'], //按钮
+                shade: [0.4, '#393D49'] //显示遮罩
+            }, function(){ 
+                $.post("{:U('Index/logon')}", {},function(data){
+                    if(data ==0){
+                         location.href="{:U('Login/login')}";
+                    }
+                }, "json");
+            },function(){
+        });  
+    }
+    </script>
+</body>
+
+</html>
+

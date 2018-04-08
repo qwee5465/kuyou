@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" /> 
+    <link rel="stylesheet" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css" /> 
+</head>
+
+<body style="background: #fff;">
+    <div class="">
+         <div class="title-pop">编辑角色</div>
+        <!-- 输入位置 -->
+        <form action="__SELF__" method="post">  
+            <input type="hidden" name="rid" value="{$data.rid}">
+            <div class="mt40">
+                <div class="form-group  cf">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <span class="fl w-80 text-right fs-14" style="padding: 15px 15px 0 0;">角色名称:</span>
+                        <div class="fl inline-block mt6 w-200" > 
+                            <input class="form-control" name="name" id="name"  type="text" value="{$data.name}" > 
+                        </div>
+                    </div>
+                </div>
+            </div>  
+            <div class="t-footer">
+                <div class="form-group">
+                    <div class="w50 text-center fl">
+                        <input type="button" value="取消"  class="cancel-pop" />
+                    </div>
+                    <div class="w50 text-center fl">
+                        <input type="submit" value="确定" onclick="return checkForm()" class="confirm-pop" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+    <script src='__PUBLIC__/bootstrap/js/bootstrap.min.js' charset="UTF-8"></script> 
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script> 
+    <script type="text/javascript"> 
+        // 加载时验证选择框 
+        $(function(){
+            $("#status").val('{$data.status}'); 
+        }); 
+        //表单验证
+        function checkForm(){
+            var name =$('#name').val(); 
+            if(!name){
+                layer.tips('请填写角色名称', '#name', {tips: 1}); 
+                return false;
+            } 
+            return true; 
+        }
+         $('.cancel-pop').click(function(){ 
+            parent.layer.closeAll('iframe');
+        });
+    </script>
+</body>
+
+</html>

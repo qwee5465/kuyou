@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/goodsList.css" /> 
+	<style type="text/css">
+	.nav-top{background-color:#59ab76; background-image: none; margin-top:-25px;}
+	.data-setting{background:#eee;border-radius:0px;}
+	.fs-12{letter-spacing: 1.5px;}
+.headcolor{background-color: #404040; color: #fff; letter-spacing: 1.5px; border-left: 1px solid #404040 !important; border-bottom: 1px solid #404040 !important; border: 1px solid #404040;}
+.tb-style td{border-left: 1px solid #d2d2d2; border-bottom: 1px solid #d2d2d2;}
+.performer{border-bottom: 1px solid #d2d2d2;}
+.form-control{width: auto;}
+.data-submit{height: auto; background: #59ab76;border: 1px solid #3b9f5f;bottom:20px;}
+.data-submit:hover{background: #3b9f5f;border: 1px solid #3b9f5f;}
+	</style>
+</head>
+<body>
+	<!-- 数据设置开始 -->
+	<div class="data-setting">
+		<div class="nav-top">
+			<ul id="ul_top">
+				<li class="fl w33 nav-top-li active pr">表头设置
+					<div class="pa triangle" style="left:110px;"></div>
+				</li>
+				<li class="fl w33 nav-top-li pr">明细设置
+					<div class="pa triangle none"  style="left:110px;"></div>
+				</li>
+				<li class="fl w33 nav-top-li pr">自定义列管理
+					<div class="pa triangle none"  style="left:110px;"></div>
+				</li>
+			</ul>
+			<input type="hidden" id="hid_topvalue" value="1" />
+		</div>
+		<form>
+			<div class="wrap"  style="height:360px;background-color:#fff;">
+				<div class="form-setting">
+					<div class="performer cf" style="height:auto;">
+						<div class="h-40">
+							<span class="fs-12 fl lh-40 ml15">此功能可以选择在窗口中显示列及自定义标题</span>
+							<div class="fr mt15 mr15">
+								<!-- <input type="checkbox" class="fl w-14 h-14" />
+								<span class="fs-14 fl sp-s-p">应用于所有操作员</span> -->
+							</div>
+							
+						</div>
+						<!-- <div class="line"></div> -->
+						<!-- <div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员1</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员2</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员3</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员4</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员5</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员6</span>
+						</div> -->
+					</div>
+					<div style="height:320px;overflow:auto;">
+						<table style="border:none;" class="tb-style t-table">
+							<thead>
+								<tr>
+									<td class="headcolor">行号</td>
+									<td class="w-200 headcolor">标题名称</td>
+									<td class="w-200 headcolor">显示名称</td>
+									<td class="headcolor">可显示</td>
+									<td class="headcolor">可打印</td>
+								</tr>
+							</thead>
+							<tbody>
+								<volist name="os_list" id="vo">
+									<tr>
+										<td>{$key+1}</td>
+										<td>{$vo.title}</td>
+										<td>
+											<input type="text" value="{$vo.show_name}" id="{$vo.cname}"  class="bnone-txt text-center" />
+										</td>
+										<td> 
+											<if condition="$vo['disabled'] eq 0">
+												<input type="checkbox" name="show" id="{$vo.cname}_s"  disabled checked="checked" class="w-14 h-14">
+											<else />
+												<if condition="$vo['isshow'] eq 0"> 
+													<input type="checkbox" name="show" id="{$vo.cname}_s" checked="checked" class="w-14 h-14" /> 
+												<else />
+													<input type="checkbox" name="show" id="{$vo.cname}_s" class="w-14 h-14" />
+												</if> 
+											</if> 	
+										</td>
+										<td>
+											<if condition="$vo.isprint eq 0">
+												<input type="checkbox" name="print" id="{$vo.cname}_p" checked="checked" class="w-14 h-14" />
+											<else />	
+												<input type="checkbox" name="print" id="{$vo.cname}_p" class="w-14 h-14" />
+											</if>
+										</td>
+									</tr> 
+								</volist> 
+							</tbody>
+						</table>
+					</div>
+				</div>
+			 	<div class="form-setting none">
+					<div class="performer cf" style="height:auto;">
+						<div class="h-40">
+							<span class="fs-12 fl lh-40 ml15">此功能可以选择在窗口中显示列及自定义标题</span>
+							<div class="fr mt15 mr15">
+								<!-- <input type="checkbox" class="fl w-14 h-14" />
+								<span class="fs-14 fl sp-s-p">应用于所有操作员</span> -->
+							</div>
+							
+						</div>
+						<!-- <div class="line"></div> -->
+						<!-- <div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员1</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员2</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员3</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员4</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员5</span>
+						</div>
+						<div class="fl ml20">
+							<input type="checkbox" class="fl w-14 h-14" />
+							<span class="fs-14 fl sp-s-p">操作员6</span>
+						</div> -->
+					</div>
+					<div style="height:320px;overflow:auto;">
+						<table style="border:none;" class="tb-style">
+							<thead>
+								<tr>
+									<td class="headcolor">行号</td>
+									<td class="w-200 headcolor">标题名称</td>
+									<td class="w-200 headcolor">显示名称</td>
+									<td class="headcolor">可显示</td>
+									<td class="headcolor">可打印</td>
+								</tr>
+							</thead>
+							<tbody>
+								<volist name="osb_list" id="vo">
+									<tr>
+										<td>{$key+1}</td>
+										<td>{$vo.title}</td>
+										<td>
+											<input type="text" value="{$vo.show_name}" id="{$vo.cname}"  class="bnone-txt text-center" />
+										</td>
+										<td> 
+											<if condition="$vo['disabled'] eq 0">
+												<input type="checkbox" name="show" id="{$vo.cname}_s"  disabled checked="checked" class="w-14 h-14">
+											<else />
+												<if condition="$vo['isshow'] eq 0"> 
+													<input type="checkbox" name="show" id="{$vo.cname}_s" checked="checked" class="w-14 h-14" /> 
+												<else />
+													<input type="checkbox" name="show" id="{$vo.cname}_s" class="w-14 h-14" />
+												</if> 
+											</if> 	
+										</td>
+										<td>
+											<if condition="$vo.isprint eq 0">
+												<input type="checkbox" name="print" id="{$vo.cname}_p" checked="checked" class="w-14 h-14" />
+											<else />	
+												<input type="checkbox" name="print" id="{$vo.cname}_p" class="w-14 h-14" />
+											</if>
+										</td>
+									</tr> 
+								</volist>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="custom-mg none">
+					<h4 class="text-center" style="margin-top:100px;letter-spacing: 1.5px;">功能未开放，敬请期待。</h4>
+					<div class="fl list none" >
+						<ul>
+							<li class="text-center" style="border-bottom:1px solid #d0d0d0;">已定义列</li>
+							<li>自定义列表1</li>
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+						</ul>
+					</div>
+					<div class="none">
+						<form  action="" method="get">			
+						<div class="fl property">
+							<p>列属性</p>
+							<div class="cf property-value">
+								<div class="fl mt10">
+									<span>列类型：</span>
+									<input type="text" class="w-100 ml14">
+								</div>
+								<div class="fl ml10 mt10">
+									<span>数据类型：</span>
+									<input type="text" class="w-100">
+								</div>
+								<div class="fl mt10">
+									<span>显示名称：</span>
+									<input type="text" class="w-100">
+								</div>
+								<div class="fl ml10 mt10">
+									<span>默认值：</span>
+									<input type="text" class="w-100 ml14">
+								</div>
+							</div>
+							<div class="property-choice">
+								<div class="cf mt10">
+									<div class="fl">
+										<input type="checkbox" class="fl w-14 h-14" />
+										<span class="fs-14 fl sp-s-p">添加到表头区</span>
+									</div>
+									<div class="fl ml75">
+										<input type="checkbox" class="fl w-14 h-14" />
+										<span class="fs-14 fl sp-s-p">添加到明细区</span>
+									</div>
+								</div>
+								<div class="cf mt10">
+									<div class="fl">
+										<input type="checkbox" class="fl w-14 h-14" />
+										<span class="fs-14 fl sp-s-p">可编辑</span>
+									</div>
+									<div class="fl ml30">
+										<input type="checkbox" class="fl w-14 h-14" />
+										<span class="fs-14 fl sp-s-p">可显示</span>
+									</div>
+									<div class="fl ml20">
+										<input type="checkbox" class="fl w-14 h-14" />
+										<span class="fs-14 fl sp-s-p">可打印</span>
+									</div>
+								</div>	
+							</div>
+							<div class="calc">
+								<span>计算列表达式？</span>
+								<textarea></textarea>
+							</div>
+							<div class="text-center mt10">
+								<input type="submit" value="保存" class="w-80 mr30">
+								<input type="submit" value="取消" class="w-80">
+							</div>
+						</div>
+					</form>	
+					</div>
+					
+				</div>
+			</div>
+			<div>
+				<input type="button" onclick="submitForm()" value="提 交" class="form-control data-submit w-90 h-30 pa" >
+			</div>
+		</form>
+	</div>
+	<!-- 数据设置结束 --> 
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript"> 
+		// 数据设置顶部导航
+		$(".nav-top-li").click(function(){
+			$(this).addClass("active").siblings().removeClass("active");
+			$(this).children(".triangle").show().end().siblings().children(".triangle").hide();
+			$(".wrap").children().eq($(this).index()).show().siblings().hide();
+			$("#hid_topvalue").val($(this).index()+1); 
+		});
+		function submitForm(){
+			var hid_top = $("#hid_topvalue").val();
+			if(hid_top==1){ 
+				tableTopSubmit();
+			}else if(hid_top==2){
+				tableSubmit();
+			}else{}
+		}
+		//表头提交
+		function tableTopSubmit(){ 
+			var osid = $("#osid").val();
+			if(!osid){ 
+				layer.tips('请填写显示名称', '#osid', {tips: 2});
+				return false; 
+			}
+			var osid_s = $("#osid_s").is(':checked') ? 0 : 1;
+			var osid_p = $("#osid_p").is(':checked') ? 0 : 1;
+
+			var osname = $("#osname").val();
+			if(!osname){ 
+				layer.tips('请填写显示名称', '#osname', {tips: 2});
+				return false; 
+			}
+			var osname_s = $("#osname_s").is(':checked') ? 0 : 1;
+			var osname_p = $("#osname_p").is(':checked') ? 0 : 1;
+
+			var cname = $("#cname").val();
+			if(!cname){ 
+				layer.tips('请填写显示名称', '#cname', {tips: 2});
+				return false; 
+			}
+			var cname_s = $("#cname_s").is(':checked') ? 0 : 1;
+			var cname_p = $("#cname_p").is(':checked') ? 0 : 1;
+
+			var cphone = $("#cphone").val();
+			if(!cphone){ 
+				layer.tips('请填写显示名称', '#cphone', {tips: 2});
+				return false; 
+			}
+			var cphone_s = $("#cphone_s").is(':checked') ? 0 : 1;
+			var cphone_p = $("#cphone_p").is(':checked') ? 0 : 1;
+
+			var caddress = $("#caddress").val();
+			if(!caddress){ 
+				layer.tips('请填写显示名称', '#caddress', {tips: 2});
+				return false; 
+			}
+			var caddress_s = $("#caddress_s").is(':checked') ? 0 : 1;
+			var caddress_p = $("#caddress_p").is(':checked') ? 0 : 1;
+
+			var company = $("#company").val();
+			if(!company){ 
+				layer.tips('请填写显示名称', '#company', {tips: 2});
+				return false; 
+			}
+			var company_s = $("#company_s").is(':checked') ? 0 : 1;
+			var company_p = $("#company_p").is(':checked') ? 0 : 1;
+
+			var company_address = $("#company_address").val();
+			if(!company_address){ 
+				layer.tips('请填写显示名称', '#company_address', {tips: 2});
+				return false; 
+			}
+			var company_address_s = $("#company_address_s").is(':checked') ? 0 : 1;
+			var company_address_p = $("#company_address_p").is(':checked') ? 0 : 1;
+
+			var company_phone = $("#company_phone").val();
+			if(!company_phone){ 
+				layer.tips('请填写显示名称', '#company_phone', {tips: 2});
+				return false; 
+			}
+			var company_phone_s = $("#company_phone_s").is(':checked') ? 0 : 1;
+			var company_phone_p = $("#company_phone_p").is(':checked') ? 0 : 1;
+
+			var ctime = $("#ctime").val();
+			if(!ctime){ 
+				layer.tips('请填写显示名称', '#ctime', {tips: 2});
+				return false; 
+			} 
+			var ctime_s = $("#ctime_s").is(':checked') ? 0 : 1;
+			var ctime_p = $("#ctime_p").is(':checked') ? 0 : 1;
+			var remark = $("#remark").val();
+			if(!remark){ 
+				layer.tips('请填写显示名称', '#remark', {tips: 2});
+				return false; 
+			}
+			var remark_s = $("#remark_s").is(':checked') ? 0 : 1;
+			var remark_p = $("#remark_p").is(':checked') ? 0 : 1; 
+			var total = $("#total").val();
+			if(!total){ 
+				layer.tips('请填写显示名称', '#total', {tips: 2});
+				return false; 
+			}
+			var total_s = $("#total_s").is(':checked') ? 0 : 1;
+			var total_p = $("#total_p").is(':checked') ? 0 : 1; 
+
+			var audit = $("#audit").val();
+			if(!audit){ 
+				layer.tips('请填写显示名称', '#audit', {tips: 2});
+				return false; 
+			}
+			var audit_s = $("#audit_s").is(':checked') ? 0 : 1;
+			var audit_p = $("#audit_p").is(':checked') ? 0 : 1; 
+
+			var check = $("#check").val();
+			if(!check){ 
+				layer.tips('请填写显示名称', '#check', {tips: 2});
+				return false; 
+			}
+			var check_s = $("#check_s").is(':checked') ? 0 : 1;
+			var check_p = $("#check_p").is(':checked') ? 0 : 1; 
+			
+			var data ={
+				"osid":osid,
+	            "osid_s":osid_s,
+	            "osid_p":osid_p,
+				"osname":osname,
+	            "osname_s":osname_s,
+	            "osname_p":osname_p,
+	            "cname":cname,
+	            "cname_s":cname_s,
+	            "cname_p":cname_p,
+	            "cphone":cphone,
+	            "cphone_s":cphone_s,
+	            "cphone_p":cphone_p,
+	            "caddress":caddress,
+	            "caddress_s":caddress_s,
+	            "caddress_p":caddress_p,
+	            "company":company,
+	            "company_s":company_s,
+	            "company_p":company_p,
+	            "company_address":company_address,
+	            "company_address_s":company_address_s,
+	            "company_address_p":company_address_p,
+	            "company_phone":company_phone,
+	            "company_phone_s":company_phone_s,
+	            "company_phone_p":company_phone_p,
+	            "ctime":ctime,
+	            "ctime_s":ctime_s,
+	            "ctime_p":ctime_p, 
+	            "remark":remark,
+	            "remark_s":remark_s,
+	            "remark_p":remark_p,
+	            "total":total,
+	            "total_s":total_s,
+	            "total_p":total_p,
+	            "audit":audit,
+	            "audit_s":audit_s,
+	            "audit_p":audit_p,
+	            "check":check,
+	            "check_s":check_s,
+	            "check_p":check_p
+			}; 
+			var index = layer.load(2,{time:1000});
+			$.post("{:U('Outstock/dataColumnSubmitT')}", data,function(data){
+				layer.close(index);
+			 	if(data==0){
+			 		layer.msg("提交成功,2秒后刷新页面!");
+			 		setTimeout(function(){
+			 			parent.history.go(0);
+			 		},2000) 
+			 	}else{
+			 		layer.msg("提交失败");
+			 	}
+			}, "json");
+		}
+
+		//表格提交
+		function tableSubmit(){
+			var gname = $("#gname").val();
+			if(!gname){ 
+				layer.tips('请填写显示名称', '#gname', {tips: 2});
+				return false; 
+			}
+			var gname_s = $("#gname_s").is(':checked') ? 0 : 1;
+			var gname_p = $("#gname_p").is(':checked') ? 0 : 1;
+			
+			var alias = $("#alias").val();
+			if(!alias){ 
+				layer.tips('请填写显示名称', '#alias', {tips: 2});
+				return false; 
+			}
+			var alias_s = $("#alias_s").is(':checked') ? 0 : 1;
+			var alias_p = $("#alias_p").is(':checked') ? 0 : 1;
+
+			var bname = $("#bname").val();
+			if(!bname){ 
+				layer.tips('请填写显示名称', '#bname', {tips: 2});
+				return false; 
+			}
+			var bname_s = $("#bname_s").is(':checked') ? 0 : 1;
+			var bname_p = $("#bname_p").is(':checked') ? 0 : 1;
+			var uname = $("#uname").val();
+			if(!uname){ 
+				layer.tips('请填写显示名称', '#uname', {tips: 2});
+				return false; 
+			}
+			var uname_s = $("#uname_s").is(':checked') ? 0 : 1;
+			var uname_p = $("#uname_p").is(':checked') ? 0 : 1;
+			var num = $("#num").val();
+			if(!num){ 
+				layer.tips('请填写显示名称', '#num', {tips: 2});
+				return false; 
+			}
+			var num_s = $("#num_s").is(':checked') ? 0 : 1;
+			var num_p = $("#num_p").is(':checked') ? 0 : 1;
+			var than = $("#than").val();
+			if(!than){ 
+				layer.tips('请填写显示名称', '#than', {tips: 2});
+				return false; 
+			}
+
+			var num1 = $("#num1").val();
+			if(!num1){ 
+				layer.tips('请填写显示名称', '#num1', {tips: 2});
+				return false; 
+			}
+			var num1_s = $("#num1_s").is(':checked') ? 0 : 1;
+			var num1_p = $("#num1_p").is(':checked') ? 0 : 1;
+			 
+			var than_s = $("#than_s").is(':checked') ? 0 : 1;
+			var than_p = $("#than_p").is(':checked') ? 0 : 1;
+
+			var price = $("#price").val();
+			if(!price){ 
+				layer.tips('请填写显示名称', '#price', {tips: 2});
+				return false; 
+			}
+			var price_s = $("#price_s").is(':checked') ? 0 : 1;
+			var price_p = $("#price_p").is(':checked') ? 0 : 1;
+
+			var tax_price = $("#tax_price").val();
+			if(!tax_price){ 
+				layer.tips('请填写显示名称', '#tax_price', {tips: 2});
+				return false; 
+			}
+			var tax_price_s = $("#tax_price_s").is(':checked') ? 0 : 1;
+			var tax_price_p = $("#tax_price_p").is(':checked') ? 0 : 1;
+
+			var price1 = $("#price1").val();
+			if(!price1){ 
+				layer.tips('请填写显示名称', '#price1', {tips: 2});
+				return false; 
+			}
+			var price1_s = $("#price1_s").is(':checked') ? 0 : 1;
+			var price1_p = $("#price1_p").is(':checked') ? 0 : 1;
+
+			var j_price = $("#j_price").val();
+			if(!j_price){ 
+				layer.tips('请填写显示名称', '#j_price', {tips: 2});
+				return false; 
+			}
+			var j_price_s = $("#j_price_s").is(':checked') ? 0 : 1;
+			var j_price_p = $("#j_price_p").is(':checked') ? 0 : 1;
+
+			var cd_num = $("#cd_num").val();
+			if(!cd_num){ 
+				layer.tips('请填写显示名称', '#cd_num', {tips: 2});
+				return false; 
+			}
+			var cd_num_s = $("#cd_num_s").is(':checked') ? 0 : 1;
+			var cd_num_p = $("#cd_num_p").is(':checked') ? 0 : 1;
+
+			var stock = $("#stock").val();
+			if(!stock){ 
+				layer.tips('请填写显示名称', '#stock', {tips: 2});
+				return false; 
+			}
+			var stock_s = $("#stock_s").is(':checked') ? 0 : 1;
+			var stock_p = $("#stock_p").is(':checked') ? 0 : 1;
+
+			var remarkb = $("#remarkb").val();
+			if(!remarkb){ 
+				layer.tips('请填写显示名称', '#remarkb', {tips: 2});
+				return false; 
+			}
+			var remarkb_s = $("#remarkb_s").is(':checked') ? 0 : 1;
+			var remarkb_p = $("#remarkb_p").is(':checked') ? 0 : 1;
+			var totalb = $("#totalb").val();
+			if(!totalb){ 
+				layer.tips('请填写显示名称', '#totalb', {tips: 2});
+				return false; 
+			}
+			var totalb_s = $("#totalb_s").is(':checked') ? 0 : 1;
+			var totalb_p = $("#totalb_p").is(':checked') ? 0 : 1;   
+
+			var rweight = $("#rweight").val();
+			if(!rweight){ 
+				layer.tips('请填写显示名称', '#rweight', {tips: 2});
+				return false; 
+			}
+			var rweight_s = $("#rweight_s").is(':checked') ? 0 : 1;
+			var rweight_p = $("#rweight_p").is(':checked') ? 0 : 1;
+
+			var machining = $("#machining").val();
+			if(!machining){ 
+				layer.tips('请填写显示名称', '#machining', {tips: 2});
+				return false; 
+			}
+			var machining_s = $("#machining_s").is(':checked') ? 0 : 1;
+			var machining_p = $("#machining_p").is(':checked') ? 0 : 1; 
+
+			var check_num = $("#check_num").val();
+			if(!check_num){ 
+				layer.tips('请填写显示名称', '#check_num', {tips: 2});
+				return false; 
+			}
+			var check_num_s = $("#check_num_s").is(':checked') ? 0 : 1;
+			var check_num_p = $("#check_num_p").is(':checked') ? 0 : 1;
+
+			var totalb1 = $("#totalb1").val();
+			if(!totalb1){ 
+				layer.tips('请填写显示名称', '#totalb1', {tips: 2});
+				return false; 
+			}
+			var totalb1_s = $("#totalb1_s").is(':checked') ? 0 : 1;
+			var totalb1_p = $("#totalb1_p").is(':checked') ? 0 : 1;   
+
+			var data ={
+				"gname":gname,
+	            "gname_s":gname_s,
+	            "gname_p":gname_p,
+				"alias":alias,
+	            "alias_s":alias_s,
+	            "alias_p":alias_p,
+	            "bname":bname,
+	            "bname_s":bname_s,
+	            "bname_p":bname_p,
+	            "uname":uname,
+	            "uname_s":uname_s,
+	            "uname_p":uname_p,
+	            "num":num,
+	            "num_s":num_s,
+	            "num_p":num_p, 
+	            "num1":num1,
+	            "num1_s":num1_s,
+	            "num1_p":num1_p, 
+	            "than":than,
+	            "than_s":than_s,
+	            "than_p":than_p,
+	            "price":price,
+	            "price_s":price_s,
+	            "price_p":price_p,
+	            "tax_price":tax_price,
+	            "tax_price_s":tax_price_s,
+	            "tax_price_p":tax_price_p,
+	            "price1":price1,
+	            "price1_s":price1_s,
+	            "price1_p":price1_p,
+	            "j_price":j_price,
+	            "j_price_s":j_price_s,
+	            "j_price_p":j_price_p,
+	            "cd_num":cd_num,
+	            "cd_num_s":cd_num_s,
+	            "cd_num_p":cd_num_p,
+	            "stock":stock,
+	            "stock_s":stock_s,
+	            "stock_p":stock_p,
+	            "remarkb":remarkb,
+	            "remarkb_s":remarkb_s,
+	            "remarkb_p":remarkb_p,
+	            "totalb":totalb,
+	            "totalb_s":totalb_s,
+	            "totalb_p":totalb_p,
+	            "rweight":rweight,
+	            "rweight_s":rweight_s,
+	            "rweight_p":rweight_p,
+	            "machining":machining,
+	            "machining_s":machining_s,
+	            "machining_p":machining_p,
+	            "check_num":check_num,
+	            "check_num_s":check_num_s,
+	            "check_num_p":check_num_p,
+	            "totalb1":totalb1,
+	            "totalb1_s":totalb1_s,
+	            "totalb1_p":totalb1_p
+			}; 
+			// console.log(data);return;
+			var index = layer.load(2,{time:1000});
+			$.post("{:U('Outstock/dataColumnSubmit')}", data,function(data){
+				layer.close(index);
+			 	if(data==0){
+			 		layer.msg("提交成功,2秒后刷新页面!");
+			 		setTimeout(function(){
+			 			parent.history.go(0);
+			 		},2000) 
+			 	}else{
+			 		layer.msg("提交失败");
+			 	}
+			}, "json");
+		}
+
+	</script>
+</body>
+</html>

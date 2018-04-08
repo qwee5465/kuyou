@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.bb-solid{border-bottom:1px solid #eee; padding-bottom: 15px;}
+		.btn-warning{background: #ed4949; border: 1px solid #cd2525; letter-spacing: 1.5px;}
+		.btn-warning:hover{background: #cd2525; border: 1px solid #cd2525;}
+		.btn-success{background: #59ab76; border: 1px solid #3b9f5f;}
+		.btn-success:hover{background: #3b9f5f; border: 1px solid #3b9f5f;}
+
+	</style>
+</head>
+<body>
+	<div class="nav navbar-default h-60">
+		<div class="contianer-fluid">
+			<h3 style="border:none;">参数设置</h3>
+		</div>
+	</div>
+	<div class="contianer-fluid">
+		<form action="" method="">
+			<div class="ml15 mt20" style="background:#fff;box-shadow:0 0 8px #d6d6d6;width:600px;padding: 15px; letter-spacing: 1.5px;">  
+				<div class="form-group bb-solid">
+					<span class="mt8">数量显示几位小数</span>
+					<select class="mr10" id="param_num" onchange="setParamNum(this.value)" > 
+						<option value='0'>0</option>
+						<option value='1'>1</option>
+						<option value='2' selected="selected">2</option>
+						<option value='3'>3</option>
+						<option value='4'>4</option> 
+					</select>
+				</div>
+				<div class="form-group mt20 bb-solid">
+					<span class="mt8">价格显示几位小数</span>
+					<select class="mr10" id="param_price"  onchange="setParamPrice(this.value)">
+						<option value='0'>0</option>
+						<option value='1'>1</option>
+						<option value='2' selected="selected">2</option>
+						<option value='3'>3</option>
+						<option value='4'>4</option> 
+					</select>
+				</div>
+				<div class="form-group mt20 bb-solid">
+					<span class="mt8">金额显示几位小数</span>
+					<select class="mr10" id="param_sum"  onchange="setParamSum(this.value)">
+						<option value='0'>0</option>
+						<option value='1'>1</option>
+						<option value='2' selected="selected">2</option>
+						<option value='3'>3</option>
+						<option value='4'>4</option>  
+					</select>
+				</div>
+				<div class="form-group mt20 bb-solid">
+					<span class="mt8">商品价格是否四舍五入</span>
+					<select class="mr10" id="param_is_round"  onchange="setParamIsRound(this.value)">
+						<option value='1'>是</option>
+						<option value='0'>否</option> 
+					</select>
+				</div>
+				<div class="form-group mt20 bb-solid">
+					<span class="mt8">保质期过期提醒设置天数</span>
+					<input type="number" id="overdue_day" class="form-control w-100 text-center" value="{$overdue_day}"  />
+					<span class="mt8 ml10" style="color:#999;">(请输入数字)</span>
+					<input type="button" class="btn btn-success" onclick="submitOverdueDay()" value="保 存" />
+				</div> 
+				<div class="form-group mt20 bb-solid">
+					<span class="mt8">采购单分拣单是否转换单位</span>
+					<select class="mr60" id="param_is_convert_unit" onchange="setParamIsConvertUnit(this.value)">
+						<option value="0">不转换</option>
+						<option value="1">公斤转换成斤</option>
+						<option value="2">斤转换成公斤</option>
+					</select>
+				</div> 
+			
+				<div class="form-group mt20 bb-solid">
+					<span class="mt8">低于商品进价销售时是否允许</span>
+					<select class="mr60">
+						<option>否</option>
+						<option>是</option>
+					</select>
+				</div> 
+				<div class="form-group mt20 bb-solid">
+					<span class="mt8">商品出库数大于库存数量是否允许出库</span>
+					<select class="mr60">
+						<option>否</option>
+						<option>是</option>
+					</select>
+				</div>  
+				<div class="form-group mt20">
+					<span class="mt8" style="color:rgb(51,51,51);">
+						清空入库出库及库存数据
+					</span>
+					<input type="button" onclick="createStock()" value="清空出入库数据" class="btn btn-warning " style="margin-left: 100px;" /> 
+				</div> 
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script>
+		//文档加载完毕
+		$(function(){
+			$("#param_num").val("{$splist['param_num']}");
+			$("#param_price").val("{$splist['param_price']}");
+			$("#param_sum").val("{$splist['param_sum']}");
+			$("#param_is_round").val("{$splist['param_is_round']}");
+			$("#param_is_convert_unit").val("{$splist['param_is_convert_unit']}");
+		});
+		// //清空出入库数据
+		// function createStock(){
+			
+		// }
+		//提交保质天数
+		function submitOverdueDay(){
+			var overdue_day = $("#overdue_day").val();
+			if(!IsNum(overdue_day)){
+				layer.tips('请填写保证天数', '#overdue_day', {tips: 2});
+				return false;
+			}
+			$.post("{:U('Parameters/submitOverdueDay')}", {"overdue_day": overdue_day}, function(data) {
+				if (data == 0) {
+					layer.msg('保存成功,账号重新登录后生效!', {icon: 1,time: 2000});
+				} else {
+					layer.msg('保存失败', {icon: 2,time: 2000});
+				}
+			}, "json"); 
+		}
+
+		//设置系统参数——数量
+		function setParamNum(param_num){ 
+			$.post("{:U('Parameters/setParamNum')}", {"param_num": param_num}, function(data) {
+				if (data == 1) {
+					layer.msg('保存成功,账号重新登录后生效!', {icon: 1,time: 2000});
+				} else {
+					layer.msg('保存失败', {icon: 2,time: 2000});
+				}
+			}, "json"); 
+		}
+		//设置系统参数——单价
+		function setParamPrice(param_price){ 
+			$.post("{:U('Parameters/setParamPrice')}", {"param_price": param_price}, function(data) {
+				if (data == 1) {
+					layer.msg('保存成功,账号重新登录后生效!', {icon: 1,time: 2000});
+				} else {
+					layer.msg('保存失败', {icon: 2,time: 2000});
+				}
+			}, "json"); 
+		}
+		//设置系统参数——金额
+		function setParamSum(param_sum){ 
+			$.post("{:U('Parameters/setParamSum')}", {"param_sum": param_sum}, function(data) {
+				if (data == 1) {
+					layer.msg('保存成功,账号重新登录后生效!', {icon: 1,time: 2000});
+				} else {
+					layer.msg('保存失败', {icon: 2,time: 2000});
+				}
+			}, "json"); 
+		}
+		//设置系统参数——是否四舍五入
+		function setParamIsRound(param_is_round){ 
+			$.post("{:U('Parameters/setParamIsRound')}", {"param_is_round": param_is_round}, function(data) {
+				if (data == 1) {
+					layer.msg('保存成功', {icon: 1,time: 1000});
+				} else {
+					layer.msg('保存失败', {icon: 2,time: 2000});
+				}
+			}, "json"); 
+		}
+		function setParamIsConvertUnit(param_is_convert_unit){
+			$.post("{:U('Parameters/setParamIsConvertUnit')}", {"param_is_convert_unit": param_is_convert_unit}, function(data) {
+				if (data == 1) {
+					layer.msg('保存成功', {icon: 1,time: 1000});
+				} else {
+					layer.msg('保存失败', {icon: 2,time: 2000});
+				}
+			}, "json"); 
+		}	
+	</script>
+</body>
+</html>

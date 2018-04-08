@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}出库单</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/area.js"></script> 
+	<script type="text/javascript" src="__PUBLIC__/js/areapublic.js"></script> 
+	<style>
+		#body_content{    letter-spacing: 0.5px;}
+		.bill-ul{background:#fff;margin-bottom: 0;}
+		.bill-ul-li{float:left;padding: 5px 0px 0px 5px;}
+		.bill-ul-li-title{display: inline-block;font-weight: 300;float: left;}
+		.bill-ul-li-content{display: inline-block;border-bottom:1px solid #000;padding: 0 10px;margin-right: 30px;height: 20px;min-width:100px;text-align: center;}
+		.bill-ul-li-content.bbk{border-bottom:1px solid #000;}   
+		.tb-style td{border: 1px solid #000;height: 25px;}
+		.print-h3{border: none; padding-bottom: 0; margin-top: 0px;text-align: center;font-weight:bold;} 
+		.page-next{page-break-after:always;}
+	</style>
+</head>
+<body style="background: #fff;">
+<div id="body_content" style="padding:0 5px;"> 
+	<foreach name="nlist" item="v">
+		 <ul class="cf bill-ul"> 
+			<if condition="$osList.osname_p eq 0">
+				<li class="bill-ul-li w100 t_osname_p">
+					<h3 class="print-h3">{$list[0].osname}</h3>
+				</li> 
+			</if>   
+			<if condition="$osList.cname_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.cname}：</label> 
+					<span class="bill-ul-li-content">{$list[0].cname}</span>
+				</li>
+			</if>  
+			<if condition="$osList.ctime_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.ctime}：</label> 
+					<span class="bill-ul-li-content">{$list[0].create_time|date='Y-m-d',###}</span>
+				</li>
+			</if>   
+			<if condition="$osList.osid_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.osid}：</label> 
+					<span class="bill-ul-li-content">{$osid}</span>
+				</li>
+			</if> 
+			<if condition="$osList.audit_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.audit}：</label> 
+					<span class="bill-ul-li-content">{$list[0].contacts}</span>
+				</li>
+			</if>  
+			<if condition="$osList.cphone_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.cphone}：</label> 
+					<span class="bill-ul-li-content">{$list[0].phone}</span>
+				</li>
+			</if>
+			<if condition="$osList.caddress_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.caddress}：</label> 
+					<span class="bill-ul-li-content" id="span_caddress">{$list[0].street}</span>
+				</li> 
+			</if>
+			<!-- 公司 -->
+			<if condition="$osList.company_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.company}：</label> 
+					<span class="bill-ul-li-content" id="span_company">{$company}</span>
+				</li> 
+			</if>
+			<!-- 公司地址 --> 
+			<if condition="$osList.company_address_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.company_address}：</label> 
+					<span class="bill-ul-li-content" id="span_company_address"></span>
+				</li> 
+			</if>
+			<!-- 公司电话 --> 
+			<if condition="$osList.company_phone_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.company_phone}：</label> 
+					<span class="bill-ul-li-content" id="span_company_phone">{$company_phone}</span>
+				</li> 
+			</if>
+			<!-- 备注 -->
+			<if condition="$osList.remark_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.remark}：</label> 
+					<span class="bill-ul-li-content">{$list[0].remarkf}</span>
+				</li>
+			</if> 
+			<if condition="$osList.total_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.total}：</label> 
+					<span class="bill-ul-li-content">{$list[0].total|customDecimal="sum",###}</span>
+				</li> 
+			</if>
+			<if condition="$osList.check_p eq 0">
+				<li class="bill-ul-li">
+					<label class="bill-ul-li-title">{$titles.check}：</label> 
+					<span class="bill-ul-li-content"></span>
+				</li> 
+			</if>
+		</ul>  
+		<table class="tb-style" style="margin-top: 10px;">
+			<thead>
+			<tr>
+				<td style="min-width: 35px;">序号</td>
+				<if condition="$osbList.gname_p eq 0">
+					<td style="min-width:70px;max-width: 290px;" class="b_gname_p">{$t_list.gname}</td>
+				</if>
+				<if condition="$osbList.alias_p eq 0">
+					<td style="min-width:70px;max-width: 290px;" class="b_alias_p">{$t_list.alias}</td>
+				</if>
+				<if condition="$osbList.bname_p eq 0">
+					<td style="min-width:70px;" class=" b_bname_p">{$t_list.bname}</td>
+				</if>
+				<if condition="$osbList.uname_p eq 0">
+					<td style="min-width:70px;" class=" b_uname_p">{$t_list.uname}</td>
+				</if>
+				<if condition="$osbList.num_p eq 0">
+					<td style="min-width:50px;" class=" b_num_p">{$t_list.num}</td>
+				</if>  
+				<if condition="$osbList.num1_p eq 0">
+					<td style="min-width:50px;" class=" b_num1_p">{$t_list.num1}</td>
+				</if>   
+				<if condition="$osbList.machining_p eq 0">
+					<td style="min-width:70px;" class=" b_machining_p">{$t_list.machining}</td>
+				</if> 
+				<if condition="$osbList.check_num_p eq 0">
+					<td style="min-width:70px;" class=" b_check_num_p">{$t_list.check_num}</td>
+				</if>
+				<if condition="$osbList.price_p eq 0">
+					<td style="min-width:70px;" class=" b_price_p">{$t_list.price}</td>
+				</if>
+				<if condition="$osbList.than_p eq 0">
+					<td style="min-width:70px;" class=" b_than_p">{$t_list.than}</td>
+				</if>
+				<if condition="$osbList.tax_price_p eq 0">
+					<td style="min-width:70px;" class=" b_tax_price_p">{$t_list.tax_price}</td>
+				</if>
+				<if condition="$osbList.price1_p eq 0">
+					<td style="min-width:70px;" class=" b_price1_p">{$t_list.price1}</td>
+				</if>
+				<if condition="$osbList.cd_num_p eq 0">
+					<td style="min-width:70px;" class=" b_cd_num_p">{$t_list.cd_num}</td>
+				</if> 
+				<if condition="$osbList.rweight_p eq 0">
+					<td style="min-width:70px;" class=" b_rweight_p">{$t_list.rweight}</td>
+				</if>
+				<if condition="$osbList.totalb_p eq 0">
+					<td style="min-width:70px;" class=" b_totalb_p">{$t_list.totalb}</td>
+				</if>
+				<if condition="$osbList.remarkb_p eq 0">
+					<td style="min-width:100px;max-width: 290px;">{$t_list.remarkb}</td> 
+				</if> 
+				<if condition="$osbList.totalb1_p eq 0">
+					<td style="min-width:70px;" class=" b_totalb1_p">{$t_list.totalb1}</td>
+				</if>
+			</tr>
+			</thead>
+			<tbody>
+			<foreach name="v.list" item="vo">
+				<tr> 
+					<td>{$key+1}</td>
+					<if condition="$osbList.gname_p eq 0">
+						<td>{$vo.gname}</td>
+					</if>
+					<if condition="$osbList.alias_p eq 0">
+						<td>{$vo.alias}</td>
+					</if>
+					<if condition="$osbList.bname_p eq 0">
+						<td>{$vo.brand_name}</td>
+					</if>
+					<if condition="$osbList.uname_p eq 0">
+						<td>{$vo.uname}</td> 
+					</if>
+					<if condition="$osbList.num_p eq 0">
+						<td>{$vo['num1']/$vo['nei_num']|customDecimal="num",###}</td> 
+					</if> 
+					<if condition="$osbList.num1_p eq 0">
+						<td>0</td> 
+					</if> 
+					<if condition="$osbList.machining_p eq 0">
+						<td>{$t_list.machining|getMachining}</td> 
+					</if>
+					<if condition="$osbList.check_num_p eq 0">
+						<td></td> 
+					</if>
+					<if condition="$osbList.price_p eq 0">
+						<td>{$vo.nei_price|customDecimal="price",###}</td> 
+					</if>
+					<if condition="$osbList.than_p eq 0">
+						<td>{$vo.than|customDecimal="price",###}</td> 
+					</if>
+					<if condition="$osbList.tax_price_p eq 0">
+						<td>{$vo['nei_price'] * $vo['than']|customDecimal="price",###}</td> 
+					</if> 
+					<if condition="$osbList.price1_p eq 0">
+						<td>0</td> 
+					</if>
+					<if condition="$osbList.cd_num_p eq 0">
+						<td>{$vo['cd_num']/$vo['nei_num']|customDecimal="num",###}</td> 
+					</if>
+					<if condition="$osbList.rweight_p eq 0">
+						<td>{$vo['num1']/$vo['nei_num'] + $vo['cd_num']/$vo['nei_num']|customDecimal="num",###}</td> 
+					</if>
+					<if condition="$osbList.totalb_p eq 0">
+						<td class="sales_amount">{$vo.sales_amount|customDecimal="sum",###}</td> 
+					</if>
+					<if condition="$osbList.remarkb_p eq 0">
+						<td>{$vo.remark}</td> 
+					</if> 
+					<if condition="$osbList.totalb1_p eq 0">
+						<td>0</td> 
+					</if>
+				</tr>
+			</foreach>
+			</tbody>
+		</table>
+		<div class="page-next"></div>
+	</foreach>
+</div>
+<script>
+	var address ="";//供应商地址
+	$(function(){ 
+		address =getAddressName('{$list[0].pid}')+getAddressName('{$list[0].pid}','{$list[0].cid}')+getAddressName('{$list[0].pid}','{$list[0].cid}','{$list[0].did}')+$("#span_caddress").html();
+		$("#span_caddress").html(address);  
+		$("#span_company_address").html(getAddressName('{$info_list.pid}')+getAddressName('{$info_list.pid}','{$info_list.cid}')+getAddressName('{$info_list.pid}','{$info_list.cid}','{$info_list.did}')+"{$info_list['street']}"); 
+		var tdCount = $(".tb-style tbody tr").eq(0).find("td").length; 
+		var html="<tr><td id='td_heje' colspan='"+tdCount+"'>合计</td></tr>"; 
+		$(".tb-style").last().find("tbody").append(html);
+		$totalb1_p = "{$osbList.totalb1_p}";
+		if($totalb1_p=="0"){
+			$("#td_heje").html("合计："); 
+		}else{
+			$("#td_heje").html("合计：{$heje}"); 
+		} 
+		printme();
+	}); 
+
+	function printme(){ 
+		window.print();
+		setTimeout(function(){
+			parent.layer.closeAll();
+		},50);
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+/*
+* 共用组件和私有组件库
+* 维护人:田 
+* 创建时间：2016/8/20
+**/
+
+body{background-color: #eee;}
+.body-ohid{overflow:hidden;}
+
+/*重置bootstrap样式*/
+.form-control{display: inline-block;}
+
+.has-error .form-control {
+    border-color: rgba(170,170,170,1);
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+}
+
+h3{font-size: 18px;margin-left: 15px;margin-right: 15px;padding-bottom: 15px;border-bottom: 1px solid #ccc;letter-spacing: 2px;}
+/*选择框位置调整*/
+.sp-l{display: block;margin: -5px 0 0 10px;}
+.sp-s{display: block;margin: -3px 0 0 10px;}
+.sp-s-p{display: block;margin: -3px 0 0 10px;}
+
+
+
+/*设置滚动条隐藏 但依然可滚动*/
+/*::-webkit-scrollbar {width: 0; height: 0;}
+::-moz-scrollbar {width: 0; height: 0;}
+::scrollbar {width: 0; height: 0;}*/
+textarea:focus, select:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
+    border-color: rgba(170,170,170,1);
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+}
+
+.bg-hui{background-color:#EBEBEB;}
+.l-title{float: left;width: 80px;text-align: right;margin-right: 10px; font-size: 14px; margin-top: 7px;word-break:keep-all; white-space:nowrap;overflow:hidden; /*text-overflow:ellipsis;*/}
+.l-titl-star{right:-8px;top:3px;color:red;}
+
+/*搜索按钮 */
+.search{width:40px;height:30px;position:absolute;top:1px;right:1px;border:none;border-top-right-radius:4px;border-bottom-right-radius:4px;outline:none;}
+
+/*列表操作*/
+.operation{color:#A7A7A7;}
+.operation-a{color:#A7A7A7;}
+.operation-a:hover{color:#000;}
+
+.list-img{width:40px;height:40px;}
+
+/*双线*/
+.line-tow{border-top:1px solid #ccc;border-bottom:1px solid #fff;margin: 0 15px;clear:both;}
+
+input[type="checkbox"]{margin: 0 !important;}
+select{ padding: 6px 30px 6px 12px;border: 1px solid #ccc;font-size:14px;appearance:none;-webkit-appearance: none;-moz-appearance: none;-ms-appearance:none;background: url('../img/select-drop-icon.png') no-repeat 90% center;background-size: 14px auto;}
+option{padding-left: 12px;}
+/*表格*/
+.tb-style{border-collapse: collapse;width: 100%;font-size: 14px;background-color: #fff;border:1px solid #d0d0d0;}
+.tb-style td{border-left:1px solid #d0d0d0;border-bottom: 1px dashed #d0d0d0;text-align: center;height: 40px;}
+.tb-style td a{color: #59ab76;}
+.tb-style td a:hover{color: #3b9f5f;}
+.t-table tbody tr.active{background-color: #c5edb1 !important;}
+.tb-style tbody tr:hover{background-color: #c5edb1;}
+/*table tbody tr:last-child td{border-bottom: none;}
+table tr td:first-child{border-left: none;}
+*/
+
+
+
+.i-style{display: block;color:#b3b3b3;line-height: 36px;text-align:center;width: 48px;height: 38px;border-top-left-radius: 4px;border-bottom-left-radius: 4px;border-right:1px solid #c1c1c1;left: 1px;top: 1px;}
+.search-style{font-size:20px;width:41px;height:32px;background-color:#f2f2f2;border-top-right-radius: 4px;border-bottom-right-radius: 4px;margin-top: 1px;border-right: 1px solid #d0d0d0;color: #616161;}
+.search-style.active{font-size:20px;width:41px;height:32px;background-color: #dfad00;border-top-right-radius: 4px;border-bottom-right-radius: 4px;margin-top: 1px;border-right: 1px solid #dfad00;color: #fff;}
+
+/*.search-style{color: #fff;background: #dfad00;}*/
+/*input字体颜色*/
+::-webkit-input-placeholder{color: #b3b3b3;}
+::-moz-placeholder{color: #b3b3b3;}
+/*计数*/
+.count{font-size: 14px;color: #838383;}
+
+
+/*常用按钮样式*/
+.btn-style{background:#52b38c;color:#fff;}
+.btn-style:hover{background: linear-gradient(#4daf88,#118556);color:#fff;}
+/*个别按钮样式*/
+.btn-style-r{background: #ff999a;color: #fff;}
+.btn-style-r:hover{background: linear-gradient(#ffbfbf,#ff9a9a);color:#fff;}
+.btn-style-y{background: #e4bd34;color: #fff;}
+.btn-style-y:hover{background: linear-gradient(#3b9f5f,#3b9f5f);color:#fff;}
+
+/*遮罩层*/
+.mask{position: absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1500;}
+
+/*分页*/
+.current{cursor:not-allowed;}
+.paging-btn{color: #000; padding: 10px; width: 40px;display: inline-block;background: #fff;margin: 0 3px;text-align: center;box-shadow: 0px 0px 5px #999;}
+.paging-btn:hover{color:#fff;background: #52b38c;}
+.paging-btn.active{color:#fff;background: #52b38c;}
+
+/*layer样式重置部分*/
+.layui-layer-dialog .layui-layer-content{/*font-size:16px !important;*/ text-align: center;}
+.layui-layer-btn {text-align: center !important;}
+.layui-layer-btn .layui-layer-btn0{background: #52b38c !important;border-color: transparent !important;}
+.layui-layer-title{background: #52b38c !important;}
+
+/*列表图片*/
+.list-img{width:60px;height:40px;}
+
+/*弹窗标题*/
+.title-pop{text-align: center;height:40px;background:#52b38c;font-size:16px;line-height: 40px;color: #fff;}
+.cancel-top:hover{width: 25px;height: 25px;background: url(../img/cancel_h.png);background-size: 100% 100%;}
+/*弹窗取消按钮*/
+.cancel-pop{width:100%;height: 40px;border:none;background-color:#ececec;font-size: 16px;}
+/*弹窗确定按钮*/
+.confirm-pop{width:100%;height: 40px;border:none;background-color:#52b38c;font-size: 16px;color: #fff;}
+
+
+input.active{border:1px solid #dfad00 !important;box-shadow: 0 0 5px #cddab2 !important;}
+select.active{border:1px solid #dfad00;box-shadow: 0 0 5px #cddab2;}
+
+/*新增和编辑页面分隔区域背景*/
+.bg-gap{padding-top: 20px;padding-bottom: 20px;background: #f0f0f0;width: 100%;}
+/*新增和编辑页面底部样式*/
+.bottom-style{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#fff;box-shadow:0 -1px 5px #d0d0d0;}
+/*返回按钮*/
+.return{border-radius:4px;border:1px solid #d0d0d0;margin-left:50px;color:#000;line-height: 25px;}
+/*保存按钮*/
+.preserve{background:#52b38c;color:#fff;border:none;border-radius:4px;font-size: 14px;}
+
+/*选择搜索框*/
+.select-sreach-btn{position: absolute;opacity: 0;transition:opacity .3s ease-in; right:1px;top:1px;width:40px;text-align: center;line-height: 35px;background-image:url('../img/select-drop-icon.png');background-repeat: no-repeat;    height: 32px; background-position: center;}
+.select-sreach-btn:hover{opacity: 1;}
+.select-sreach-list{position: absolute;right:0;top:35px;width:100%;background:#F0F0F0;z-index: 10;}
+.select-sreach-list li{padding: 10px;text-align: center;border-bottom:1px solid #fff;    overflow: hidden; white-space: nowrap;text-overflow: ellipsis;}
+.select-sreach-list li:hover,.select-sreach-list li.active{background:#D0A972;}
+.select-sreach-list li.select-sreach-list-fl50{float:left;width:50%;}
+.select-sreach-list li.select-sreach-list-fl25{float:left;width:25%;}
+
+.select-sreach-list-open{width:100%;background:#F0F0F0;z-index: 10;}
+.select-sreach-list-open li{padding: 10px;text-align: center;border-bottom:1px solid #fff;     background: #f0f0f0;   overflow: hidden; white-space: nowrap;text-overflow: ellipsis;}
+.select-sreach-list-open li:hover{background:#D0A972;}
+.select-sreach-list-open li.select-sreach-list-fl50{float:left;width:50%;}
+.select-sreach-list-open li.select-sreach-list-fl25{float:left;width:25%;}
+
+input[type=number]{text-align: center;}
+/*type=number箭头去除*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0; 
+}
+/*Firefox下：*/
+input[type="number"]{-moz-appearance:textfield;}
+/*table 滚动*/
+.table-scroll{height:280px;overflow:auto;}
+
+/*数据列设置 提交按钮*/
+.data-submit{left: 50%;bottom: 8px;margin-left: -50px;background: linear-gradient(#2ca174,#128357);border: none;color: #fff;height: 40px;}
+
+/*底部浮动*/
+.t-footer{position: fixed;bottom:0px;left:0px;width:100%;}
+/*文本框无边框无备注状态*/
+.bnone-txt {  padding: 0 15px;  height: 35px; box-sizing: border-box; text-align: center;  background: none;border:none; }
+
+.t-zzc{width:100%;height:100%;position: fixed;left:0;top:0;z-index:100;text-align: left;}
+
+/*jquery实现返回顶部按钮和scroll滚动功能[带动画效果] */
+ #toTop{width: 100px;z-index: 10;border: 1px solid #333;background: #121212;text-align: center;padding: 5px; position: fixed;bottom: 0px;right: 0px;cursor: pointer;display: none; color: #fff;text-transform: lowercase;font-size: 0.9em;}

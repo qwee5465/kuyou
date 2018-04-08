@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+    <style type="text/css">
+        body{overflow:auto;background-color:#eee;}
+        .front_mg{height: 50px;background-color: #f5f5f5;width: 99%;padding-top: 15px;margin-top: 10px;}
+        .content_mg{width: 99%;background-color: #fff;padding: 10px;}
+        .user_mg{width: 99%;height: 370px;background-color: #fff;margin-top: 20px;padding-top: 15px;}
+        .user_mg li{margin-top: 10px;}
+        .nav-top{width: 100%;background:url(__PUBLIC__/img/role_square.png) no-repeat;background-size: 100% 40px;}
+
+        .nav-top-ul-li{float:left;padding:20px 20px;font-size:16px;margin-top: -6px;width: 120px;text-align: center;}
+        .nav-top-ul-li a{display:block;color:#000;margin-bottom: 10px;line-height: 18px;}
+        .nav-top-ul-li.active a{color:#fff;}
+        .nav-top-ul-li.active{background:url(__PUBLIC__/img/role_nav.png) no-repeat;background-size: 120px 52px;}
+    </style>
+</head>
+<body> 
+    <div class="nav navbar-default h-60">
+        <h3 style="border: none;">权限设置</h3>
+    </div>
+    <div class="container-fluid mt20">
+        <!-- 导航栏 -->
+        <div class="nav-top">
+            <ul class="nav-top-ul cf"> 
+                <li class="nav-top-ul-li">
+                    <!-- <a href="__APP__/WholesaleAdmin/Role/roleSetPower.html?rid={$rid}&ptid={$vo.ptid}">通用权限</a> -->
+                    <a href="javascript:;">通用权限</a>
+                </li> 
+            </ul>
+        </div>
+        <form action="__SELF__" method="post">
+            <input type="hidden" value="{$rid}" name="rid" />
+            <input type="hidden" value="{$ptid}" name="ptid" />
+            <div class="col-xs-12 content_mg"> 
+                <div> 
+                    <ul class="cf">
+                        <foreach name="data" item="vo">
+                            <li class="ml36 fl mt10">
+                                <input type="checkbox" name="pid[]" value="{$vo.pid}" class="fl w-15 h-15" />
+                                <span class="fs-16 fl sp-s">{$vo.pname}</span>
+                            </li>
+                        </foreach> 
+                    </ul>
+                </div>
+            </div> 
+            <div class="text-center">
+                <input type="submit" onclick="return checkForm();" class="btn btn-style w-200 mt10" value="保存" />
+            </div> 
+        </form>
+    </div>
+    
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script>
+           var cdata=[]; 
+    </script>
+    <foreach name="cdata" item="vo">
+        <script>
+            cdata.push({$vo.pid});
+        </script>
+    </foreach> 
+    <script>
+        //文档加载
+        $(function(){  
+            $('input[type=checkbox]').each(function(index,value){
+                for(var i=0;i<cdata.length;i++){
+                     if($(value).val()==cdata[i]){
+                        $(value).attr("checked",true);
+                     }
+                } 
+            });
+        });
+        
+    </script>
+</body>
+</html>

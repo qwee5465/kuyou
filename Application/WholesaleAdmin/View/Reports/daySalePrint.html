@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}销售总汇</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		 #body_content{    letter-spacing: 0.5px;}
+		.t-caption{text-align: center; color: #000;} 
+		.tb-style{width:99%;margin:auto;}
+		.tb-style td{border: 1px solid #000;height: 25px;    border-bottom: 1px solid #000;}
+		.print-h3{border: none; padding-bottom: 0; margin-top: 0px;text-align: center;font-weight:bold;}
+
+	</style>
+</head>
+<body style="background: #fff;">
+<div id="body_content">
+	 <table class="tb-style">
+		<caption class="t-caption" >
+			<h3 class="print-h3" style="margin: 0;">{$tcaption}</h3></caption>
+		<thead>
+			<tr class="headcolor2">
+				<td style="min-width: 35px;">行号</td> 
+				<if condition="$dsdcList.gname_p eq 0">
+					<td style="min-width:70px;max-width: 290px;" class="t_gname_p">
+						<span class="pr">
+							{$titles.gname}  
+						</span> 
+					</td> 
+				</if>
+				<if condition="$dsdcList.alias_p eq 0">
+					<td style="min-width:70px;max-width: 290px;" class="t_alias_p">{$titles.alias}</td> 
+				</if>
+				<if condition="$dsdcList.gtname_p eq 0">
+					<td style="min-width:70px;max-width: 290px;" class="t_gtname_p"> 
+						<span class="pr">
+							{$titles.gtname}
+						</span>	
+					</td> 
+				</if>
+				<if condition="$dsdcList.bname_p eq 0">
+					<td style="min-width:70px;" class="t_bname_p"> 
+						<span class="pr">
+							{$titles.bname} 
+						</span>
+					</td> 
+				</if> 
+				<if condition="$dsdcList.uname_p eq 0">
+					<td style="min-width:70px;" class="t_uname_p">{$titles.uname}</td> 
+				</if>
+				<if condition="$dsdcList.num_p eq 0">
+					<td style="min-width:70px;" class="t_num_p">{$titles.num}</td> 
+				</if>  
+				<if condition="$dsdcList.cd_num_p eq 0">
+					<td style="min-width:70px;" class="t_cd_num_p">{$titles.cd_num}</td> 
+				</if> 
+				<if condition="$dsdcList.rweight_p eq 0">
+					<td style="min-width:70px;" class="t_rweight_p">{$titles.rweight}</td> 
+				</if>
+				<if condition="$dsdcList.check_num_p eq 0">
+					<td style="min-width:70px;" class="t_check_num_p">{$titles.check_num}</td> 
+				</if>
+				<if condition="$dsdcList.than_p eq 0">
+					<td style="min-width:70px;" class="t_than_p">{$titles.than}</td> 
+				</if>
+				<if condition="$dsdcList.price_p eq 0">
+					<td style="min-width:70px;" class="t_price_p">{$titles.price}</td> 
+				</if>
+				<if condition="$dsdcList.total_p eq 0">
+					<td style="min-width:70px;" class="t_total_p">{$titles.total}</td> 
+				</if>
+				<if condition="$dsdcList.cname_p eq 0">
+					<td style="min-width:70px;" class="t_cname_p"> 
+						<span class="pr">
+							{$titles.cname} 
+						</span>	
+					</td> 
+				</if>
+				<if condition="$dsdcList.remark_p eq 0">
+					<td style="min-width:70px;" class="t_remark_p">{$titles.remark}</td> 
+				</if>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="list" id="vo">
+			<tr>
+				<td>{$key+1}</td>
+				<if condition="$dsdcList.gname_p eq 0">
+					<td  class="t_gname_p">{$vo.gname}</td> 
+				</if>
+				<if condition="$dsdcList.alias_p eq 0">
+					<td class="t_alias_p">{$vo.alias}</td> 
+				</if>
+				<if condition="$dsdcList.gtname_p eq 0">
+					<td class="t_gtname_p">
+						{$vo.type_name}
+						<if condition="$vo['type_name1']">
+							>{$vo.type_name1}
+						</if>
+						<if condition="$vo['type_name2']">
+							>{$vo.type_name2}
+						</if>
+					</td>
+				</if>
+				<if condition="$dsdcList.bname_p eq 0">
+					<td class="t_bname_p">{$vo.brand_name}</td>
+				</if>
+				<if condition="$dsdcList.uname_p eq 0">
+					<td class="t_uname_p">{$vo.unit_name}</td>
+				</if>
+				<if condition="$dsdcList.num_p eq 0">
+					<td class="t_num_p">{$vo.num1}</td> 
+				</if> 
+				<if condition="$dsdcList.cd_num_p eq 0">
+					<td class="t_cd_num_p">{$vo.cd_num}</td>
+				</if>
+				<if condition="$dsdcList.rweight_p eq 0">
+					<td class="t_rweight_p">{$vo['num1']+$vo['cd_num']}</td>
+				</if>
+				<if condition="$dsdcList.check_num_p eq 0">
+					<td class="t_check_num_p">{$vo.check_num}</td>
+				</if>
+				<if condition="$dsdcList.than_p eq 0">
+					<td class="t_than_p">{$vo.than}</td>
+				</if>
+				<if condition="$dsdcList.price_p eq 0">
+					<td class="t_price_p">{$vo.price}</td>
+				</if>
+				<if condition="$dsdcList.total_p eq 0">
+					<td class="t_total_p">{$vo['num1']*$vo['than']*$vo['price']}</td> 
+				</if>
+				<if condition="$dsdcList.cname_p eq 0">
+					<td class="t_cname_p">{$vo.cname}</td>
+				</if>
+				<if condition="$dsdcList.remark_p eq 0">
+					<td class="t_remark_p">{$vo.remark}</td>
+				</if>
+			</tr> 
+			</volist>
+		</tbody>
+	</table>
+</div>
+
+
+
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		$(function(){
+		 	printme();
+		});
+		//打印
+		function printme(){ 
+			window.print(); 
+			setTimeout(function(){
+				parent.layer.closeAll();
+			},50);
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/findVerify.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/fonts/iconfont.css" />
+</head>
+<body>
+	<div class="wrapper">
+		<div class="findVerify pa">
+			<h4>找回密码</h4>
+			<form>
+				<div class="pr" style="margin-top:55px;">
+					<i class="iconfont i-style pa fs-30">&#xe6ec;</i>
+					<label class="sr-only" for="username">请输入登录用户名</label>
+          			<input id="username" class="w-280 h-40" placeholder="请输入登录用户名" type="text">
+				</div>
+				<div class="pr mt10">
+					<label class="sr-only" for="verifyCode">请输入验证码</label>
+          			<input id="verifyCode" class="verifyCode w-280 h-40" placeholder="请输入验证码" type="text">
+          			<div class="getVerify pa" id="wait_time"></div>
+				</div>
+				<div class="pr mt10">
+					<i class="iconfont i-style pa fs-30">&#xe692;</i>
+					<label class="sr-only" for="password">请设置新密码</label>
+          			<input id="password" class="w-280 h-40" placeholder="请设置新密码" type="text">
+				</div>
+				<div class="pr mt10">
+					<i class="iconfont i-style pa fs-30">&#xe692;</i>
+					<label class="sr-only" for="repassword">请确认输入密码</label>
+          			<input id="repassword" class="w-280 h-40" placeholder="请确认输入密码" type="text">
+				</div>
+				
+				<div class="mt30">
+					<input type="submit" value="确认修改" class="w-280 h-40">
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

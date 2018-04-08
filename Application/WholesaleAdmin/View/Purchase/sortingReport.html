@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}分拣单</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.t-caption{text-align: center;border: 1px solid #ccc;  background: #fff;}
+		.headcolor2 td{background-color: #404040 !important; border:1px solid #404040 !important;color: #fff;}
+		table tr:nth-child(even){background-color: #e4e4e4;}
+		table tr:nth-child(odd){background-color: #F5F5F5;}
+		.tb-style{background-color: #f5f5f5; font-size:14px;}
+		.tb-style td{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+		.navbar-default {background-color: #fff;}
+		.btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important; letter-spacing: 1.5px;}
+	    .btn_color:hover{background-color: #6db81f !important; border:1px solid #6db81f !important;}
+	    .t-caption{background-color: #59ab76; border: 1px solid #59ab76; color: #fff;}
+	    .btn-style{background-color: #59ab76; border: 1px solid #3b9f5f;}
+	    .btn-style:hover{background: linear-gradient(#3b9f5f,#3b9f5f);
+	    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+	    background-position-x: initial;
+	    background-position-y: initial;
+	    background-size: initial;
+	    background-repeat-x: initial;
+	    background-repeat-y: initial;
+	    background-attachment: initial;
+	    background-origin: initial;
+	    background-clip: initial;
+	    background-color: initial;}
+	    .a-jiantou-top{position: absolute; top: 2px;right: -15px;width:0;height:0;   border-left:5px solid transparent;   border-right:5px solid transparent;   border-bottom:5px solid #fff;}
+	    .a-jiantou-bottom{position: absolute; bottom: 2px;right: -15px;width:0;height:0;   border-left:5px solid transparent;   border-right:5px solid transparent;   border-top:5px solid #fff;}
+	    .noradius{border-radius: 0px;}
+	    .ml5{margin-left: 5px;}
+	    .ml20{margin-left: 20px;}
+	    .col-md-2{width: auto;}
+	    .col-xs-6{width: auto;}
+	    .nav,select{letter-spacing: 1.5px;} 
+	    .code-tr td{width:35px;} 
+	    td span{margin-left:10px;}
+	</style>
+	<style type="text/css" id="style1">
+		table {
+			border-collapse: collapse;
+		    width: 100%;
+		    font-size: 20px;
+		    background-color: #fff;
+		    border: 1px solid #d0d0d0;
+		}
+		td,th {
+			text-align: center;
+			border: 1px solid #d0d0d0; 
+		}
+		td span{margin-left:10px;} 
+	</style>
+</head>
+<body>
+<div id="body_content">
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>分拣单</h3>
+			<div>
+				<form id="form1" action="__SELF__" method="post">
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="ml15">
+								<span class="fl mt8">日期</span>
+								<input type="text" name="create_time" value="{$create_time}" id="date" class="form-control w-130 fl ml5 noradius">
+							</div>
+							<div>
+								<span class="fl mt8 ml20">品牌名称</span>
+								<input type="text" name="brand_name" id="brand_name" value="{$brand_name}" class="form-control w-120 fl ml5">
+							</div> 
+							<div>
+								<span class="fl fs-14 mt8 ml20">是否加工</span>
+								<select class="w-115 fl ml5" name="machining" id="machining">
+									<option value="">全部</option>
+									<option value="0">不加工</option>
+									<option value="1">加工</option>
+								</select>
+							</div>
+							<div>
+								<span class="fl mt8 ml20">客户类型</span>
+								<select class="w-115 fl ml5" onchange="getCilentInfo(this.value)" name="ctid" id="ctid">
+									<option value="">全部类型</option>
+									<volist name="ctlist" id='vo'>
+										<option value="{$vo.ctid}">{$vo.type_name}</option>
+									</volist>
+								</select> 
+							</div>
+							<div>
+								<span class="fl mt8 ml20">客户名称</span>
+								<select class="w-115 fl ml5" name="c_id" id="c_id">
+									<option value="">全部</option>
+								</select> 
+							</div>
+						</div>
+					</div> 
+					<div class="form-group ml15">
+						<div> 
+							<span class="fl mt8">商品类别</span>
+							<select class="w-115 fl ml5" name="gtid" id="gtid" onchange="getTwoTypeInfo(this.value)">
+								<option value="">一级全部</option>
+								<volist name="tlist" id='vo'>
+									<option value="{$vo.gtid}">{$vo.type_name}</option>
+								</volist>
+							</select>
+							<select name="gtid1" id="gtid1"  class="w-115 fl ml5" onchange="getThreeTypeInfo(this.value)">
+								<option value="">二级全部</option>
+							</select>
+							<select name="gtid2" id="gtid2" class="w-115 fl ml5">
+								<option value="">三级全部</option> 
+							</select>
+							<span class="fl mt8 ml20">采用模式</span>
+							<select id="sel_model" class="w-115 fl ml5" name="ctid" id="ctid">
+								<option value="0">数量+单位</option>
+								<option value="1">单位备注</option>  
+							</select> 
+							<span class="fl mt8 ml20">商品名</span>
+							<input type="text" name="gname" id="gname" value="{$gname}" class="form-control w-120 fl ml5"> 
+							<input type="hidden" name="hid_order" id="hid_order" value="{$hid_order}" />
+							<input type="button" onclick="getSortingReportInfo()" class="btn btn-style ml20" value="搜 索" />
+							<input type="button" class="btn btn-success ml20" onclick="printme()" value='打 印'/> 
+							<!-- <input type="button" value="数据列设置" class="btn data w-100 btn-success btn_color ml20"/> -->
+							<!-- <input type="button" class="btn btn-success ml20" onclick="exportDaySaleDetails()" value='导 出' />  -->
+						</div>   
+					</div>
+				</form>
+			</div>	
+		</div>
+	</div>
+	<div class="container-fluid"> 
+		<div id="divPrint">
+			<table class="tb-style t-table">
+				<caption class="t-caption" ><input type="text" id="tcaption" style="background: none;border: none;text-align: center; letter-spacing: 1.5px;" value="分拣单" /></caption>
+				<thead id="thead">
+					<tr>
+						<td style="width:40px;">行号</td>  
+						<td class="not-print" style="width: 200px;">商品类型</td>
+						<td style="width:150px;">商品名称</td> 
+						<td>客户量</td> 
+					</tr>
+				</thead>
+				<tbody id="tbody"> 
+					<tr>
+						<td colspan="4">请先搜索，暂无数据。</td>
+					</tr>
+				</tbody>
+			</table>
+		</div> 
+	</div>
+</div>
+
+
+
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/scrolltop.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/LodopFuncs.js"></script> 
+	<script type="text/javascript">  
+		//页面加载时
+		$(function(){ 
+			 
+		});
+
+		function getSortingReportInfo(){
+			var create_time = $("#date").val(), 
+	    		brand_name = $("#brand_name").val(),
+	    		c_id = $("#c_id").val(),
+	    		ctid = $("#ctid").val(),
+	    		machining = $("#machining").val(),
+	    		gtid = $("#gtid").val(),
+	    		gtid1 = $("#gtid1").val(),
+	    		gtid2 = $("#gtid2").val(),
+	    		tcaption = $("#tcaption").val(),
+	    		gname = $("#gname").val(); 
+	    	if(!create_time){
+				layer.tips('请填写日期', '#date', {tips: 1});
+				return false;
+			} 
+			var sel_model =$("#sel_model").val();
+    		data ={
+        		create_time:create_time, 
+        		brand_name:brand_name,
+        		c_id:c_id,
+        		ctid:ctid, 
+        		machining:machining,
+        		gtid:gtid,
+        		gtid1:gtid1,
+        		gtid2:gtid2,
+        		gname:gname
+        	}; 
+        	var index = layer.msg('正在生成单品分拣单,请稍后!', {
+			    icon: 16,
+			    shade: 0.01,
+			    time:10000
+			}); 
+			var url="{:U('Purchase/getSortingReportInfo')}";
+        	$.ajax({
+	            type: "POST",
+	            url: url,
+	            data: data,
+	            dataType: "json",
+	            success: function(data){ 
+	            	if(data.resultcode==1){
+	            		//请求成功
+	            		var str ="",list=data.data;
+	            		for(var i=0;i<list.length;i++){
+	            			str+="<tr><td>"+(i+1)+"</td>"; //行号  
+	            			str+="<td class='not-print'>"; //商品类型
+	            			if(list[i].tname3){
+	            				str+=list[i].tname3+">";
+	            			}
+	            			if(list[i].tname2){
+	            				str+=list[i].tname2+">";
+	            			} 
+	            			str+=list[i].tname1+"</td>";
+	            			str+="<td>"+list[i].gname+"</td>";//商品名称
+	            			str+="<td style='text-align:left;'>";//客户量
+	            			var clist = list[i].clist;
+	            			for(var j=0;j<clist.length;j++){
+	            				if(sel_model==0){
+	            					str+="<span>"+clist[j].code+":"+clist[j].num;
+		            				
+	            				}else{
+	            					str+="<span>"+clist[j].code+":"+clist[j].p_remark;
+	            				}
+	            				if(clist[j].remark!=""){
+	            					str+="("+clist[j].remark+")";
+	            				}
+	            				str+=";</span>";
+	            				
+	            			}
+	            			str+="</td>";
+	            		}
+	            		$("#tbody").html(str);
+	            	}else{
+	            		$("#tbody").html("<tr><td colspan='4'>无数据</td></tr>");
+	            	}
+                    console.log(data); 
+	            },
+	            error:function(msg){
+	            	layer.msg("请求失败");
+	            },complete: function () {
+                    layer.close(index);
+                }
+	        });
+		}
+
+		//根据客户类型获取客户信息
+		function getCilentInfo(ctid){
+			if(ctid){
+				$.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">全部类型</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['c_id']+'">'+result[i]['cname']+'</option>';
+		                }
+		                $("#c_id").html(str);  
+		                var c_id = "{$c_id}";
+		                $("#c_id").val(c_id);
+		            }else{ 
+				    	$("#c_id").html('<option value="">全部类型</option>');  
+		            }
+		        }, "json");
+	        }else{
+	        	$("#c_id").html('<option value="">全部类型</option>');  
+	        }
+		}
+
+		var index =0,index1=0;	
+		//根据1级类型编号获取二级分类
+	    function getTwoTypeInfo(fid){ 
+	    	var gtid1 = "{$gtid1}";
+	    	if(fid){
+		        $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">二级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		                if(gtid1 && gtid1!="0"){
+		                	if(index==0){
+			                	$("#gtid1").val(gtid1);
+			                	getThreeTypeInfo(gtid1);
+			                	index++;
+		                	}
+		                }
+		            }else{
+		            	var str ='<option value="">二级全部</option>';
+				    	$("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		            }
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">二级全部</option>';
+		    	$("#gtid1").html(str); 
+                $("#gtid2").html('<option value="">三级全部</option>');
+		    }
+	    }
+
+	    //根据二级类型编号获取三级分类
+	    function getThreeTypeInfo(fid){ 
+	    	var gtid2 ="{$gtid2}";
+	    	if(fid){
+		        $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">三级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid2").html(str);
+		                if(gtid2 && gtid2!="0"){
+		                	if(index1==0){
+		                		$("#gtid2").val(gtid2);
+		                		index1++;
+		                	}
+		                } 
+		            }else{
+		            	var str ='<option value="">三级全部</option>';
+		    			$("#gtid2").html(str);
+		            }
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">三级全部</option>';
+		    	$("#gtid2").html(str);
+		    }
+	    } 
+ 
+		laydate({ 
+            elem: '#date' 
+        });
+  
+		//打印
+		function printme(){
+			var index = layer.msg('请稍后', {
+			    icon: 16,
+			    shade: 0.01,
+			    time: 3000
+			});
+			$(".not-print").hide();  
+			$("table tr").each(function(index,value){
+				if(index%2==0){
+					$(value).css("background-color","#e4e4e4");
+				}else{
+					$(value).css("background-color","#fff"); 
+				}
+
+			});
+			var strBodyStyle="<style>"+$("#style1").html()+"</style>";
+			var strFormHtml=strBodyStyle+"<body>"+$("#divPrint").html()+"</body>";
+
+			LODOP=getLodop();  
+			LODOP.PRINT_INIT("sortingReport单品分拣单");
+			LODOP.ADD_PRINT_TABLE(0,0,"100%","95%",strFormHtml);
+			// LODOP.SET_PRINT_STYLEA(0,"TableHeightScope",iRadioValue);		
+			LODOP.PREVIEW();
+			if (LODOP.CVERSION){
+				CLODOP.On_Return = function(TaskID, Value) {
+		            if(Value==0 || Value==1){
+		            	$(".not-print").show();  
+		            }
+		        }
+			} 
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/info/supplierType.css">
+</head>
+<body>
+    <div class="nav navbar-default">
+        <div class="container-fluid pb10">
+            <div>
+                <h3>角色列表</h3>
+            </div>
+            <div class="nav navbar-nav navbar-right mr15">   
+                <button class="btn btn-success active" id="add">新增</button>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mt10">
+        <div class="row ml0">
+            <div class="col-xs-8">
+                <table class="tb-style">
+                    <thead>
+                        <tr>
+                            <td>序号</td>
+                            <!-- <td>角色类型</td> -->
+                            <td>角色名称</td>
+                            <!-- <td>状态</td> -->
+                            <td>操作</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <foreach name="rlist" item="vo">
+                            <tr>
+                                <td>{$key+1}</td>
+                                <!-- <td>{$vo.role_type|setRoleType}</td> -->
+                                <td>{$vo.name}</td>
+                                <!-- <td>
+                                    {$vo.status|setStatus}
+                                    &nbsp;|&nbsp;
+                                    <if condition="$vo.status eq 0 ">
+                                        <a href="javascript:setStatus({$vo.rid},1);">设置禁用</a>
+                                    <else /> 
+                                        <a href="javascript:setStatus({$vo.rid},0);">设置正常</a>
+                                    </if>  
+                                </td> -->
+                                <td data-id='{$vo.rid}'>
+                                    <a href="./roleSetPower.html?ptid=1&rid={$vo.rid}">权限管理</a>
+                                    &nbsp;|&nbsp;
+                                    <a class="edit" href="javascript:;">编辑</a>
+                                    &nbsp;|&nbsp;
+                                    <a class="del" href="javascript:;">删除</a>
+                                </td>
+                            </tr>  
+                        </foreach>                                                                                         
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script> 
+    <script>
+        //新增角色
+        $('#add').click(function(){ 
+            layer.open({
+                type: 2,
+                closeBtn: 0,
+                area: ['340px', '200px'],
+                title: false,
+                content: './roleAdd.html'
+            });
+        });
+
+        //删除角色  
+        $('.del').click(function(){
+            var _this =this;
+            var id =$(this).parent().attr('data-id');
+            layer.confirm('您确定要删除吗？', {
+                btn: ['确认'], //按钮
+                shade: [0.4, '#393D49'] //显示遮罩
+            }, function(){ 
+                 $.post("{:U('Role/roleDel')}", { "rid": id},function(data){
+                    if(data == 1){
+                        layer.msg('删除成功', { icon: 1, time: 1000 }, function(){
+                                $(_this).parent().parent().remove();
+                            });
+                    }else if(data==0){
+                        layer.msg('删除失败', {icon: 2, time: 2000 }); 
+                    }else if(data==2){
+                        layer.msg('角色已被引用，无法删除!', {icon: 2, time: 2000 }); 
+                    }
+                }, "json");
+            },function(){
+            }); 
+        });
+        //编辑按钮
+        $('.edit').click(function(){
+            var id =$(this).parent().attr('data-id');
+            layer.open({
+                type: 2,
+                closeBtn: 0,
+                area: ['340px', '200px'],
+                title: false,
+                content: './roleEdit.html?rid='+id
+            });
+        }); 
+
+        //设置角色状态
+        function setStatus(rid,status){
+            $.post("{:U('Role/set_status')}", { "rid": rid,"status":status},function(data){
+                if(data == 0){
+                    location.reload();
+                }
+            }, "json");
+        }
+
+    </script>
+</body>
+</html>

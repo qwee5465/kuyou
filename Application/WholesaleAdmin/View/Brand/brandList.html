@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+	<style type="text/css">
+.headcolor2 td{background-color: #404040; border:1px solid #404040;color: #fff; border-bottom: 1px solid #404040 !important; border-left: 1px solid #404040 !important;}
+	table tr:nth-child(even){background-color: #e4e4e4;}
+	.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;}
+	.tb-style td{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+	.navbar-default {background-color: #fff;}
+	.btn-success.active{background: #feb235; border: 1px solid #e5920b;}
+	.btn-success.active:hover{background: #e5920b; border: 1px solid #e5920b;}
+	input{letter-spacing: 1.5px;}
+	</style>
+</head>
+<body>
+<div class="nav navbar-default">
+	<div class="container-fluid pb10">
+		<h3>品牌列表</h3> 
+		<div class="col-xs-12 col-md-3">
+			<form action="__SELF__" method="post">
+				<div class="has-feedback w-300">
+					<label class="sr-only" for="kw">搜索</label>
+					<input id="search" class="form-control w-300" placeholder="请输入品牌名称关键字"  name="search" type="text">
+					<span class="glyphicon glyphicon-search form-control-feedback search-style"></span>
+					<input type="submit" name="" value="" class="search">
+				</div>			
+			</form>
+		</div>
+		<div class="col-xs-12 col-md-1 col-md-offset-8">
+			<button class="btn btn-success active fr" id="add">
+				新 增
+			</button>
+		</div>
+	</div>
+</div>
+<div class="container-fluid mt10">
+	<div class="row ml0">
+		<div class="col-xs-6">
+			<table class="tb-style">
+				<thead>
+				<tr class="headcolor2">
+					<td>序号</td>
+					<td>品牌名称</td>
+					<!-- <td>操作</td> -->
+				</tr>
+				</thead>
+				<tbody>
+
+				<volist name="list" id="vo">
+					<tr>
+						<td>{$key+$s_num}</td>
+						<td>{$vo.brand_name}</td>
+						<!-- <td class="text-center" data-id='{$vo.brand_id}'>
+							<a class="edit"  href="javascript:;">编辑</a>
+							&nbsp;|&nbsp;
+							<a class="del"  href="javascript:;">删除</a>
+						</td> -->
+					</tr>
+				</volist>
+
+				</tbody>
+			</table>
+			<div class="row paging">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right  pr">
+					{$page}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript">
+	// $('.del').click(function(){
+	// 	var _this =this;
+	// 	var id =$(this).parent().attr('data-id');
+	// 	layer.confirm('您确定要删除吗？', {
+	// 		btn: ['确认'], //按钮
+	// 		shade: [0.4, '#393D49'] //显示遮罩
+	// 	}, function(){
+	// 		$.post("{:U('Brand/brandDel')}", { "brand_id": id},function(data){
+	// 			if(data == 0){
+	// 				layer.msg('删除成功', { icon: 1, time: 1000 }, function(){
+	// 					$(_this).parent().parent().remove();
+	// 				});
+	// 			}else{
+	// 				layer.msg('删除失败', {icon: 2, time: 2000 });
+	// 			}
+	// 		}, "json");
+	// 	},function(){
+	// 	});
+	// });
+	// //编辑按钮
+	// $('.edit').click(function(){
+	// 	var id =$(this).parent().attr('data-id');
+	// 	layer.open({
+	// 		type: 2,
+	// 		closeBtn: 0,
+	// 		area: ['350px', '200px'],
+	// 		title: false,
+	// 		content: '__APP__/WholesaleAdmin/Brand/brandEdit.html?brand_id='+id
+	// 	});
+	// });
+
+	//新增供应商类型
+	$('#add').click(function(){
+		layer.open({
+			type: 2,
+			closeBtn: 0,
+			area: ['350px', '200px'],
+			title:false,
+			content: '__APP__/WholesaleAdmin/Brand/brandAdd.html'
+		});
+	});
+
+	$(function () {
+		$("#search").val('{$search}');
+	});
+</script>
+</body>
+</html>

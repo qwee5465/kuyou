@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/login.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/fonts/iconfont.css" />
+</head>
+<body>
+	<div class="wrapper">
+		<div class="container-fluid">
+			<div class="col-xs-6 col-md-6">
+				<div class="logo"><img src="__PUBLIC__/img/logo.png"></div>
+			</div>
+			<div class="col-xs-6 col-md-6">
+				<form action="__SELF__" method="POST">
+					<p class="tt">欢迎使用库友平台端</p>
+					<div class="pr form-group">
+						<i class="iconfont i-style pa fs-30">&#xe6db;</i>
+						<label class="sr-only" for="login_id">请输入用户名</label>
+      					<input id="login_id" name="login_id" class="w-280 h-40 form-control" placeholder="请输入用户名" type="text">
+					</div>
+					<div class="pr mt20 form-group">
+						<i class="iconfont i-style pa fs-30">&#xe692;</i>
+						<label class="sr-only" for="pwd">请输入密码</label>
+      					<input id="password" name="password" class="w-280 h-40 form-control" placeholder="请输入密码" type="password">
+      					<a href="__APP__/admin/Register/loginName" class="fl fs-12">注册</a>
+      					<a href="" class="fr fs-12">找回密码</a>
+					</div>
+					<div class="pr mt10 form-group mt20">
+						<img class="getVerify pa" id="wait_time" onclick="javascript:this.src=this.src+'?time='+Math.random()" title="点我刷新哦！" src="{:U('Login/verify')}"  /> 
+						<input  class="w-280 h-40 form-control" id="code" onkeyup="checkCode()" type="text">
+						<inupt type="hidden" value="" id="hidcode" />
+					</div>
+					<div class="">
+						<input type="submit" onclick="return checkForm()"  value="登录" class="w-280 h-40"> 
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script> 
+	<script type="text/javascript">
+		$(function(){
+			$("input[type!=submit]").click(function(){
+				$(this).addClass("active");
+				$(this).siblings(".iconfont").addClass("active");
+			});
+			$("input[type!=submit]").blur(function(){
+				$(this).removeClass("active");
+				$(this).siblings(".iconfont").removeClass("active");
+			});
+
+		});
+		
+		//表单验证
+        function checkForm(){ 
+        	var login_id =$('#login_id').val(); 
+            var password = $('#password').val();
+            var hidcode = $('#hidcode').val(); 
+            if(!login_id){
+                layer.tips('请填写账号', '#login_id', {tips: 1}); 
+                return false;
+            }
+            if(!password){
+                layer.tips('请填写密码', '#password', {tips: 1}); 
+                return false;
+            } 
+            if(hidcode!=1){
+            	layer.tips('验证码错误', '#hidcode', {tips: 1}); 
+                return false;
+            }
+            return true; 
+        }
+        //验证码
+        function checkCode(){
+        	var val = $('#code');
+        	if(val.val()){  
+        		$.ajax({
+        			url:"{:U('Login/checkCode')}", 
+        			data:{ "code": val.val()},
+        			type:'post', 
+        			async : true, 
+        			dataType:'json', 
+        			success: function (data) {
+               			if(data != 0){ 
+	                        $('#hidcode').val('');
+	                    }else{
+	                        $('#hidcode').val('1');
+	                    }
+		            },error: function (msg) {
+		                layer.msg(msg);
+		            }
+
+        		});
+        	}
+        } 
+	</script>
+</body>
+</html>

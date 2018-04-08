@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery.dataTables.min.css">
+    <script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script src="__PUBLIC__/js/jquery.dataTables.min.js">
+    </script>
+</head>
+
+<body>
+    <table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>单位名称</th>
+                <th>拼音</th>  
+            </tr>
+        </thead> 
+    </table>
+    <script type="text/javascript"> 
+    
+    //object可以如下初始化表格
+
+    $(document).ready(function() {
+	    $('#example').DataTable( {
+	        "ajax": "{:U('MachiningType/getMachiningInfo')}",
+	        "columns": [
+	            { "data": "unit_id","ordering":false },
+	            { "data": "unit_name" },
+	            { "data": "py" }
+	        ],
+	        "ordering":true,
+	        "info":false //信息栏是否打开
+	    } );
+	} );
+    </script>
+</body>
+
+</html>

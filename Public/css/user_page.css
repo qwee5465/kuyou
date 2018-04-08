@@ -1,0 +1,18 @@
+
+.ct_l .ctr_panel{width: 90%;margin-top: 15px;margin-left: 30px;}
+.ct_l .ctr_panel div{background-color: #666565;float: left;text-align: center;color: #fff;font-size: 14px;border: 5px solid #fff;}
+.ct_l .ctr_panel div img{display: block;width: 50px;height: 50px;background-size: 100%;margin: 10px auto;}
+/*表格*/
+.ct_l .base_info{width: 90%;margin-left: 20px;}
+.ct_l .base_info .tt{margin-top: 10px;color: #5a5858;font-size: 14px;}
+.ct_l .base_info .tt b{display: block;border-bottom: 1px solid #eae9e9;width: 100%;margin-top: 20px;}
+.ct_l .base_info .col-md-12{padding-right: 0;}
+.ct_l  table{border: 1px solid #eae9e9;overflow-y: auto;width: 100%;}
+.ct_l  td{height: 30px;padding-left: 5px;border: 1px solid #eae9e9;color: #606060;font-size: 12px;}
+
+
+
+.ct_r .tt{font-size: 16px;margin-top: 20px;color: #5a5858;border-bottom: 1px solid #eae9e9;width: 90%;padding-bottom:20px; }
+.ct_r table{border: 1px solid #eae9e9;overflow-y: auto;width: 90%;}
+.ct_r td{height: 32px;padding-left: 10px;border: 1px solid #eae9e9;color: #606060;font-size: 12px;}
+.ct_r table thead td{font-size: 14px;background-color: #f5f5f5;}

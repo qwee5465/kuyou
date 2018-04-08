@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.btn-list.active{position: fixed;right: 0;top: 0;z-index: 20;width: 100%;background: #fff;box-shadow: 0 1px 5px #c5c5c5;padding: 10px 10px 0 0; }
+		.btn-list button{border:none;outline: none;margin-right: 20px;margin-bottom: 10px;}
+		.f-spec-box{width:260px;margin:0 auto;text-align: right;height:250px;}
+		.spec-submit{position:fixed;bottom:0;left:0;width:100%;height:50px;background:#fff;text-align: center;}
+		.nspec-box{width:600px;margin:auto;}
+		/*.nspec-box-spec{float:left;}*/
+		.nspec-box-eq{float:left;width:60px;text-align: center;}
+		input{border: none !important;outline: none;}
+		table{border-collapse: collapse;width: 100%;font-size: 14px;background-color: #f5f5f5;border:1px solid #d0d0d0;}
+		table td{border-left:1px solid #d0d0d0;border-bottom: 1px dashed #d0d0d0;text-align: center;height: 40px;}  
+		tr.gray-bg{background:#e5e4e4;}
+		table tr:nth-child(even){background:#e5e4e4;} 
+		/*入库出库文本框*/
+		.stock-txt{padding: 0 15px;height: 35px;box-sizing: border-box;text-align: center;background:none;}  
+		tr.green-bg{background-color: #59ab76;}
+		tr.green-bg2{background-color: #404040;}
+		.w-50,.w-150,.w-120,.t_remark_p,.w-100,.w-200,.btn-list button{color:#fff; letter-spacing: 1.5px;}
+		.btn-list button{border-radius: 4px; background-color: #59ab76; border:1px solid #3b9f5f; padding: 6px 12px;}
+		table td{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+		/*.btn-style:hover{background-color: #3b9f5f;border-color: #3b9f5f;}*/
+		/*sssssssssssssssssssssssss*/
+		.btn-style:hover{linear-gradient(#3b9f5f,#3b9f5f);
+    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    .btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important;}
+    .btn_color:hover{linear-gradient(#6db81f,#6db81f);
+    background-image: linear-gradient(rgb(109, 184, 31), rgb(109, 184, 31));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    .btn_color2{background-color: #feb235 !important; border:1px solid #e5920b !important;}
+    .btn_color2:hover{linear-gradient(#e5920b,#e5920b);
+    background-image: linear-gradient(rgb(229, 146, 11), rgb(229, 146, 11));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    table tr:nth-child(even){background-color: #e4e4e4;}
+    .headcolor td,.headcolor{background-color: #59ab76; border:1px solid #59ab76; color: #fff;}
+    .headcolor2 td{background-color: #404040; border:1px solid #404040;color: #fff;}
+    select{border: none;}
+    .back_btn{background: #f1f1f1 !important; border: 1px solid #ccc !important;color: #555 !important;}
+    .back_btn:hover{background: #fff !important; border: 1px solid #ccc !important;color: #333 !important;}
+	</style>
+</head>
+<body>
+<div id="body_content">
+	<div class="container-fluid h-60" style="background-color:#fff;">
+		<h3 style="border:none;">入库单->编辑</h3>
+	</div>
+	<div class="container-fluid mt20">
+		<div class="cf btn-list">
+			<button class="fr btn-style" style="z-index:101;position: relative;" onclick="printme()">打 印</button>
+			<button class="fr btn-style" style="z-index:101;position: relative;" onclick="exportJoinStock()">导 出</button> 
+			<button class="fr btn-style " onclick="saveJoinStock(0)">保 存</button>
+			<button class="fr btn-style" onclick="saveJoinStock(1)">保存并审核</button>
+			<button class="fr btn-style data btn_color">数据列设置</button> 
+			<button class="fr btn-style btn_color2" onclick="addGoods()">新增商品</button> 
+			<button class="fr back_btn" onclick="backPage()">返 回</button>   
+		</div>
+		<div id="divPrint">
+			<div class="col-xs-12">
+				<table class="">
+					<thead>
+					<tr class="green-bg">
+						<if condition="$jsList.jsid_s eq 0">
+							<td class="w-150 t_jsid_p headcolor" >{$titles.jsid}</td>
+						<else />
+							<td class="w-150 none t_jsid_p headcolor">{$titles.jsid}</td>
+						</if>
+						<if condition="$jsList.jsname_s eq 0">
+							<td class="w-150 t_jsname_p headcolor" >{$titles.jsname}</td>
+						<else />
+							<td class="w-150 none t_jsname_p headcolor">{$titles.jsname}</td>
+						</if>
+						<if condition="$jsList.sname_s eq 0">
+							<td class="w-300 t_sname_p headcolor" style="color:#fff;">{$titles.sname}</td>
+						<else />
+							<td class="w-300 none t_sname_p headcolor" style="color:#fff;">{$titles.sname}</td>
+						</if>
+						<if condition="$jsList.ctime_s eq 0">
+							<td class="w-120 t_ctime_p headcolor" >{$titles.ctime}</td>
+							<else />
+							<td class="w-120 none t_ctime_p headcolor">{$titles.ctime}</td>
+						</if>
+						<if condition="$jsList.cfee_s eq 0">
+							<!-- <td class="w-120 not-print">{$titles.cfee}</td> -->
+							<td class="w-120 t_cfee_p headcolor">{$titles.cfee}</td>
+							<else />
+							<td class="w-120 none t_cfee_p headcolor">{$titles.cfee}</td>
+						</if>
+						<if condition="$jsList.ufee_s eq 0">
+							<td class="w-120 t_ufee_p headcolor" >{$titles.ufee}</td>
+							<else />
+							<td class="w-120 none t_ufee_p headcolor">{$titles.ufee}</td>
+						</if>
+						<if condition="$jsList.afee_s eq 0">
+							<td class="w-120 t_afee_p headcolor">{$titles.afee}</td>
+							<else />
+							<td class="w-120 none t_afee_p headcolor">{$titles.afee}</td>
+						</if>  
+						<if condition="$jsList.remark_s eq 0">
+							<td class="t_remark_p headcolor">{$titles.remark}</td>
+							<else />
+							<td class="none t_remark_p headcolor">{$titles.remark}</td>
+						</if>
+						<if condition="$jsList.total_s eq 0">
+							<td class="w-120 t_total_p headcolor">{$titles.total}</td>
+							<else />
+							<td class="w-120 none t_total_p headcolor">{$titles.total}</td>
+						</if>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<if condition="$jsList.jsid_s eq 0">
+							<td class="t_jsid_p"><input type="text" class="stock-txt w100" readonly value="{$jsid}" id="jsid" name="jsid" /></td>
+							<else />
+							<td class="none t_jsid_p"><input type="text" class="stock-txt w100" readonly value="{$jsid}" id="jsid" name="jsid" /></td>
+						</if> 
+						<if condition="$jsList.jsname_s eq 0">
+							<td class="t_jsname_p"><input type="text" class="stock-txt w100" value="{$list[0].jsname}" id="jsname" name="jsname" /></td>
+							<else />
+							<td class="none t_jsname_p"><input type="text" class="stock-txt w100" value="{$list[0].jsname}" id="jsname" name="jsname" /></td>
+						</if>
+						<if condition="$jsList.sname_s eq 0">
+							<td class="t_sname_p">
+								<div class="nspec-box-spec pr" >
+									<input type="text" id="txt_sid" value="{$list[0].sname}" onkeyup="publicSearch.textCall(this)"  data-li-class="select-sreach-list-fl25"  name="" data-name="name" data-id="sid" data-page="getSupplierInfoByText" class=" select-sreach-input stock-txt" style="width:100%;" />
+									<span class="select-sreach-btn" onclick="publicSearch.btnCall(this)"></span>
+									<ul class="select-sreach-list cf none" title="4" id="ul4" style="width: 500px;margin-right:-50px;"></ul>
+									<input type="hidden" class="hid" value="{$list[0].sid}"  id="sid"/>
+								</div>
+							</td>
+							<else />
+							<td class="none t_sname_p">
+								<div class="nspec-box-spec pr" >
+									<input type="text" id="txt_sid" value="{$list[0].sname}" onkeyup="publicSearch.textCall(this)" name=""  data-li-class="select-sreach-list-fl25" data-name="name" data-id="sid" data-page="getSupplierInfoByText" class=" select-sreach-input stock-txt" style="width:100%;" />
+									<span class="select-sreach-btn" onclick="publicSearch.btnCall(this)"></span>
+									<ul class="select-sreach-list cf none" title="4" id="ul4" style="width: 500px;margin-right:-50px;"></ul>
+									<input type="hidden" class="hid" value="{$list[0].sid}"  id="sid"/>
+								</div>
+							</td>
+						</if>
+						<if condition="$jsList.ctime_s eq 0">
+							<td class="t_ctime_p">
+								<input type="text" name="" id="date" value="{$list[0].create_time|date='Y-m-d',###}" class="stock-txt w100">
+							</td>
+							<else />
+							<td class="none t_ctime_p" >
+								<input type="text" name="" id="date" value="{$list[0].create_time|date='Y-m-d',###}" class="stock-txt w100">
+							</td>
+						</if>
+						<if condition="$jsList.cfee_s eq 0">
+							<td class="t_cfee_p">
+								<input type="number" name="" id="carry_fee" value="{$list[0].carry_fee|keep4}" class="stock-txt w100 ">
+							</td>
+							<else />
+							<td class="none t_cfee_p" >
+								<input type="number" name="" id="carry_fee" value="{$list[0].carry_fee|keep4}" class="stock-txt w100 ">
+							</td>
+						</if>
+						<if condition="$jsList.ufee_s eq 0">
+							<td class="t_ufee_p">
+								<input type="number" name="" id="unloading_fee" value="{$list[0].unloading_fee|keep4}" class="stock-txt w100 ">
+							</td>
+							<else />
+							<td class="none t_ufee_p" >
+								<input type="number" name="" id="unloading_fee" value="{$list[0].unloading_fee|keep4}" class="stock-txt w100 ">
+							</td>
+						</if>
+						<if condition="$jsList.afee_s eq 0">
+							<td class="t_afee_p">
+								<input type="number" name="" id="agency_fee" value="{$list[0].agency_fee|keep4}"  class="stock-txt w100 ">
+							</td>
+							<else />
+							<td class="none t_afee_p">
+								<input type="number" name="" id="agency_fee" value="{$list[0].agency_fee|keep4}"  class="stock-txt w100 ">
+							</td>
+						</if> 
+						<if condition="$jsList.remark_s eq 0">
+							<td class="t_remark_p">
+								<input type="text" name="" id="remark"  value="{$list[0].remark}"  class="stock-txt w100">
+							</td>
+						<else />
+							<td class="none t_remark_p">
+								<input type="text" name="" id="remark"  value="{$list[0].remark}"  class="stock-txt w100">
+							</td>
+						</if>
+						<if condition="$jsList.total_s eq 0">
+							<td class="t_total_p">
+								<input type="number" name="" id="total" value="{$list[0].total|keep4}"  readonly class="stock-txt w100">
+							</td>
+							<else />
+							<td class="none t_total_p" >
+								<input type="number" name="" id="total" value="{$list[0].total|keep4}"  readonly class="stock-txt w100">
+							</td>
+						</if>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-xs-12 mt50">
+				<table class="t-table" id="table">
+					<thead>
+					<tr class="green-bg headcolor2">
+						<td class="w-50">序号</td>
+						<if condition="$jsbList.gname_s eq 0">
+							<td class="w-200 b_gname_p">{$t_list.gname}</td>
+							<else />
+							<td class="w-200 none b_gname_p">{$t_list.gname}</td>
+						</if>
+						<if condition="$jsbList.bname_s eq 0">
+							<td class="w-100 b_bname_p">{$t_list.bname}</td>
+							<else />
+							<td class="w-100 none b_bname_p">{$t_list.bname}</td>
+						</if>
+						<if condition="$jsbList.uname_s eq 0">
+							<td class="w-100 b_uname_p">{$t_list.uname}</td>
+							<else />
+							<td class="w-100 none b_uname_p">{$t_list.uname}</td>
+						</if> 
+						
+						<if condition="$jsbList.num_s eq 0">
+							<td class="w-100 b_num_p">{$t_list.num}</td>
+							<else />
+							<td class="w-100 none b_num_p">{$t_list.num}</td>
+						</if>
+						<if condition="$jsbList.price_s eq 0">
+							<td class="w-100 b_price_p">{$t_list.price}</td>
+							<else />
+							<td class="w-100 none b_price_p">{$t_list.price}</td>
+						</if>
+						<if condition="$jsbList.shelf_s eq 0">
+							<td class="w-100 b_shelf_p">{$t_list.shelf}</td>
+							<else />
+							<td class="w-100 none b_shelf_p">{$t_list.shelf}</td>
+						</if>
+						<if condition="$jsbList.totalb_s eq 0">
+							<td class="w-100 b_totalb_p">{$t_list.totalb}</td>
+							<else />
+							<td class="w-100 none b_totalb_p">{$t_list.totalb}</td>
+						</if>
+						<td class="w-80">操作</td>
+					</tr>
+					</thead>
+					<tbody>
+					<?php $kkk=0; ?>
+					<foreach name="list" item="vo">
+						<?php $kkk +=1; ?>
+						<tr >
+							<td class="pr"> 
+								<span class="td_xh">{$key+1}</span>
+							</td> 
+							<if condition="$jsbList.gname_s eq 0">
+								<td class="td_goods_name b_gname_p">
+									<div class="nspec-box-spec pr" >
+										<input type="text" value="{$vo.gname}" onblur="IsGoods(this)" onkeyup="selectSpec(1,this)" data-li-class="select-sreach-list-fl50" name="" data-name="name"  data-id="wgid" data-page="getGoodsInfoByText" class="stock-txt select-sreach-input " style="width:100%;" />
+										<!-- <span class="select-sreach-btn"  onclick="selectSpec(2,this)"></span> -->
+										<ul class="select-sreach-list cf none" title="4" id="ul4" style="width: 400px;margin-right: -280px;"></ul>
+										<input type="hidden" name="wgids" value="{$vo.wgid}" class="hid"  />
+										<if condition="$vo['spec_num'] eq 1">
+											<input type="hidden" value='{$vo.spec}' class="hid_spec">
+										</if>
+									</div>
+								</td>
+								<else/>
+								<td class="td_goods_name b_gname_p none">
+									<div class="nspec-box-spec pr" >
+										<input type="text" value="{$vo.gname}" onblur="IsGoods(this)" onkeyup="selectSpec(1,this)" data-li-class="select-sreach-list-fl50" name="" data-name="name"  data-id="wgid" data-page="getGoodsInfoByText" class="stock-txt select-sreach-input " style="width:100%;" />
+										<!-- <span class="select-sreach-btn"  onclick="selectSpec(2,this)"></span> -->
+										<ul class="select-sreach-list cf none" title="4" id="ul4" style="width: 400px;margin-right: -280px;"></ul>
+										<input type="hidden" name="wgids" value="{$vo.wgid}" class="hid"  />
+										<if condition="$vo['spec_num'] eq 1">
+											<input type="hidden" value='{$vo.spec}' class="hid_spec">
+										</if>
+									</div>
+								</td>
+							</if>
+							<if condition="$jsbList.bname_s eq 0">
+								<td class="td_brand b_bname_p">{$vo.brand_name}</td>
+								<else/>
+								<td class="td_brand b_bname_p none">{$vo.brand_name}</td>
+							</if>
+							<if condition="$jsbList.uname_s eq 0">
+								<td class="td_unit_id b_uname_p"> 
+									<select name="nei_unit_id" onchange="specChange(this)"> 
+										<volist name="vo['usub']" id="v" >
+											<if condition="$vo['nei_unit_id'] eq $v['unit_id']">
+												<option data-nei_num="{$v.num}" selected value="{$v.unit_id}">{$v.uname}</option>
+											<else />
+												<option data-nei_num="{$v.num}" value="{$v.unit_id}">{$v.uname}</option>
+											</if>
+										</volist>
+									</select> 
+									<input type="hidden" name="unit_id" value="{$vo.unit_id1}" />
+									<input type="hidden" class="jcprice" value="{$vo.price}" />
+								</td>  
+							<else/>
+								<td class="td_unit_id b_uname_p none">
+									<select name="nei_unit_id" onchange="specChange(this)">
+										<option data-nei_num="1" value="{$vo.unit_id1}">{$vo.unit_name1}</option>
+										<volist name="vo['usub']" id="v" >
+											<if condition="$vo['nei_unit_id'] eq $v['unit_id1']">
+												<option data-nei_num="{$v.num}" selected value="{$v.unit_id1}">{$v.uname}</option>
+											<else />
+												<option data-nei_num="{$v.num}" value="{$v.unit_id1}">{$v.uname}</option>
+											</if>
+										</volist>
+									</select> 
+									<input type="hidden" name="unit_id" value="{$vo.unit_id1}">
+									<input type="hidden" class="jcprice" value="{$vo.price}">
+								</td>  
+							</if>
+							<if condition="$jsbList.num_s eq 0">
+									<td class="td_num b_num_p">
+										<input type="text" value="{$vo['num1']/$vo['nei_num']|keep4}" name="num1s" class="stock-txt w100  t-number">
+									</td>
+								<else/>
+									<td class="td_num b_num_p none">
+										<input type="text" value="{$vo['num1']/$vo['nei_num']|keep4}" name="num1s" class="stock-txt w100  t-number">
+									</td>
+							</if>
+							<if condition="$jsbList.price_s eq 0">
+									<td class="td_price b_price_p">
+										<input type="text" value="{$vo.nei_price|keep4}" name="prices" class="stock-txt w100  t-number">
+									</td>
+								<else/>
+									<td class="td_price b_price_p none">
+										<input type="text" value="{$vo.nei_price|keep4}" name="prices" class="stock-txt w100  t-number">
+									</td>
+							</if>
+							<if condition="$jsbList.shelf_s eq 0">
+									<td class="td_shelf_life b_shelf_p">
+										<if condition="$vo.shelf_life">
+											<input type="text" name="shelf_lifes" value="{$vo.shelf_life}" class=" stock-txt w100  t-number">
+										</if>
+									</td>
+								<else/>
+									<td class="td_shelf_life b_shelf_p none">
+										<if condition="$vo.shelf_life">
+											<input type="text" name="shelf_lifes" value="{$vo.shelf_life}" class=" stock-txt w100  t-number">
+										</if>
+									</td>
+							</if>
+							<if condition="$jsbList.totalb_s eq 0">
+									<td class="td_sum b_totalb_p">
+										<input type="text" name="sums" readonly value="{$vo.totalx|keep4}" class="stock-txt w100 t-number ">
+									</td>
+								<else/>
+									<td class="td_sum b_totalb_p none">
+										<input type="text" name="sums" readonly value="{$vo.totalx|keep4}" class="stock-txt w100 t-number ">
+									</td>
+							</if>
+							<td>
+								<a href="javascript:;" onclick="removeTr(this)" class="a_del">
+									<img src="__PUBLIC__/img/a-del.png" />
+								</a>
+							</td> 
+						</tr>
+					</foreach>
+					<for start="1" end="100-$kkk">
+						<tr class="not-print"> 
+							<td class="pr"> 
+								<span class="td_xh">{$i+$kkk}</span>
+							</td> 
+							<if condition="$jsbList.gname_s eq 0">
+								<td class="td_goods_name b_gname_p">
+									<div class="nspec-box-spec pr" >
+										<input type="text" onblur="IsGoods(this)"  onkeyup="selectSpec(1,this)" data-li-class="select-sreach-list-fl50" name="" data-name="name" data-layer="1"  data-id="wgid" data-page="getGoodsInfoByText" class="stock-txt select-sreach-input " style="width:100%;" /> 
+										<!-- <span class="select-sreach-btn"  onclick="selectSpec(2,this)"></span> -->
+										<ul class="select-sreach-list cf none" title="4" style="width: 400px;margin-right: -105px;"></ul>
+										<input type="hidden" name="wgids" class="hid"  />
+									</div>
+								</td> 
+							<else />
+								<td class="td_goods_name_s b_gname_p none">
+									<div class="nspec-box-spec pr" >
+										<input type="text" onblur="IsGoods(this)" onkeyup="selectSpec(1,this)" data-li-class="select-sreach-list-fl50" name="" data-name="name" data-layer="1"  data-id="wgid" data-page="getGoodsInfoByText" class="stock-txt select-sreach-input " style="width:100%;" /> 
+										<!-- <span class="select-sreach-btn"  onclick="selectSpec(2,this)"></span> -->
+										<ul class="select-sreach-list cf none" title="4" style="width: 400px;margin-right: -105px;"></ul>
+										<input type="hidden" name="wgids" class="hid"  />
+									</div>
+								</td> 
+							</if> 
+							<if condition="$jsbList.bname_s eq 0">
+								<td class="td_brand b_bname_p"></td>
+							<else />
+								<td class="td_brand none b_bname_p"></td>
+							</if>
+							<if condition="$jsbList.uname_s eq 0">
+								<td class="td_unit_id b_uname_p"><select class="none"></select></td>
+							<else />
+								<td class="td_unit_id none b_uname_p"><select class="none"></select></td>
+							</if>
+							<if condition="$jsbList.num_s eq 0">
+								<td class="td_num b_num_p"><input type="text" name="num1s" class="stock-txt w100 t-number "></td>
+							<else />
+								<td class="td_num none b_num_p"><input type="text"  name="num1s" class="stock-txt w100 t-number "></td>
+							</if>
+							<if condition="$jsbList.price_s eq 0">
+								<td class="td_price b_price_p"><input type="text" name="prices" class="stock-txt w100 t-number "></td>  
+							<else />
+								<td class="td_price none b_price_p"><input type="text" name="prices" class="stock-txt w100 t-number "></td>  
+							</if>
+							<if condition="$jsbList.shelf_s eq 0">
+								<td class="td_shelf_life b_shelf_p"><input type="text" name="shelf_lifes" class="stock-txt w100 t-number "></td>  
+							<else />
+								<td class="td_shelf_life b_shelf_p none"><input type="text" name="shelf_lifes" class="stock-txt w100 t-number "></td>  
+							</if>
+							<if condition="$jsbList.totalb_s eq 0">
+								<td class="td_sum b_totalb_p"><input type="text" name="sums" readonly class="stock-txt w100 t-number "></td> 
+							<else />
+								<td class="td_sum none b_totalb_p"><input type="text" name="sums" readonly class="stock-txt w100 t-number "></td> 
+							</if>
+							<td>
+								<a href="javascript:;" onclick="removeTr(this)" class="a_del none">
+									<img src="__PUBLIC__/img/a-del.png" />
+								</a>
+							</td> 
+						</tr> 
+					</for>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- 遮罩层 -->
+	<div id="div_zzc" class="t-zzc none">
+		<!-- 已审核 -->
+		<img src="__PUBLIC__/img/icon-ysh.png"  style="margin-top: 150px;margin-left: 150px;" /> 
+	</div> 
+	<div id="div_zzc1" class="t-zzc none">
+		<!-- 已保存 -->
+		<img src="__PUBLIC__/img/icon-ybc.png"  style="margin-top: 150px;margin-left: 150px;" /> 
+	</div>
+	<div id="div_zzc2" class="t-zzc none">
+		<!-- 审核失败 -->
+		<img src="__PUBLIC__/img/icon-shsb.png"  style="margin-top: 150px;margin-left: 150px;" /> 
+	</div> 
+
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/area.js"></script> 
+	<script type="text/javascript" src="__PUBLIC__/js/areapublic.js"></script> 
+	<script type="text/javascript">
+		//页面加载时
+		$(function(){
+			
+		});
+		laydate({
+			elem: '#date'
+		});
+		function addGoods(){
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['1100px', '500px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Goods/goodsAdd.html?pageState=1'
+			});
+		}
+		//移除本行
+		function removeTr(obj){
+			var tr = $(obj).parent().parent();
+			tr.remove();
+			$(".td_xh").each(function(index,value){
+				$(value).html(index+1);
+			});
+			//表格中的上下左右键切换input的焦点
+			new tabTableInput("table", "text");
+			calculateSum(); 
+		}
+		//判断商品是否存在
+		function IsGoods(obj){
+			var td = $(obj).parent();
+			var wgid = td.find("input[name='wgids']").val();
+			if(!wgid && wgid !=""){
+				layer.msg('该商品不存在');
+				obj.value="";
+			} 
+		}
+
+		// 滚动条事件-导航栏
+		window.onscroll=function(){
+			var t =document.documentElement.scrollTop||document.body.scrollTop;
+			if(t>130){
+				$(".btn-list").addClass("active");
+			}else{
+				$(".btn-list").removeClass("active");
+			}
+		}
+
+
+
+
+		function selectSpec(num,obj){
+			var e=window.event||event; 
+			if(e.keyCode==27)
+				return; 
+			var sid = $("#sid").val();
+			if(!sid){
+				layer.msg("请先选择供应商");
+				$(obj).val("");
+				return;
+			}
+			if(num==1){
+				publicSearch.textCall(obj,backCall);
+			}else{
+				publicSearch.btnCall(obj,backCall)
+			}
+		}
+		//表格中的上下左右键切换input的焦点
+		new tabTableInput("table", "text");
+
+		var backCall = function(obj,ul){
+			//默认单位 渲染到对应的td中
+			var tr = $(ul).parent().parent().parent(); //jq对象
+			var wgid = $(obj).attr("data-id");
+			//判断该商品是否在本次入库单中存在 如果存在则不允许添加
+			if(!checkGid(wgid)){
+	        	setRow(obj,ul,tr,wgid);
+			}else{
+				layer.confirm('出现重复商品，是否添加', function(index){
+				    setRow(obj,ul,tr,wgid);
+				    layer.close(index);
+				},function(index){
+					tr.find(".td_goods_name input[type='text']").val("");
+					tr.find(".td_goods_name input[type='hidden']").val("");
+				});
+				 
+			}
+		} 
+		function setRow(obj,ul,tr,wgid){
+			saveState = 1; //设置保持状态为1
+			tr.find(".a_del").removeClass("none");
+			var div =$(ul).parent(); //td 下的div  
+			var td = tr.find('.td_unit_id'); //jq对象
+			resetTrInfo(div);
+			var hidhtml = "<select name='nei_unit_id' onchange='specChange(this)'><option data-nei_num='1' value='"+$(obj).attr('data-unit-id')+"'>"+$(obj).attr('data-unit-name') +"</option></select><input type='hidden' name='unit_id' value='"+$(obj).attr('data-unit-id')+"' /><input type='hidden' class='jcprice' value='"+$(obj).attr("data-price")+"' />";
+    		td.html(hidhtml);   
+    		tr.find(".td_brand").html($(obj).attr("data-brand"));//品牌 
+			tr.find(".td_price input").val($(obj).attr("data-price"));//金额 
+			tr.removeClass("not-print");
+    		getSpecInfo(wgid,td);
+    		//表格中的上下左右键切换input的焦点
+			new tabTableInput("table", "text");
+		}
+
+		//规格选择
+		function specChange(obj){
+			var tr = $(obj).parent().parent();
+			var result = parseFloat(tr.find(".td_unit_id .jcprice").val())  * parseFloat($(obj).find("option:selected").attr("data-nei_num")).toFixed(4);
+			tr.find('.td_price input').val(result);
+			calculatePrice(tr);
+		}
+
+		//根据批发商商品编号获取规格信息
+		function getSpecInfo(wgid,td){
+		    var url = "/kuyou/Api/Public/getSpecInfo";
+		    $.ajax({
+		        type:"post",
+		        url:url,
+		        data:{"wgid":wgid},
+		        dataType:"json",
+		        success:function(data) {
+		            if (data.resultcode == 0) {  
+		            	var str ="";
+		            	var result =data.result;
+		            	for(var i=0;i<result.length;i++){
+		            		str +="<option data-nei_num='"+result[i].num+"' value='"+result[i].unit_id1+"'>"+result[i].uname+"</option>";
+		            	} 
+		                td.find("select").append(str);
+		            }
+		        },
+		        error:function(){
+		            layer.alert('获取规格时异常',{icon: 2});
+		        }
+		    }); 
+		}
+
+		//判断该商品是否在本次入库单中存在 如果存在则不允许添加
+		function checkGid(gid){
+			var wgids = document.getElementsByName("wgids");
+			var k =0;
+			for(var i=0;i<wgids.length;i++){
+				if(wgids[i].value==gid){
+					k++;
+				}
+				if(k>1){
+					return true;
+				}
+			}
+			return false;
+		}
+ 
+		//总金额计算 1.修改数量时自动计算 2.修改单价时自动计算
+		$('.td_num input').change(function(){
+			//判断是否填写金额
+			var tr = $(this).parent().parent();
+			calculatePrice(tr);
+		});
+		$('.td_price input').change(function(){
+			//判断是否填写数量 
+			var tr = $(this).parent().parent(); 
+			calculatePrice(tr);
+		});  
+
+		//重置本行信息
+		function resetTrInfo(div){
+			var tr = div.parent().parent();//tr　　
+			tr.find(".td_num input[name='num1s']").val("");
+			tr.find(".td_sum input[name='sums']").val("");
+			calculateSum();
+		}  
+		//计算总金额
+		function calculateSum(){
+			var total=0;
+			$("input[name='sums']").each(function(index,value){
+				if(IsNum($(value).val()))
+					total =parseFloat(total) + parseFloat($(value).val());
+			});
+			// 运费
+			var carry_fee = $("#carry_fee").val();
+			if(carry_fee){
+				total +=parseFloat(carry_fee);
+			}
+			// 卸车费 unloading_fee
+			var unloading_fee = $("#unloading_fee").val();
+			if(unloading_fee){
+				total +=parseFloat(unloading_fee);
+			}
+			// 代理费 agency_fee 
+			var agency_fee = $("#agency_fee").val();
+			if(agency_fee){
+				total +=parseFloat(agency_fee);
+			} 
+			$("#total").val(parseFloat(total.toFixed(4)));
+		}
+		$("#carry_fee").change(function(){
+			 calculateSum();
+		});
+		$("#unloading_fee").change(function(){
+			 calculateSum();
+		});
+		$("#agency_fee").change(function(){
+			 calculateSum();
+		});
+
+		//计算金额
+		function calculatePrice(tr){
+			var price = tr.find(".td_price input").val();
+			var num = tr.find(".td_num input").val();
+			var sum = tr.find(".td_sum input");
+			if(IsNum(num) && IsNum(price)){
+				var s =parseFloat((parseFloat(price) * parseFloat(num)).toFixed(4));
+				sum.val(s); 
+			}else{
+				sum.val(0); 
+			} 
+			calculateSum();
+		}
+
+	</script>
+	<script>
+		//保存
+		function saveJoinStock(status){ 
+			var jsid=$("#jsid").val(); 
+			var sid=$("#sid").val();
+			if(sid==""){
+				layer.tips('请填写供应商', '#txt_sid', {tips: 1});
+				return;
+			} 
+			var sid=$("input[id='sid']").val();
+			var	date=$("input[id='date']").val(),
+				carry_fee=$("input[id='carry_fee']").val(),
+				jsname=$("input[id='jsname']").val(),
+				unloading_fee=$("input[id='unloading_fee']").val(),
+				agency_fee=$("input[id='agency_fee']").val(),
+				remark=$("input[id='remark']").val(),
+				total=$("input[id='total']").val(); 
+			var data ={
+				jsid:jsid,
+				jsname:jsname,
+				sid:sid,
+				create_time:date,
+				status:status,
+				total:total,
+				carry_fee:carry_fee,
+				unloading_fee:unloading_fee,
+				agency_fee:agency_fee, 
+				remark:remark
+			}  
+			var	arr = [];
+			if(status==1){ 
+				var k=0;
+				var errStr ="";
+				$("input[name='wgids']").each(function(index,value){ 
+					var val = $(value).val();
+					if(val){
+						var t_num1s = $(value).parent().parent().parent().find("input[name='num1s']").val();
+						if(t_num1s=="" || t_num1s=='0'){  
+							errStr +=index+1+",";
+							arr.push(index);//未完善数据在第几行
+							k++; 
+						} 	
+					}
+				});
+				if(errStr!=""){
+					errStr = errStr.substr(0,errStr.length-1);
+					errStr = "在第"+errStr+"行，有数据未完善,审核数据将对未完善数据进行移除,是否审核数据?";
+					layer.confirm(errStr, {icon: 3, title:'提示'},function(index){
+						layer.close(index);
+						submitForm(arr,data);
+					},function(index){
+						layer.close(index);
+						return;
+					});
+				}else{
+					submitForm(arr,data);
+				}
+			}else{
+				submitForm(arr,data);
+			} 
+		}
+
+		//表单提交
+		function submitForm(arr,data){
+			var wgids = '',// 商品名称
+				unit_ids = '',//默认单位
+				num1s = '',//数量
+				prices = '',//单位进价 
+				sums = '';//总金额
+				shelf_lifes = "", //生成日期 
+				nei_unit_ids="",//内装单位
+				nei_nums="", //内装数  
+			$("input[name='wgids']").each(function(index,value){
+				if(arr.indexOf(index)<0){
+					var val=$(value).val();
+					if (val) { 
+						wgids+=val+',';
+						unit_ids+= $("input[name='unit_id']").eq(index).val()+',';
+						num1s+= $("input[name='num1s']").eq(index).val()+',';
+						prices+= $("input[name='prices']").eq(index).val()+','; 
+						sums+= $("input[name='sums']").eq(index).val()+',';
+						shelf_lifes += $("input[name='shelf_lifes']").eq(index).val()+','; 
+						nei_unit_ids += $("select[name='nei_unit_id']").eq(index).val()+','; 
+						nei_nums += $("select[name='nei_unit_id']").eq(index).find("option:selected").attr("data-nei_num")+','; 
+					}
+				} 	
+			});
+			data.wgids=wgids.substr(0,wgids.length-1);
+			data.unit_ids=unit_ids.substr(0,unit_ids.length-1);
+			data.num1s=num1s.substr(0,num1s.length-1);
+			data.prices=prices.substr(0,prices.length-1); 
+			data.sums=sums.substr(0,sums.length-1); 
+			data.shelf_lifes=shelf_lifes.substr(0,shelf_lifes.length-1);  
+			data.nei_unit_ids=nei_unit_ids.substr(0,nei_unit_ids.length-1);  
+			data.nei_nums=nei_nums.substr(0,nei_nums.length-1);   
+			if(data.wgids==""){
+				layer.msg('请填写数据');
+				return;
+			}
+			var status = data.status;
+			var jsid = data.jsid;
+			layer.msg("单据提交中",{time:3000});  
+			$.ajax({
+				type:"post",
+				url:"{:U('Instock/instockAjaxEdit')}",
+				data:data,
+				dataType:"json",
+				success:function(data) {
+					if(data.resultcode==0){
+						$("input[name='wgids']").each(function(index,value){
+							if(arr.indexOf(index)>=0){
+								$(value).parent().parent().parent().remove();
+							}	
+						});
+						if(status==1){ 
+							layer.msg("入库单保存成功,正在审核请稍后...");
+							upInstockStatus(jsid,1);
+						}else{
+							layer.alert('入库单保存成功',function(index){
+								layer.close(index);
+							});
+							$("#div_zzc1").removeClass("none"); 
+						}
+						window.scrollTo(0,0);  
+						$(".a_del").addClass("none"); //隐藏删除按钮
+					}else if(data.resultcode == 10){
+						layer.alert(data.msg,function(index){
+							if(data.err_row){
+								var err_row = parseInt(data.err_row)-1;
+								$("#table tbody").find("tr").eq(err_row).find(".a_del").removeClass("none");
+							}
+							layer.close(index);
+						}); 
+					}else if(data.resultcode== 8){
+						layer.alert("数据验证错误");
+					}else{
+						layer.msg(data.msg);
+					}
+					$(".td_xh").each(function(index,value){
+						$(value).html(index+1);
+					});
+					saveState=0;
+					publicState=1;//可打印
+				},
+				error:function(){
+					layer.alert('不能重复保存。',{icon: 2});
+				}
+			}); 
+		}
+
+		//修改入库单审核状态
+        function upInstockStatus(jsid,status){
+        	var index = layer.load(2,{time:2000}); 
+        	$.post("{:U('Instock/upInstockStatus')}",{jsid:jsid,status:status},function(data){
+        		//关闭加载框 
+        		layer.close(index);
+        		if(data.resultcode==0){ 
+					layer.alert("审核"+data.msg); 
+					$("#div_zzc").removeClass("none");
+				}else{
+					layer.alert("单据已保存，审核失败,"+data.msg,{icon:2});
+					$("#div_zzc2").removeClass("none");
+				}
+        	},"json");
+        }	
+
+		//数据列设置
+		$('.data').click(function(){
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['700px', '500px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Instock/instockDataSet.html'
+			});
+		});
+		//打印和导出状态 0.不可打印导出 1.可打印导出
+		var publicState = 0;
+		//excel 导出
+		function exportJoinStock(){
+			if(publicState==1){
+				//根据入库单据号获取供应商地址
+				var index = layer.load(2, {time: 2000});
+				var jsid = $("#jsid").val();
+				$.ajax({
+					type:"post",
+					url:"{:U('Instock/getSaddress')}",
+					data:{'jsid':jsid},
+					dataType:"json",
+					success:function(data) {
+						if(data.resultcode==0){
+							var address = getAddressName(data.result[0].pid)+getAddressName(data.result[0].pid,data.result[0].cid)+getAddressName(data.result[0].pid,data.result[0].cid,data.result[0].did);
+							address += data.result[0]['street'];
+							var url = "{:U('Instock/exportJoinStock')}";
+							url+="?jsid="+jsid+"&address="+address;
+							location.href=url;
+						} 
+					},
+					error:function(){
+						layer.alert('获取地址异常',{icon: 2});
+					}
+				}); 
+				
+			}else{
+				layer.alert("请先保存入库单",{icon: 2});
+			}
+		}
+		//打印 
+		function printme(){    
+			var jsid = $("#jsid").val();
+			if(publicState==1){
+				layer.open({
+					type: 2,
+					closeBtn: 0,
+					area: ['0px', '0px'],
+					title: false,
+					content: '__APP__/WholesaleAdmin/Instock/instockPrint.html?jsid='+jsid
+				}); 
+			}else{
+				layer.alert("请先保存入库单",{icon: 2});
+			} 
+		}
+	</script>
+</div>
+</body>
+</html>

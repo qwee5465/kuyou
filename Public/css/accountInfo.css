@@ -1,0 +1,12 @@
+.nav-top-li{cursor: pointer;}
+.nav-top-li.active{color: #57b8db;}
+form{background:#fff;box-shadow:0 0 8px #d6d6d6;padding-top: 10px;padding-bottom: 20px;text-align: center;}
+a.btn{background: #57b8db;color: #fff;line-height: 30px;margin-top: -3px;margin-left: 50px;}
+a.btn:hover{color: #fff;}
+.message{width: 400px;margin: 0 auto;background:#fff;box-shadow:0 0 8px #d6d6d6;padding-top: 10px;text-align: center;}
+table{border-right: none;border-left:none;border-bottom: none;}
+table tr td:first-child{border-left: none !important;}
+table thead tr td{border-bottom: 1px solid #d0d0d0;}
+table tbody tr:last-child td{border-bottom: none;}
+.message a span{color: red;}
+.message a:hover{color: #000;}

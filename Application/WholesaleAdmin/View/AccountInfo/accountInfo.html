@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/accountInfo.css">
+    <style type="text/css">
+		.nav-top-li{width:33.33%;}
+		.w-60{width: 60px;}
+        .h-32{height: 32px;}
+        .preserve{background: #59ab76;border: 1px solid #3b9f5f; padding: 6px 12px;}
+        .preserve:hover{background: #3b9f5f;border: 1px solid #3b9f5f;}
+        .nav-top-li.active{color: #59ab76;}
+        .tb-style td a{color: #999;}
+    </style>
+</head>
+<body>
+	<div class="nav navbar-default h-60 lh-50">
+		<div class="nav-top">
+			<ul style="    width: 300px;margin: 5px auto;">
+				<if condition="$list['fid'] eq 0">
+					<li class="nav-top-li fl pr30 text-right">公司信息</li>
+				</if>
+				<li class="nav-top-li fl pr30 text-right active">个人信息</li>
+				<li class="nav-top-li fl pl30">账号安全</li>
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid mt10 account-content">
+		<if condition="$list['fid'] eq 0">
+		<div class="none">
+			<div class="col-xs-12 col-md-4"></div>
+			<div class="col-xs-12 col-md-4">
+				<form>
+					<p class="text-center">公司信息</p> 
+					<div class="form-group mt50">
+						<span>公司名称</span>
+						<input type="text" name="unit_name" id="unit_name" value="{$list['unit_name']}"  class="form-control w-240" /> 
+					</div>  
+					<div class="form-group">
+						<span>负&nbsp;责&nbsp;人</span>
+						<input type="text" name="legal_person" id="legal_person" value="{$list['legal_person']}"  class="form-control w-240" /> 
+					</div>  
+					<div class="form-group">
+						<span>联系电话</span>
+						<input type="text" name="gstel" id="gstel" value="{$list['gstel']}"  class="form-control w-240">
+					</div>
+					<div class="form-group">
+						<span >联系地址</span> 
+						<select name="pid" onchange="provinceOpt(this)" id="pid" class="w-110 mr10">
+							<option>请选择省份</option>
+							<option>浙江省</option>
+						</select> 
+						<select name="cid" id="cid" onchange="cityOpt(this)"  class="w-110 mr10">
+							<option>请选择城市</option>
+							<option>杭州市</option>
+						</select> 
+						<div class="mt10">
+							<select name="did" id="did"  class="w-110 mr20">
+								<option>请选择县区</option>
+								<option>西湖区</option>
+							</select> 
+							<input type="text" class="form-control w-240 mt10" id="street" name="street" value="{$list.street}" />
+						</div>  
+					</div>
+
+					<div class="mt70">
+						<input type="button" onclick="brandInfoSubmit()" name="" value="保 存" class="preserve"> 
+					</div>
+				</form>
+			</div>
+			<div class="col-xs-12 col-md-4">
+				<div class="message">
+					<p>个人信息提醒</p>
+					<table class="mt50 tb-style">
+						<thead>
+							<tr>
+								<td class="w-150">时间</td>
+								<td class="w-250">内容</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		</if>
+		<div class="">
+			<div class="col-xs-12 col-md-4"></div>
+			<div class="col-xs-12 col-md-4">
+				<form>
+					<p class="text-center">个人资料</p> 
+					<div class="form-group mt50">
+						<span>账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号</span>
+						<input type="text" name="phone" id="phone" value="{$list['phone']}" readonly class="form-control w-240">
+					</div> 
+					<div class="form-group">
+						<span>联&nbsp;&nbsp;系&nbsp;&nbsp;人</span>
+						<input type="text" name="contacts" id="contacts" value="{$list['contacts']}" class="form-control w-240">
+					</div> 
+					<div class="form-group">
+						<span>联系电话</span>
+						<input type="text" name="tel" id="tel" value="{$list['tel']}" class="form-control w-240">
+					</div>  
+					<div class="form-group">
+						<span >联系地址</span> 
+						<input type="text" class="form-control w-240 mt10" id="address" name="address" value="{$list.address}" />
+					</div> 
+					<div class="mt70">
+						<input type="button" onclick="baseInfoSubmit()" name="" value="保 存" class="preserve"> 
+					</div>
+				</form>
+			</div>
+			<div class="col-xs-12 col-md-4">
+				<div class="message">
+					<p>个人信息提醒</p>
+					<table class="mt50 tb-style">
+						<thead>
+							<tr>
+								<td class="w-150">时间</td>
+								<td class="w-250">内容</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+							<tr>
+								<td>2016-9-9 12:12:12</td>
+								<td><a href="">您有<span>1条</span>重要信息<span>未读</span></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="none">
+			<div class="col-xs-12 col-md-4 col-md-offset-4">
+				<form action="" method="" style="padding-bottom: 100px;">
+					<p class="text-center">修改密码</p>
+					<div class="form-group mt50">
+						<span>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</span>
+						<input type="password" name="old_pwd" id="old_pwd" class="form-control w-200">
+					</div>
+					<div class="form-group">
+						<span>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</span>
+						<input type="password" name="new_pwd" id="new_pwd" class="form-control w-200">
+					</div>
+					<div class="form-group">
+						<span>确认密码</span>
+						<input type="password" name="new_pwd1" id="new_pwd1" class="form-control w-200">
+					</div>
+					<div class="mt70">
+						<input type="button" onclick="upPassword()" value="保 存" class="preserve"> 
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/area.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			var area = _dataArea; //地址json对象
+	        var pstr = '',cstr = '',dstr = '';
+	        for (var i = 0; i < area.length; i++) {
+	            pstr += '<option value="' + i + '">' + area[i].name + '</option>';
+	        }
+	        $('#pid').html(pstr);
+	        var pid = {$list.pid};
+	        var cid = {$list.cid};
+	        var did = {$list.did};
+	        $('#pid').val(pid);
+	        var city = _dataArea[pid].son;
+	        for (var i = 0; i < city.length; i++) {
+	            cstr += '<option value="' + i + '">' + city[i].name + '</option>';
+	        }
+	        $('#cid').html(cstr);
+	        $('#cid').val(cid);
+	        var district = _dataArea[pid].son[cid].son;
+	        for (var i = 0; i < district.length; i++) {
+	            dstr += '<option value="' + i + '">' + district[i].name + '</option>';
+	        }
+	        $('#did').html(dstr);
+	        $('#did').val(did);
+			$(".nav-top-li").click(function(){
+				$(this).addClass("active").siblings().removeClass("active");
+				$(".account-content > div").eq($(this).index()).show().siblings().hide();
+			})
+		}); 
+		 
+		//省份选择事件
+	    function provinceOpt(obj) {
+	        //根据val查询城市信息 
+	        var city = _dataArea[obj.value].son; //城市json
+	        var cstr = "";
+	        for (var i = 0; i < city.length; i++) {
+	            cstr += '<option  value="' + i + '">' + city[i].name + '</option>';
+	        }
+	        $('#cid').html(cstr);
+	        cityOpt(0);
+	    }
+	    //城市选择事件
+	    function cityOpt(obj) {
+	        var pid_value = $("#pid").val();
+	        var val = (obj == 0) ? 0 : obj.value;
+	        var district = _dataArea[pid_value].son[val].son; //城市json
+	        var dstr = "";
+	        for (var i = 0; i < district.length; i++) {
+	            dstr += '<option  value="' + i + '">' + district[i].name + '</option>';
+	        }
+	        $('#did').html(dstr);
+	    }
+
+	    //基础信息提交
+	    function baseInfoSubmit(){
+	    	var contacts =$('#contacts').val();
+			if(!contacts){
+				layer.tips('请填写联系人', '#contacts', {tips: 1});
+				return false;
+			} 
+			var tel = $('#tel').val();
+			if(!contacts){
+				layer.tips('请填写联系电话', '#contacts', {tips: 1});
+				return false;
+			}
+			var address = $('#address').val();
+			if(!address){
+				layer.tips('请填写街道信息', '#address', {tips: 1});
+				return false;
+			} 
+	    	var data ={"contacts":contacts,"tel":tel,"address":address};
+	    	$.post("{:U('AccountInfo/baseInfoSubmit')}", data,function(data){
+				if(data == 0){
+					layer.msg("修改成功");
+				}else{
+					layer.msg("修改失败");
+				}
+			}, "json");
+	    }
+	    //公司信息提交
+	    function brandInfoSubmit(){
+	    	var unit_name =$('#unit_name').val();
+			if(!unit_name){
+				layer.tips('请填写公司名称', '#unit_name', {tips: 1});
+				return false;
+			}  
+			var legal_person = $('#legal_person').val();
+			if(!legal_person){
+				layer.tips('请填写负责人', '#legal_person', {tips: 1});
+				return false;
+			} 
+			var gstel = $('#gstel').val();
+			if(!contacts){
+				layer.tips('请填写联系电话', '#gstel', {tips: 1});
+				return false;
+			} 
+			var pid = $('#pid').val();
+			if(!pid){
+				layer.tips('请选择省份', '#pid', {tips: 1});
+				return false;
+			} 
+			var cid = $('#cid').val();
+			if(!cid){
+				layer.tips('请选择城市', '#cid', {tips: 1});
+				return false;
+			} 
+			var did = $('#did').val();
+			if(!contacts){
+				layer.tips('请选择县区', '#did', {tips: 1});
+				return false;
+			}
+			var street = $('#street').val();
+			if(!street){
+				layer.tips('请填写详细地址', '#street', {tips: 1});
+				return false;
+			}
+	    	var data ={"unit_name":unit_name,"legal_person":legal_person,"tel":gstel,"pid":pid,"cid":cid,"did":did,"street":street};
+	    	$.post("{:U('AccountInfo/brandInfoSubmit')}", data,function(data){
+				if(data == 0){
+					layer.msg("修改成功");
+				}else{
+					layer.msg("修改失败");
+				}
+			}, "json");
+	    }
+	    //修改密码
+	    function upPassword(){
+	    	var old_pwd =$('#old_pwd').val();
+			if(!old_pwd){
+				layer.tips('请填写原密码', '#old_pwd', {tips: 1});
+				return false;
+			}  
+			var new_pwd = $('#new_pwd').val();
+			if(!new_pwd){
+				layer.tips('请填写新密码', '#new_pwd', {tips: 1});
+				return false;
+			} 
+			if(new_pwd.length<6){
+				layer.tips('密码过于简单，请填写6-12个字符', '#new_pwd', {tips: 1});
+				return false;
+			} 
+			var new_pwd1 = $('#new_pwd1').val();
+			if(!new_pwd1){
+				layer.tips('请填写确认密码', '#new_pwd1', {tips: 1});
+				return false;
+			}  
+			if(new_pwd!=new_pwd1){
+				layer.tips('两次密码不同', '#new_pwd1', {tips: 1});
+				return false;
+			}  
+	    	var data ={"old_pwd":old_pwd,"new_pwd":new_pwd};
+	    	$.post("{:U('AccountInfo/upPassword')}", data,function(data){
+				if(data == 0){
+					layer.msg("修改成功");
+				}else if(data == 1){
+					layer.msg("修改失败");
+				}else if(data == 2){
+					layer.msg("原密码错误");
+				}
+			}, "json");
+	    }
+	    
+	</script>
+</body>
+</html>

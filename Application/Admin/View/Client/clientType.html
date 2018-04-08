@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+</head>
+<body>
+<div class="nav navbar-default">
+	<div class="container-fluid pb10">
+		<h3>客户类型列表</h3>
+		<div class="col-xs-12 col-md-3">
+			<form action="__SELF__" method="post">
+				<div class="has-feedback w-300">
+					<label class="sr-only" for="kw">搜索</label>
+					<input id="search" class="form-control w-300" placeholder="搜索..."  name="search" type="text">
+					<span class="glyphicon glyphicon-search form-control-feedback search-style"></span>
+					<input type="submit" name="" value="" class="search">
+				</div>			
+			</form>
+		</div>
+		<div class="col-xs-12 col-md-1 col-md-offset-8">
+			<button class="btn btn-success active fr" id="add">
+				新增
+			</button>
+		</div>
+	</div>
+</div>
+<div class="container-fluid mt10">
+	<div class="row ml0">
+		<div class="col-xs-6">
+			<table class="tb-style">
+				<thead>
+				<tr>
+					<td>
+						<div class="w-60" style="margin:0 auto;">
+							<input type="checkbox" name="" class="fl h-15 w-15">
+							<span class="fl sp-s-p"> 编号</span>
+						</div>
+
+					</td>
+					<td>类型名称</td>
+					<td>操作</td>
+				</tr>
+				</thead>
+				<tbody>
+
+				<volist name="list" id="vo">
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> {$vo.ctid}</span>
+							</div>
+						</td>
+						<td>{$vo.type_name}</td>
+						<td class="text-center" data-id='{$vo.ctid}'>
+							<a class="edit"  href="javascript:;">编辑</a>
+							&nbsp;|&nbsp;
+							<a class="del"  href="javascript:;">删除</a>
+						</td>
+					</tr>
+				</volist>
+
+				</tbody>
+			</table>
+			<div class="row paging">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right  pr">
+					{$page}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript">
+	$('.del').click(function(){
+		var _this =this;
+		var id =$(this).parent().attr('data-id');
+		layer.confirm('您确定要删除吗？', {
+			btn: ['确认'], //按钮
+			shade: [0.4, '#393D49'] //显示遮罩
+		}, function(){
+			$.post("{:U('Client/clientTypeDel')}", { "ctid": id},function(data){
+				if(data == 0){
+					layer.msg('删除成功', { icon: 1, time: 1000 }, function(){
+						$(_this).parent().parent().remove();
+					});
+				}else{
+					layer.msg('删除失败', {icon: 2, time: 2000 });
+				}
+			}, "json");
+		},function(){
+		});
+	});
+	//编辑按钮
+	$('.edit').click(function(){
+		var id =$(this).parent().attr('data-id');
+		layer.open({
+			type: 2,
+			closeBtn: 0,
+			area: ['350px', '200px'],
+			title: false,
+			content: '__APP__/Admin/Client/clientTypeEdit.html?ctid='+id
+		});
+	});
+
+	//新增供应商类型
+	$('#add').click(function(){
+		layer.open({
+			type: 2,
+			closeBtn: 0,
+			area: ['350px', '200px'],
+			title:false,
+			content: '__APP__/Admin/Client/clientTypeAdd.html'
+		});
+	});
+
+	$(function () {
+		$("#search").val('{$search}');
+	});
+</script>
+</body>
+</html>

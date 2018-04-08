@@ -1,0 +1,24 @@
+body{font-size: 14px;font-family: "兰亭黑简体","Microsoft yahei";background: url(../img/login_bg.png);background-size: 100% 100%;}
+.wrapper{position: absolute;width: 800px;height: 550px;left: 50%;top: 50%;margin-left: -400px;margin-top: -255px;}
+.title{width: 100%;height: 40px;background: #56a2bc;opacity: .8; color: #fff;padding-left: 10px;}
+.title span{line-height: 40px;}
+.content{background:rgba(255,255,255,.7);}
+input{background-color:#fff;border-radius: 0 !important;}
+.nav-top{width: 98%;height: 55px;border-bottom: 1px solid #dcdcdc;margin: 0 auto;}
+.nav-top .box{width: 120px;height:20px;margin: 25px auto 0 auto;text-align: center;padding-bottom:29px;cursor: pointer;}
+.nav-top .box.active{border-bottom: 1px solid #53b1d3;}
+.nav-top .circle{width: 16px;height: 16px;border-radius: 8px;background-color: #b5b5b5;line-height: 16px;color: #fff;margin-top: 2px;text-align: center;margin-left: 10px;}
+.nav-top .circle.active{background: #53b1d3;}
+.nav-top .box-list{color: #b5b5b5;}
+.nav-top .box-list.active{color: #47485d;}
+.login-name form{padding-bottom: 50px;}
+.login-name form i{right: 7px;top: 5px;}
+.agreement{font-size: 12px;width: 220px;margin: 30px auto 0 auto;}
+.next-step{display:block;width: 100px;height: 35px;text-align: center;color: #fff;background: #54b2d4;line-height: 35px;font-size: 16px;margin: 30px auto 0 auto;}
+.acount-info form{padding-bottom: 50px;}
+.register-success{padding-bottom: 50px;margin-top: 109px;}
+.register-success .tip{width: 270px;margin: 40px auto;}
+.register-success img{display: block;width: 80px;height: 70px;float: left;}
+.register-success span{float: left;font-size: 22px;color: #57b8db;margin-left: 10px;line-height: 70px;}
+.register-success a{display:block;width: 100px;height: 35px;text-align: center;color: #fff;background: #54b2d4;line-height: 35px;font-size: 16px;margin: 30px auto 0 auto;margin-top: 85px;}
+select{padding: 4px 0 4px 10px;border-radius: 0;}

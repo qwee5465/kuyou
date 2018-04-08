@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		form{margin: 0 2.5%;width: 95%;background:#fff;box-shadow:0 0 8px #d6d6d6;}
+		.tips{width: 250px;background: #d0a972;top:0;right: 0;padding-bottom: 2px;}
+		.tips_content{width: 246px;;background: #fff;margin: 0 auto 0 2px;word-wrap: break-word;font-size:12px;}
+		.goods-ul{position: absolute;left:0;top:35px;width:100%;background:#F0F0F0;z-index: 10;}
+		.goods-ul li{padding: 10px;text-align: center;border-bottom:1px solid #fff;}
+		.goods-ul li:hover{background:#D0A972;}
+		.unit-box{width:400px;margin-left:15px;} 
+		.table td,.table th{text-align: center;height:38px;}
+		.td_units{display: inline-block;margin-left: 5px;}
+		.bg-gap{background: #fff;}
+		.tips{background: #feb235;}
+		caption{border: 1px solid #eee;color: #333; letter-spacing: 1.5px;background: #eee;}
+		.text-left{text-align: left;}
+		.btn-success{background: #59ab76; border: 1px solid #3b9f5f; margin-left: 270px;}
+		.btn-success:hover{background: #3b9f5f; border: 1px solid #3b9f5f;}
+		.headstyle{background: #404040;  border: 1px solid #404040 !important;color: #fff !important; letter-spacing: 1.5px !important;}
+		.preserve{background: #59ab76; border: 1px solid #3b9f5f;}
+		.preserve:hover{background: #3b9f5f; border: 1px solid #3b9f5f;color: #fff;}
+		.return{line-height:inherit; }
+		.unit-box{width: 520px;}
+	</style>
+</head>
+
+<body>
+<div class="nav navbar-default h-60">
+	<div class="container-fluid">
+		<h3 style="border:none">新增商品</h3>
+	</div>
+</div>
+<form action="__SELF__" method="post" enctype="multipart/form-data">
+	<div class="container-fluid mt20 pb20  pr" style="padding-left:0;padding-right:0;">
+		<div class="mt20">
+			<div class="form-group mb20 cf">
+				<div class="col-xs-12 col-sm-4 col-md-4">
+					<span class="l-title pr"><strong class="l-titl-star">* </strong>商品名称</span>
+                    <span class="fl pr">
+                   		<input type="text" name="name" id="name" class="form-control w100" autocomplete="off"  /> 
+						<!-- <input type="text" name="name" id="name" onkeyup="getGoodsName(this)" class="form-control w100"  /> -->
+						<!-- <ul class="goods-ul none" id="goods_ul" data-id="name"></ul> -->
+						<!-- 商品名称 品牌 单位 三种相同则获取商品标准库中的商品插入到批发商商品档案中 否则新增商品标准库商品，审核状态标注为未审核 -->
+					</span>
+				</div>
+			</div>
+		</div> 
+		<div class="mt20">
+			<div class="cf">
+				<div class="col-xs-12 col-sm-12 col-md-12"> 
+					<span class="l-title pr"><strong class="l-titl-star">* </strong>商品类型</span>
+                    <span class="fl">
+						<select name="gtid" id="gtid" onchange="getTwoTypeInfo(this)">
+							<option value="">请选择一级类型</option>
+							<foreach name="list1" item="vo">
+								<option value="{$vo.gtid}">{$vo.type_name}</option>
+							</foreach>
+						</select>
+					</span>
+					<span class="fl ml10">
+						<select name="gtid1" id="gtid1" onchange="getThreeTypeInfo(this)">
+							<option value="">请选择二级类型</option>
+						</select>
+					</span>
+					<span class="fl ml10">
+						<select name="gtid2" id="gtid2">
+							<option value="">请选择三级类型</option> 
+						</select>
+					</span>
+				</div>
+			</div>
+		</div>  
+		<div class="mt20">
+			<div class="pr cf"> 
+				<div class="col-xs-12 col-sm-12 col-md-12">
+					<span class="l-title pr"><strong class="l-titl-star">* </strong>商品品牌</span>
+		            <span class="fl">
+						<select name="brand_id" id="brand_id" class="w-120">
+							<foreach name="list_brand" item="vo">
+								<option value="{$vo.brand_id}">{$vo.brand_name}</option>
+							</foreach>
+						</select>
+					</span>
+					<span class="l-title pr"><strong class="l-titl-star">* </strong>基础单位</span>
+	                <span class="fl">
+						<select name="unit_id" id="unit_id">
+							<foreach name="list_unit" item="vo">
+								<option value="{$vo.unit_id}">{$vo.unit_name}</option>
+							</foreach>
+						</select>
+					</span>
+				</div> 
+			</div>
+		</div> 
+		<div class="mt20">
+			<div class="pr cf"> 
+				<div class="col-xs-12 col-sm-12 col-md-12"> 
+					<span class="l-title pr"><strong class="l-titl-star">* </strong>供应商</span>
+	                <span class="fl">
+						<select name="sid" id="sid">
+							<foreach name="slist" item="vo">
+								<option value="{$vo.sid}">{$vo.name}</option>
+							</foreach>
+						</select>
+					</span>
+					<span class="l-title pr">单价</span>
+	                <span class="fl">
+						<input type="number" name="price" id="price" step="0.01" class="form-control w50 text-center"  />
+					</span>
+				</div> 
+			</div>
+		</div> 
+		<div class="mt20">
+			<div class="form-group mb20">
+				<div class="col-xs-12 col-sm-4 col-md-4"> 
+					<div class="unit-box clear"> 
+						<table class="table table-bordered">
+							<caption class="text-left pr">&nbsp&nbsp内装数,必需大于0.0001(如：1箱=10斤 )<!-- <strong style="color:red;">选填</strong>-->
+							<input type="button" class="btn btn-success" style="position: absolute;right:5px;top:1px;" id="btn_addUnit" value="添 加" />
+							<input type="hidden" value="0" id="hid_spec" name="hid_spec" />
+							</caption> 
+							<tbody id="tbody1">
+								<tr><td class="headstyle">单位</td><td class="headstyle">操作</td><td class="headstyle">内装数</td></tr> 
+							</tbody>
+						</table>
+					</div>
+					<!-- <span class="l-title pr">商品图片:<strong class="l-titl-star">*</strong></span>
+					<span class="fl pr h-100 mb20">
+						<input type="file" name="pic" id="file_upload" class="w-120 inline-block pa" style="z-index:1;opacity: 0;left:0;top:0;width: 150px;height: 100px;">
+						<div class="pa " style="text-align: center;width: 150px;height: 100px;top: 0;left: 0;border:2px dashed #d0d0d0;padding-top: 30px;">
+							<img class="npic"  src="__PUBLIC__/img/pic.png">
+							<input type="hidden" id="hidpic" name ="hidpic" value="" />
+						</div>
+						<img id="preview" class="pa" height="50" style="top: 20px;left: 35px;display: block;width: 80px;height: 60px;"> 
+					</span> -->
+				</div>
+			</div>
+		</div>
+		<div class="pa tips">
+			<p class="fs-16 text-center h-40 lh-40" style="color:#fff;">温 馨 提 示</p>
+			<div class="tips_content fs-14">
+				<div class="p10"><strong style="color: #feb235">● </strong>为了提供更好的服务，请认真填写资料</div>
+				<div class="p10"><strong style="color: #feb235">● </strong>另：凡是带有“谨慎操作”提示的选项，非管理员授权的情况下，一律不允许添加。</div>
+			</div>
+		</div>
+	</div>
+	<div class="h-70"></div>
+	<div class="mt20 bottom-style">
+		<div class="form-group" style="margin-left:30%;padding-top:15px;">
+			<input type="submit" onclick="return checkForm();" value="保 存" class="preserve btn" />
+			<a href="javascript:;" onclick="fanhui(this)" id="a_fanhui" class="btn return">返 回</a>
+		</div>
+	</div>
+</form>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+<script type="text/javascript" src="__PUBLIC__/js/area.js"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript"> 
+	var list_unit = '{$json_unit}';
+	var pageState = "{$pageState}"; //出入库新增商品时用到
+	list_unit = JSON.parse(list_unit);
+	$(function(){
+		//图片选择放入img中
+		$("#file_upload").change(function() {
+			var $file = $(this);
+			var fileObj = $file[0];
+			var windowURL = window.URL || window.webkitURL;
+			var dataURL;
+			var $img = $("#preview");
+
+			if (fileObj && fileObj.files && fileObj.files[0]) {
+				dataURL = windowURL.createObjectURL(fileObj.files[0]);
+				$img.attr('src', dataURL);
+			} else {
+				dataURL = $file.val();
+				var imgObj = document.getElementById("preview");
+				// 两个坑:
+				// 1、在设置filter属性时，元素必须已经存在在DOM树中，动态创建的Node，也需要在设置属性前加入到DOM中，先设置属性在加入，无效；
+				// 2、src属性需要像下面的方式添加，上面的两种方式添加，无效；
+				imgObj.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+				imgObj.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = dataURL;
+			}
+			$(".npic").hide();
+		}); 
+
+	}); 
+	//基础单位选择
+	$("#unit_id").change(function(){
+		var text = $(this).find("option:selected").text(); 
+		$(".td_units").html(text);
+	});  
+
+	function fanhui(obj){ 
+		if(pageState==1){ 
+			location.href="{:U('Goods/goodsList')}";
+		}else{
+			window.history.go(-1);
+		} 
+	}
+
+	//根据1级类型编号获取二级分类
+    function getTwoTypeInfo(obj){
+        var fid = $(obj).val();
+        if(fid!=""){
+	        $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid},function(data){
+	            if(data.resultcode==0){
+	                var result =data.result;
+	                var str ='<option value="">请选择二级类型</option>';
+	                for(var i=0;i<result.length;i++){
+	                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+	                }
+	                $("#gtid1").html(str);
+	            }else{
+	            	var str ='<option value="">请选择二级类型</option>';
+	            	$("#gtid1").html(str);
+	            	var str1 ='<option value="">请选择三级类型</option>';
+	            	$("#gtid2").html(str1);
+	            }
+	        }, "json");
+	    }else{
+	    	var str ='<option value="">请选择二级类型</option>';
+        	$("#gtid1").html(str);
+        	var str1 ='<option value="">请选择三级类型</option>';
+        	$("#gtid2").html(str1);
+	    }
+    }
+
+    //根据二级类型编号获取三级分类
+    function getThreeTypeInfo(obj){
+    	var fid = $(obj).val();
+    	if(fid!=""){
+	        $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid},function(data){
+	            if(data.resultcode==0){
+	                var result =data.result;
+	                var str ='<option value="">请选择三级类型</option>';
+	                for(var i=0;i<result.length;i++){
+	                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+	                }
+	                $("#gtid2").html(str);
+	            }else{ 
+	            	var str1 ='<option value="">请选择三级类型</option>';
+	            	$("#gtid2").html(str1);
+	            }
+	        }, "json");
+	    }else{
+	    	var str1 ='<option value="">请选择三级类型</option>';
+        	$("#gtid2").html(str1);
+	    }
+    }
+
+	$("#btn_addUnit").click(function(){
+		var index = parseInt($("#hid_spec").val());
+		if(index<10){
+			var text = $("#unit_id").find("option:selected").text(); 
+			var val =  $("#unit_id").val();
+			var str ='<tr><td><span style="display: inline-block;margin-right: 5px;">1</span>';
+			str +='<select name="unit_id'+index+'" id="unit_id'+index+'">'; 
+			for(var i=0;i<list_unit.length;i++){
+				str +="<option value='"+list_unit[i].unit_id+"'>"+list_unit[i].unit_name+"</option>";
+			}
+			str +='</select></td> <td style="line-height: 35px;">=</td><td><input type="number" step="0.0001" name="num'+index+'" class="form-control w-80 text-center" /><span class="td_units">'+text+'</span></td></tr>';
+			$("#tbody1").append(str);
+			index ++;
+			$("#hid_spec").val(index);
+		}else{
+			layer.msg("不能在添加了");
+		}
+	});
+
+	
+	//表单验证
+	function checkForm(){
+		var name =$('#name').val();
+		if(!name){
+			layer.tips('请填写商品名称', '#name', {tips: 1});
+			return false;
+		}  
+		// var hid_name =$("#hid_name").val();
+		// if(hid_name==""){
+		// 	layer.tips('商品名称已存在,请跟换', '#name', {tips: 1});
+		// 	return false;
+		// }  
+		var gtid =$('#gtid').val();
+		if(!gtid){
+			layer.tips('请选择一级类型', '#gtid', {tips: 1});
+			return false;
+		}
+		
+		var hid_spec = parseInt($("#hid_spec").val()); 
+		var unit_id =$("#unit_id").val();
+		var temp = "-"+unit_id+"-";
+		for(var i=0;i<hid_spec;i++){
+			var id00 ="-"+$("#unit_id"+i).val()+"-";
+			if(temp.indexOf(id00)>=0){
+				layer.msg("内装类型不能相同");
+				return false;
+			}else{
+				temp+=id00;
+			}
+		}
+		//判断内装类型是否相同  
+		return true;
+	}
+
+	//商品名称唯一性验证
+	function getGoodsName(obj){
+		var name = obj.value;
+		$.post("{:U('Goods/getGoodsName')}", { "name": name},function(data){
+			if(data.resultcode==0){ 
+				var str ="";
+				var goods_ul = $('#goods_ul');
+				var result =data.result;
+				for(var i=0;i<result.length;i++){
+					str +="<li data-name='"+result[i].name+"' data-unit_id='"+result[i].unit_id+"' data-gtid='"+result[i].gtid+"' data-brand_id='"+result[i].brand_id+"' data-price='"+result[i].price+"' data-unit_id='"+result[i].unit_id+"' data-pic='"+result[i].pic+"'>"+result[i].brand_name +"-"+result[i].name+"-"+result[i].unit_name+"</li>";
+				}
+				goods_ul.show();  
+				goods_ul.html(str);
+				//列表点击事件
+				$('#goods_ul li').click(function(e){ 
+					e.stopPropagation();
+					var obj = $(this);
+					var id = obj.parent().attr('data-id');
+					$("#"+id).val(obj.attr('data-name'));
+					$("#gtid").val(obj.attr('data-gtid'));
+					$("#brand_id").val(obj.attr('data-brand_id'));
+					$("#price").val(obj.attr('data-price'));
+					$("#unit_id").val(obj.attr('data-unit_id')); 
+					$("#hidpic").val(obj.attr('data-pic'));
+					$("#preview").attr('src','__PUBLIC__'+obj.attr('data-pic'));
+					obj.parent().hide();
+				});
+			}  
+		}, "json");
+	}
+
+
+
+	$('body').click(function(){
+		$("#goods_ul").hide();
+	});
+</script>
+</body>
+
+</html>

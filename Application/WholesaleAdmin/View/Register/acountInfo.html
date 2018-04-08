@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/register.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/fonts/iconfont.css" />
+</head>
+<body>
+	<div class="wrapper">
+		<div class="title">
+			<span class="fs-18">注册</span>
+			<span class="fs-12">>></span>
+		</div>
+		<div class="content">
+			<div class="nav-top">
+				<div class="col-xs-4 col-md-4">
+					<div class="box">
+						<div class="circle fl">1</div>
+						<div class="fl box-list">设置登录名</div>
+					</div>
+				</div>
+				<div class="col-xs-4 col-md-4">
+					<div class="box active">
+						<div class="circle fl active">2</div>
+						<div class="fl box-list active">填写账户信息</div>
+					</div>
+				</div>
+				<div class="col-xs-4 col-md-4">
+					<div class="box">
+						<div class="circle fl">3</div>
+						<div class="fl box-list">注册成功</div>
+					</div>
+				</div>
+			</div>
+			<div class="set">
+				<div class="acount-info mt70">
+					<form action="" method="get">
+						<div class="cf">
+							<span class="fl pt6" style="margin-left:228px;"><span class="l-titl-star">*</span>邮&nbsp;&nbsp;箱</span>
+							<input type="email" name="" class="w-200 fl ml10 form-control">
+						</div>
+						<div class="mt10">
+							
+							<span class="fl pt6" style="margin-left:228px;"><span class="l-titl-star">*</span>地&nbsp;&nbsp;址</span>
+							<span class="fl ml10">
+								<select name="pid" onchange="provinceOpt(this)" id="pid" class="w-110 mr20">
+									<option>请选择省份</option>
+									<option>浙江省</option>
+								</select>
+								<select name="cid" id="cid" onchange="cityOpt(this)"  class="w-110 mr20">
+									<option>请选择城市</option>
+									<option>杭州市</option>
+								</select>
+								<select name="did" id="did"  class="w-110 mr20">
+									<option>请选择县区</option>
+									<option>西湖区</option>
+								</select>
+							</span>
+							<span style="margin-left:281px;">
+								<input type="text" name="" class="form-control w-400 mt10" placeholder="街道详情"/>
+							</span>
+						</div>
+						<div class="agreement cf">
+							<input type="checkbox" name="" class="fl">
+							<span class="fl" style="margin:-2px 0 0 2px;">我已阅读并同意<span style="color:#1f66a6;">《用户服务协议》</span></span>							
+						</div>
+						<a href="__APP__/admin/Register/registerSuccess" class="next-step">下一步 <span class="fs-12">>></span></a>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/area.js"></script> 
+	<script type="text/javascript">
+		
+		$(function(){
+			var area = _dataArea; //地址json对象
+			var pstr = '<option value="">请选择省份</option>';
+			var cstr = '<option value="">请选择城市</option>';
+			var dstr = '<option value="">请选择县区</option>';
+			for(var i=0;i<area.length;i++){
+				pstr += '<option value="'+i+'">'+area[i].name+'</option>';
+			}
+			$('#pid').html(pstr);
+		});
+		//省份选择事件
+		function provinceOpt(obj){
+			//根据val查询城市信息
+			var city = _dataArea[obj.value].son; //城市json
+			var cstr ="<option value=''>请选择城市</option>";
+			for(var i=0;i<city.length;i++){
+				cstr += '<option  value="'+i+'">'+city[i].name+'</option>';
+			}
+			$('#cid').html(cstr);
+		}
+		//城市选择事件
+		function cityOpt(obj){
+			var pid_value = $("#pid").val();
+			var district = _dataArea[pid_value].son[obj.value].son; //城市json
+			var dstr ="<option value=''>请选择城市</option>";
+			for(var i=0;i<district.length;i++){
+				dstr += '<option  value="'+i+'">'+district[i].name+'</option>';
+			}
+			$('#did').html(dstr);
+		}
+	</script>
+</body>
+</html>

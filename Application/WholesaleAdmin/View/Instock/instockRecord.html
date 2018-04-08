@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style>
+		.btn-list.active{position: fixed;right: 0;top: 0;z-index: 20;width: 100%;background: #F8F8F8;box-shadow: 0 1px 5px #c5c5c5;padding: 15px 15px 0;}
+		.tr-active{background-color: #c5edb1;}
+		.a-xin{font-size:18px;}
+		.noradius{border-radius: 0px;}
+		.wordspace{letter-spacing: 1.5px;}
+		.tb-style td{border-bottom:1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+		.btn-style{background-color: #59ab76; border-color: #3b9f5f;}
+		.btn-style:hover{linear-gradient(#3b9f5f,#3b9f5f);
+    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    .btn2{width: 60px !important;}
+    .headcolor td{background-color: #59ab76; border:1px solid #59ab76; color: #fff;}
+    .headcolor2 td{background-color: #404040; border:1px solid #404040;color: #fff;}
+    table tr:nth-child(even){background-color: #e4e4e4;}
+	.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;}
+	.navbar-default {background-color: #fff;}
+	.noradius{border-radius: 0px;}
+	.mt8{letter-spacing: 1.5px;}
+	.ml5{margin-left: 5px;}
+	.ml20{margin-left: 20px;}
+	select{letter-spacing: 1.5px !important;}
+	.form-control{
+	 background: url('../img/select-drop-icon.png') no-repeat 90% center;
+    background-image: url("../img/select-drop-icon.png");
+    background-position-x: 90%;
+    background-position-y: 50%;
+    background-size: 14px auto;
+    background-repeat-x: no-repeat;
+    background-repeat-y: no-repeat;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial !important;}
+	.layui-layer-title{background: #59ab76 !important; color: #fff !important;letter-spacing: 1.5px !important;}
+	.layui-layer-dialog .layui-layer-content{letter-spacing: 1.5px;}
+	.layui-layer-btn .layui-layer-btn0{background: #59ab76 !important; border: 1px solid #3b9f5f !important;}
+	.layui-layer-btn .layui-layer-btn0:hover{background: #3b9f5f !important; border: 1px solid #3b9f5f !important;}
+	.layui-layer-btn a{height: auto !important;line-height: inherit !important;border-radius: 4px !important;padding: 6px 12px !important;}
+	</style>
+</head>
+<body>
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>入库记录</h3>
+			<div class="btn-list wordspace">
+				<form action="__SELF__" method="get">
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-12 col-md-12">
+								<span class="fl mt8">日期 从</span>
+								<input type="text" id="date1" name="stime" value="{$stime}" class="form-control w-120 fl ml10 noradius">
+								<span class="fl ml10 mt8">到</span>
+								<input type="text" id="date2" name="etime" value="{$etime}" class="form-control w-120 fl ml10 noradius">
+						 		<span class="fl mt8 ml20">审核状态</span>
+								<select name="status" id="status" class="form-control w-90 fl ml10 wordspace noradius">
+									<option value="">全部</option>
+									<option value="0">未审核</option>
+									<option value="1">已审核</option>
+								</select> 
+								<span class="fl mt8  ml20">标记</span>
+								<select name="key_documents" id="key_documents" class="form-control w-90 fl ml10 wordspace noradius">
+									<option value="">全部</option>
+									<option value="0">取消标记</option>
+									<option value="1">标记重点</option>
+								</select> 
+								<span class="fl mt8  ml20">是否结算</span>
+								<select name="settlement" id="settlement" class="form-control w-90 fl ml10">
+									<option value="">全部</option>
+									<option value="0">未结算</option> 
+									<option value="1">已结算</option> 
+									<option value="2">未结清</option> 
+								</select> 
+							</div>
+							 
+						</div>
+					</div>
+					<div class="form-group ml15">
+						<div class="row"> 
+							<div class="col-xs-12 col-md-12">
+								<span class="fl mt8">入库单据号</span>
+								<input type="text" name="jsid" value="{$jsid}" class="form-control noradius w-150 fl ml10"> 
+								<span class="fl mt8 ml20">供应商</span>	
+								<select name="sid" id="sid" class="form-control w-150 fl ml10 wordspace noradius">
+									<option value="">全部</option>
+									<volist name="slist" id="vo">
+										<option value="{$vo.sid}">{$vo.name}</option> 
+									</volist>
+								</select>  
+								<span class="fl mt8 ml10">商品名称</span>
+								<input type="text" name="gname" value="{$gname}" class="form-control noradius w-150  fl ml10">
+								<input type="submit" value="搜 索" class="btn btn-style ml20 btn2" />
+							</div>  
+							
+						</div>
+					</div>
+				</form>
+			</div>	
+		</div>
+	</div>
+	<div class="container-fluid mt20 wordspace">
+		<div class="col-xs-12">
+			<table class="tb-style t-table" id="table1">
+				<thead>
+					<tr class="headcolor">
+						<td colspan="3" style="text-align: right;">小计:</td>
+						<td id="td_xiaoji"></td>
+						<td colspan="5"></td>
+					</tr>
+					<tr class="headcolor2">
+						<td>行号</td>
+						<td>入库单据号</td>
+						<td>供应商</td>
+						<td>单据金额</td>
+						<td>录入时间</td>
+						<td>审核状态</td>
+						<td>是否结算</td>
+						<td>备注</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="list" id="vo">
+					<tr>
+						<td>{$key+1}</td>
+						<td data-id="{$vo.jsid}">
+							<if condition="$vo.key_documents eq 0">
+								<a class="a-xin" href="javascript:;" onclick="setKeyDocuments('{$vo.jsid}',1,this)" >☆</a>
+							<else />
+								<a class="a-xin" href="javascript:;" onclick="setKeyDocuments('{$vo.jsid}',0,this)">★</a>
+							</if>
+							<a href="javascript:;"  class="t_open">{$vo.jsid}</a>
+						</td>
+						<td>{$vo.s_name|getDefaultSname}</td>
+						<td class="td_total">{$vo.total|customDecimal="sum",###}</td>
+						<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td> 
+						<td class="td_status">{$vo.status|getStatus}</td>
+						<td>
+							<select onchange="upSettlementInfo(this.value,'{$vo.jsid}')">
+								<if condition="$vo.settlement eq 0">
+									<option value='0' selected="selected">未结算</option>
+								<else />
+									<option value='0'>未结算</option> 
+								</if>
+								<if condition="$vo.settlement eq 1">
+									<option value='1' selected="selected">已结算</option>
+								<else />
+									<option value='1'>已结算</option> 
+								</if>
+								<if condition="$vo.settlement eq 2">
+									<option value='2' selected="selected">未结清</option>
+								<else />
+									<option value='2'>未结清</option> 
+								</if>  
+							</select>
+						</td>
+						<td>{$vo.remark}</td>
+						<td>
+							<if condition="$vo.status eq 0"> 
+								<a href="{:U('Instock/instockEdit',array('jsid'=>$vo['jsid']))}" class="a-edit" >编辑</a>
+								<span class="span-kg">&nbsp;|&nbsp;</span>
+								<a href="javascript:;" onclick="delJoinStock('{$vo.jsid}',this);" class="a-del" >删除</a>
+							<else />
+								<a href="{:U('Instock/instockEdit',array('jsid'=>$vo['jsid']))}" class="a-edit none" >编辑</a>
+								<span class="span-kg none">&nbsp;|&nbsp;</span>
+								<a href="javascript:;" onclick="delJoinStock('{$vo.jsid}',this);" class="a-del none">删除</a>
+							</if>
+						</td> 
+					</tr> 
+					</volist>
+				</tbody>
+			</table>
+		</div> 
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/scrolltop.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		laydate({
+            elem: '#date1'
+        });
+        laydate({
+            elem: '#date2'
+        });
+
+        $(function(){
+        	$("#sid").val("{$sid}");
+        	$("#settlement").val("{$settlement}");
+        	$("#td_xiaoji").html(xiaoji());
+        });
+
+        //计算小计金额
+        function xiaoji(){
+        	var result=0;
+        	$(".td_total").each(function(index,obj){
+        		result=(parseFloat(result) + parseFloat($(obj).html())).toFixed(4);
+        	});
+        	// return parseFloat(result.toFixed(4));
+        	return parseFloat(result);
+        }
+
+        function upSettlementInfo(val,jsid){ 
+        	$.post("{:U('Instock/upSettlementInfo')}",{'jsid':jsid,'settlement':val},function(data){
+        		if(data==1){
+        			layer.msg("修改成功",{icon:1,time:1000});
+        		}else{
+        			layer.msg("修改失败",{icon:2,time:2000});
+        		}
+        	},"json");
+        }
+
+        //num 0.未审核 1.已审核
+        function upshenhezhuangtai(num){ 
+        	if(num==1){
+        		$(".tr-active").find(".td_status").html("已审核");
+        		$(".tr-active").find(".a-edit").addClass("none");
+        		$(".tr-active").find(".span-kg").addClass("none");
+        		$(".tr-active").find(".a-del").addClass("none");
+        	}else{
+        		$(".tr-active").find(".td_status").html("未审核");
+        		$(".tr-active").find(".a-edit").removeClass("none");
+        		$(".tr-active").find(".span-kg").removeClass("none");
+        		$(".tr-active").find(".a-del").removeClass("none");
+        	} 
+        }
+
+        function setKeyDocuments(jsid,num,obj){
+        	var index = layer.load(2,{time:1000});
+        	$.post("{:U('Instock/setKeyDocuments')}",{jsid:jsid,num:num},function(data){
+        		layer.close(index);
+        		if(data==0){
+        			layer.msg('修改成功', { icon: 1, time: 1000 }, function(){
+        				if(num==1){
+        					$(obj).html("★");
+        					$(obj).attr("onclick","setKeyDocuments('"+jsid+"',0,this)");
+        				}else{
+        					$(obj).html("☆");
+        					$(obj).attr("onclick","setKeyDocuments('"+jsid+"',1,this)");
+        				}
+					}); 
+        		}else{
+        			layer.msg("修改失败,操作过于频繁",{ icon: 2, time: 1000 }); 
+        		} 
+        	},"json");
+        }
+
+        $("#table1 tbody tr").click(function(){ 
+        	$(this).addClass("tr-active").siblings().removeClass("tr-active");
+        });
+
+        //文档加载完成
+        $(function(){
+        	$("#status").val("{$status}");
+        	$("#key_documents").val("{$key_documents}");
+        });
+
+        // 滚动条事件-导航栏
+		window.onscroll=function(){
+			var t =document.documentElement.scrollTop||document.body.scrollTop;
+			if(t>170){
+				$(".btn-list").addClass("active");
+			}else{
+				$(".btn-list").removeClass("active");
+			}
+		}
+
+        //修改入库单审核状态
+        function upInstockStatus(jsid,status,obj){
+        	$.post("{:U('Instock/upInstockStatus')}",{jsid:jsid,status:status},function(data){
+        		if(data.resultcode==0 || data == 0){
+        			location.reload();
+        		}else if(data.resultcode==11){
+        			layer.alert(data.msg);
+        		}
+        	},"json");
+        }	 
+
+        function delJoinStock(jsid,obj){ 
+        	layer.confirm('您确定要删除吗？', {
+				btn: ['确 认','取 消'], //按钮
+				shade: [0.4, '#393D49'] //显示遮罩
+				}, function(){
+					$.post("{:U('Instock/delJoinStock')}",{jsid:jsid},function(data){
+		        		if(data==0){
+		        			layer.msg('删除成功', { icon: 1, time: 1000 }, function(){
+								$(obj).parent().parent().remove();
+							}); 
+		        		}else if(data == 2){
+		        			layer.msg('操作错误', { icon: 2, time: 1000 }); 
+		        		}
+		        	},"json");
+				},function(){}
+			); 
+        }
+
+        $('.t_open').click(function(){
+			var id =$(this).parent().attr('data-id');  //入库单据号
+			var url ="{:U('Instock/instockDetail')}";
+		    url +="?jsid="+id;
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['90%', '90%'],
+				title: false,
+				content: url
+			});
+		});
+
+	</script>
+</body>
+</html>

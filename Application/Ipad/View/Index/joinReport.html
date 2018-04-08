@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+	<title>库友进销存</title> 
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" /> 
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery.dataTables.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+	<style type="text/css">
+		html,body{height:100%;}
+		.wrap{}
+		.header{height:60px;background-color:#404040;z-index: 2;}
+		.header-ul{list-style-type:none;float:left;width:100%;margin-top:15px;}
+		.header-ul li{float:left;font-size: 15px;}
+		.header-ul:after{content:'';clear:both;} 
+		/*返回按钮*/
+		.back{padding:4px 5px 4px 5px;color:#fff;border:1px solid #fff;margin-left:10px;border-radius: 5px;background: none;}
+		/*日期选择*/
+		.text-date{height: 30px;margin-left:10px;}
+		/*全部和库足按钮*/
+		.header-btn{color: #fff; height: 30px; border: none; background: #C2C2C2; padding: 0 5px;}
+		.header-qbbtn{border-top-left-radius: 10px;border-bottom-left-radius: 10px;}
+		.header-kcbtn{border-top-right-radius: 10px;border-bottom-right-radius: 10px;}
+		.header button.action{background-color:#2AC2CD; border: 1px solid #19abb4;}
+		/*下拉框*/ 
+		.header .sel-box{color:#fff;padding: 5px 4px;height: 30px;display: inline-block;position: relative;}
+		.trigon{position: relative;padding-left:15px;}
+		.r-xian{padding:0 10px 0 8px; border-right: 1px solid #fff;}
+		.trigon:before{position: absolute;top:7px;left:2px;border-width: 8px 6px 0px 6px;border-style: solid; border-color: #fff transparent transparent transparent;content:"";} 
+		.sel-box-ul{background-color: #fff;position: absolute; top: 45px; left: 0; width: 500px; padding-bottom: 10px;}
+		.sel-box-ul li .li-btn{    padding: 5px 10px;background: none;border: 1px solid #D1D1D1;}
+		.sel-box-ul li .li-btn.action{color:#2AC3CB;border-color:#2AC3CB;}
+		/*搜索按钮*/
+		.header .search-btn{border-radius: 5px;padding:0 10px;color:#fff;height:30px;}
+		.user-box{position: absolute;right:20px;top:20px;}
+		.white{color:#fff;}
+		.b-none{border:none;}
+		.p10{padding:5px 10px;}
+		.logo_box{margin-left:20px;margin-top:11px;}
+		.logo_box img{width:90px;height:35px;}
+		.main{background: #fff;height:100%;width:100%;position: absolute;left:0;top:0;z-index:1;padding-top:60px;}
+		.main_content{position:absolute;top:50%;left:50%;margin-left:-200px;margin-top:-100px;width:400px;height:200px;}
+		.a-btn{position: absolute;bottom:20px;left:50%;color:#2CC3CC;border:1px solid #429BA1;background-color: #fff;padding: 3px 10px;border-radius: 10px;font-size:16px;margin-left:-40px;} 
+		.t-table{width:100%;}
+		.t-table thead{background-color: #666;}
+		.t-table thead tr{background-color: #666;height:40px;}
+		.t-table thead tr th{color:#fff;font-weight: 300;letter-spacing: 1.5px;}
+
+		.t-table tbody tr:nth-child(even){background-color: #e4e4e4;}
+		.t-table.dataTable.no-footer { border-bottom: none; }
+
+		table.dataTable thead th, table.dataTable thead td {padding: 0px 10px;border-bottom: none;font-weight: 300;color:#fff;}
+		.cg-btn{background: #2BC1CF;color:#fff;padding: 2px 8px;border:1px solid #18ABB3;border-radius: 5px;}
+		.ycg-btn{background: none;}
+		.main .t-number{height: 32px;background: #fff; border: none;width: 50px; text-align: center;display:inline-block;line-height: 32px;overflow: hidden;}
+		.main .t-number.action{border-color: rgba(170,170,170,1);
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(153,153,153,0.8);}
+		.keyboard{position: absolute;bottom:20px;left:50%;margin-left:-120px;width: 240px;height: 230px;background-color:#404040;border-radius: 15px;z-index:1;}
+		.keyboard .k-table{position: absolute;left: 0; top: 0;bottom: 0;right: 0;margin: auto;width: 88%;}
+		.keyboard .k-table button{width: 40px;height: 40px; border-radius: 5px; margin: 6px;background-color:#fff;} 
+    	.keyboard .k-table button:active{ background-color:#eee;padding-top: 2px;}
+    	table.dataTable tbody tr{background: #f5f5f5;}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="header pr">
+			<div>
+				<ul class="header-ul">
+					<li>
+					<button onclick="location.href='{:U(\'Index/main\')}'" class="back"><img src="__PUBLIC__/img/back_home.png" style="margin-right: 5px; margin-top:-4px;"/>返回</button> 
+					</li>
+					<li><input type='text' id="create_time" value="{$create_time}" class="text-date"/><img src="__PUBLIC__/img/date.png" style="position:relative;right:25px;margin-top:-4px;" onclick="click_date()"></li> 
+					<li class="ml20"><button class="search-btn action" onclick="getPurchaseInfo()">搜 索</button></li>
+					<li style="float:right;margin-right:15px;"><button onclick="allJoinStock()" class="search-btn action">全部入库</button></li>
+				</ul> 
+			</div> 
+		</div>
+		<div class="main"> 
+			<table class="t-table" id="example">
+				<thead>
+					<tr>
+						<th style="width:50px; text-align: center;">序号</th>
+						<th style="width:100px;">供应商</th>
+						<th style="width:100px;">商品名称</th>
+						<th style="width:60px; text-align:right;">数量</th>
+						<th style="width:60px;text-align: center;">单位</th>
+						<th style="width:130px;text-align:right;">进价(元)</th>
+						<th style="width:60px;text-align: center;">保质期(天)</th>
+						<th style="width:60px;text-align:right;padding-right: 10px;">总金额</th>
+						<!-- <th style="width:50px;">操作</th> -->
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+		<!-- 浮动键盘 -->
+		<div class="keyboard none" id="keyboard"> 
+			<table class="k-table">
+				<tbody>
+					<tr>
+						<td><button data-val="7">7</button></td>
+						<td><button data-val="8">8</button></td>
+						<td><button data-val="9">9</button></td>
+						<td><button data-val="backspace">←</button></td>
+					</tr>
+					<tr>
+						<td><button data-val="4">4</button></td>
+						<td><button data-val="5">5</button></td>
+						<td><button data-val="6">6</button></td>
+						<td rowspan="2"><button  data-val="clear" style="height: 94px;">清除</button></td>
+					</tr>
+					<tr>
+						<td><button data-val="1">1</button></td> 
+						<td><button data-val="2">2</button></td>
+						<td><button data-val="3">3</button></td>
+					</tr>
+					<tr>
+						<td><button data-val="0">0</button></td>
+						<td><button data-val=".">.</button></td>
+						<td colspan="2"><button  data-val="00" style="width: 94px;">00</button></td> 
+					</tr>
+				</tbody>
+			</table> 
+		</div>
+		 
+	</div>
+    <script type="text/javascript" src="__PUBLIC__/js/ipadCommon.js"></script>
+	<script type="text/javascript" src='__PUBLIC__/js/jquery.min.js' ></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.dataTables.min.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.dataTables.order.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script> 
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript">  
+		function click_date(){
+		$('#create_time').trigger("click");
+
+	}
+    $(function(){
+    	//getPurchaseInfo();
+    });
+
+    var submitJson={};
+    function getPurchaseInfo(){
+    	var create_time = $("#create_time").val();
+    	if(!create_time){
+    		layer.tips('请选择开始日期', '#create_time', {tips: 1});
+			return;
+    	} 
+        	
+    	data ={"create_time":create_time,"wid":localStorage.wid};
+    	var url ="{:U('Index/getjoinReportInfo')}"; 
+    	var index = layer.msg('正在生成入库单,请稍后!', {
+			    icon: 16,
+			    shade: 0.01,
+			    time: 10*1000
+			}); 
+    	$.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            dataType: "json",
+            success: function(data){  
+            	// console.log(data);
+            	if(data.resultcode == 1){ 
+            		var list = data.data; 
+            		submitJson=data;
+            		builTable(list);
+            	}else{
+            		$("#example tbody").html("<tr><td colspan='8' class='text-center'>无数据</td></tr>");
+            	}
+            },
+            error:function(msg){
+            	layer.msg("请求失败");
+            },complete: function () {
+                layer.close(index);
+            }
+         });
+    } 
+
+     function builTable(data){
+    	var h = $(window).height() - 100; 
+    	var i=0;
+    	//object可以如下初始化表格
+	    $('#example').DataTable( {
+	        data: data,	
+	        destroy: true, //销毁已经存在的Datatables实例并替换新的选项
+	        info:false,
+	        searching:false,
+	        ordering:false, //禁止排序
+	        paging:false,
+	        scrollY: h,
+	        //使用对象数组，一定要配置columns，告诉 DataTables 每列对应的属性
+	        //data 这里是固定不变的，name，position，salary，office 为你数据里对应的属性
+	        columns: [
+	        	{data: null,render:function ( data, type, full, meta ) {
+	        		i++;
+	        		return i;
+	        	},className:"text-center"},
+	            { data: 'sname'}, 
+	            { data: 'gname'},
+	            { data: 'num',render:function ( data, type, full, meta ) { 
+	        		return parseFloat((data/full.nei_num).toFixed(4));
+	        	},className:"text-right"},
+	            { data: 'nei_uname',className:"text-center"},
+	            { data: 'nei_price',className:"td_price text-right"},
+	            { data: '',render:function ( data, type, full, meta ) { 
+	        		return "<span class='t-number' onclick='clickEm(this)'></span>";
+	        	},className:"text-center td_baozhiqi"},
+	            { data: 'total',className:"td_total text-right"}
+	        ]
+	    } );
+    } 
+
+    laydate({ 
+        elem: '#create_time' 
+    });
+
+
+    //全部入库 
+    function allJoinStock(){
+    	if(submitJson){
+    		var url ="{:U('Index/allJoinStock')}";
+    		var data=submitJson;
+    		data.wid=localStorage.wid;
+    		data.info_id = localStorage.info_id;
+    		//加入保质天数 
+    		$(".td_baozhiqi span").each(function(index,obj){
+    			data.data[index].shelf_life=$(obj).html(); 
+    		});
+    		var index = layer.msg('正在生成入库单,请稍后!', {
+			    icon: 16,
+			    shade: 0.01,
+			    time: 10*1000
+			}); 
+    		$.ajax({
+	            type: "POST",
+	            url: url,
+	            dataType: "json", //表示返回值类型，不必须
+	            data: data,  //相当于  
+	            success: function(data){
+	            	if(data.resultcode==0){  
+	            		submitJson={};
+	            		var index1 = layer.alert("操作成功",function(){
+	            			layer.close(index1);
+	            		});
+	     //        		layer.close(index);
+	     //        		var index = layer.msg('入库成功,正在审核,请稍后!', {
+						//     icon: 16,
+						//     shade: 0.01,
+						//     time: 10*1000
+						// }); 
+						// var jsids = (data.jsids).join(',');
+						// $.post("{:U('Index/allAuditing')}",{"jsids":jsids},function(data){ 
+			   //      		layer.close(index);
+			   //      		if(data.resultcode==0 || data == 0){
+			   //      			layer.alert("操作"+data.msg,function(){
+			   //      				layer.close(index);
+			   //      				location.reload(); 
+			   //      			}); 
+			   //      		}else{
+			   //      			layer.alert("操作失败，"+data.msg,{icon:2});
+			   //      		}
+			   //      	},"json");
+	            	}else{
+	            		layer.alert(data.msg);
+	            	}
+	                // console.log(data.jsids);
+	            },
+	            error:function(msg){
+	            	layer.msg("请求失败");
+	            },complete: function () {
+	                layer.close(index);
+	            }
+	        });
+    	}else{
+    		layer.msg("无数据");
+    	}
+    }
+
+    function clickEm(obj){
+    	var e = event||window.event;
+    	e.stopPropagation();
+    	$(".t-number").removeClass("action");
+    	$(obj).addClass("action");
+    	if($("#keyboard").is(":hidden")){
+    		$("#keyboard").show();
+    	}
+    }
+
+    //监听自定义键盘按钮点击事件 
+    $("#keyboard").click(function(e){
+    	e.stopPropagation();
+    });
+    $("#keyboard button").click(function(e){
+    	e.stopPropagation();
+    	var html = $(".t-number.action").html();
+    	var val = $(this).attr("data-val");
+    	if(IsNum(val)){
+    		if(parseFloat(html)==0 && html.indexOf('.')<0){
+    			html=val;
+    		}else{
+    			html+=val;
+    		} 
+    	}else if(val=="."){
+    		//判断html中是否存在.
+    		if(html.indexOf('.')<0){
+    			if(html==""){
+    				html=0+val;
+    			}else if(parseFloat(html)==0){
+    				html=0+val;
+    			}else{
+    				html+=val;
+    			} 
+    		}else{
+    			
+    		}
+    	}else if(val=="backspace"){
+    		html=html.substr(0,html.length-1);
+    	}else if(val=="clear"){
+    		html="";
+    	}
+    	$(".t-number.action").html(html);
+    });
+
+    $("body").click(function(){ 
+    	$("#keyboard").hide();	
+    });
+
+         
+	</script>
+</body>
+</html>

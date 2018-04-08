@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style>
+		.btn-list.active{position: fixed;right: 0;top: 0;z-index: 20;width: 100%;background: #F8F8F8;box-shadow: 0 1px 5px #c5c5c5;padding: 15px 15px 0;}
+		.tr-active{background-color: #c5edb1;}
+		.a-xin{font-size:18px;}
+		.noradius{border-radius: 0px;}
+		.wordspace{letter-spacing: 1.5px;}
+		.tb-style td{border-bottom:1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+		.btn-style{background-color: #59ab76; border-color: #3b9f5f;}
+		.btn-style:hover{linear-gradient(#3b9f5f,#3b9f5f);
+    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    .btn2{width: 60px !important;}
+    .headcolor td{background-color: #59ab76; border:1px solid #59ab76; color: #fff;}
+    .headcolor2 td{background-color: #404040; border:1px solid #404040;color: #fff;}
+    table tr:nth-child(even){background-color: #e4e4e4;}
+	.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;}
+	.navbar-default {background-color: #fff;}
+	.noradius{border-radius: 0px;}
+	.mt8{letter-spacing: 1.5px;}
+	.ml5{margin-left: 5px;}
+	.ml20{margin-left: 20px;}
+	select{letter-spacing: 1.5px !important;}
+	.form-control{
+	 background: url('../img/select-drop-icon.png') no-repeat 90% center;
+    background-image: url("../img/select-drop-icon.png");
+    background-position-x: 90%;
+    background-position-y: 50%;
+    background-size: 14px auto;
+    background-repeat-x: no-repeat;
+    background-repeat-y: no-repeat;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial !important;}
+	.layui-layer-title{background: #59ab76 !important; color: #fff !important;letter-spacing: 1.5px !important;}
+	.layui-layer-dialog .layui-layer-content{letter-spacing: 1.5px;}
+	.layui-layer-btn .layui-layer-btn0{background: #59ab76 !important; border: 1px solid #3b9f5f !important;}
+	.layui-layer-btn .layui-layer-btn0:hover{background: #3b9f5f !important; border: 1px solid #3b9f5f !important;}
+	.layui-layer-btn a{height: auto !important;line-height: inherit !important;border-radius: 4px !important;padding: 6px 12px !important;}
+	</style>
+</head>
+<body>
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3 class="pr">
+				合同价列表
+				<a href="{:U('Contract/contractForm')}" class="btn btn-style pa t0"  style="margin-top: -10px;right:0px;">新增</a>
+			</h3>
+			<div class="btn-list wordspace">
+				<form action="__SELF__" method="get">
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-12 col-md-12">
+								<span class="fl mt8">日期 从</span>
+								<input type="text" id="date1" name="stime" value="{$stime}" class="form-control w-120 fl ml10 noradius">
+								<span class="fl ml10 mt8">到</span>
+								<input type="text" id="date2" name="etime" value="{$etime}" class="form-control w-120 fl ml10 noradius">
+								<span class="fl mt8 ml10">合同号</span>
+								<input type="text" name="cgpid" value="{$cgpid}" class="form-control noradius  w-150 fl ml10">    
+							</div> 
+						</div>
+						<div class="row mt10">
+							<div class="col-xs-12 col-md-12">
+								<span class="fl mt8 ml20">客户</span>	
+								<select name="cid" id="cid" class="form-control w-150 fl ml10 wordspace noradius">
+									<option value="">全部</option>
+									<volist name="clist" id="vo">
+										<option value="{$vo.c_id}">{$vo.name}</option> 
+									</volist>
+								</select> 
+								<span class="fl mt8 ml10">审核状态</span>
+								<select name="status" id="status" class=" w-100 fl ml5">
+									<option value="">全部</option>
+									<option value="0">未审核</option>
+									<option value="1">审核</option>
+								</select>
+								<span class="fl mt8 ml10">商品名称</span>
+								<input type="text" name="gname" value="{$gname}" class="form-control noradius w-150  fl ml10"> 
+								<input type="submit" value="搜 索" class="btn btn-style ml20 btn2" />
+							</div>
+						</div>
+					</div> 
+				</form>
+			</div>	
+		</div>
+	</div>
+	<div class="container-fluid mt20 wordspace">
+		<div class="col-xs-12">
+			<table class="tb-style t-table" id="table1">
+				<thead>
+					<tr class="headcolor">
+						<td colspan="8">入库单据表</td>
+					</tr>
+					<tr class="headcolor2">
+						<td>行号</td>
+						<td>合同号</td>
+						<td>客户商</td>
+						<td>应用日期</td>
+						<td>录入时间/编辑时间</td> 
+						<td>审核状态</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="list" id="vo">
+					<tr>
+						<td>{$key+1}</td>
+						<td data-id="{$vo.cgpid}"> 
+							<a href="javascript:;"  class="t_open">{$vo.cgpid}</a>
+						</td>
+						<td>{$vo.cname|getDefaultCname}</td>
+						<td>{$vo.stime|date="Y-m-d",###}~{$vo.etime|date="Y-m-d",###}</td> 
+						<td>{$vo.update_time|date="Y-m-d H:s:i",###}</td>
+						<td class="td_status">{$vo.status|getStatus}</td>
+						<td>
+							<if condition="$vo.status eq 0"> 
+								<a href="{:U('Contract/contractEdit',array('cgpid'=>$vo['cgpid']))}" class="a-edit" >编辑</a>
+								<span class="span-kg">&nbsp;|&nbsp;</span>
+								<a href="javascript:;" onclick="delContract('{$vo.cgpid}',this);" class="a-del" >删除</a>
+							<else />
+								<a href="{:U('Contract/contractEdit',array('cgpid'=>$vo['cgpid']))}" class="a-edit none" >编辑</a>
+								<span class="span-kg none">&nbsp;|&nbsp;</span>
+								<a href="javascript:;" onclick="delContract('{$vo.cgpid}',this);" class="a-del none">删除</a>
+							</if>
+						</td>
+					</tr> 
+					</volist>
+				</tbody>
+			</table>
+		</div> 
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/scrolltop.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		laydate({
+            elem: '#date1'
+        });
+        laydate({
+            elem: '#date2'
+        });
+
+        //文档加载完成
+        $(function(){
+        	$("#cid").val("{$cid}");
+        	$("#status").val("{$status}"); 
+        });
+
+        //num 0.未审核 1.已审核
+        function upshenhezhuangtai(num){ 
+        	if(num==1){
+        		$(".tr-active").find(".td_status").html("已审核");
+        		$(".tr-active").find(".a-edit").addClass("none");
+        		$(".tr-active").find(".span-kg").addClass("none");
+        		$(".tr-active").find(".a-del").addClass("none");
+        	}else{
+        		$(".tr-active").find(".td_status").html("未审核");
+        		$(".tr-active").find(".a-edit").removeClass("none");
+        		$(".tr-active").find(".span-kg").removeClass("none");
+        		$(".tr-active").find(".a-del").removeClass("none");
+        	} 
+        } 
+
+        $("#table1 tbody tr").click(function(){ 
+        	$(this).addClass("tr-active").siblings().removeClass("tr-active");
+        }); 
+
+        // 滚动条事件-导航栏
+		window.onscroll=function(){
+			var t =document.documentElement.scrollTop||document.body.scrollTop;
+			if(t>170){
+				$(".btn-list").addClass("active");
+			}else{
+				$(".btn-list").removeClass("active");
+			}
+		} 
+
+        function delContract(cgpid,obj){ 
+        	layer.confirm('您确定要删除吗？', {
+				btn: ['确 认','取 消'], //按钮
+				shade: [0.4, '#393D49'] //显示遮罩
+				}, function(){
+					$.post("{:U('Contract/delContract')}",{cgpid:cgpid},function(data){
+		        		if(data.resultcode==0){
+		        			layer.msg('删除成功', { icon: 1, time: 1000 }, function(){
+								$(obj).parent().parent().remove();
+							}); 
+		        		}else{
+		        			layer.msg(data.msg, { icon: 2, time: 1000 }); 
+		        		}
+		        	},"json");
+				},function(){}
+			); 
+        }
+
+        $('.t_open').click(function(){
+			var id =$(this).parent().attr('data-id');  //入库单据号
+			var url ="{:U('Contract/contractDetail')}";
+		    url +="?cgpid="+id;
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['90%', '90%'],
+				title: false,
+				content: url
+			});
+		});
+
+	</script>
+</body>
+</html>

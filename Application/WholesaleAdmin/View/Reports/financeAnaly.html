@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}财务分析</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		.t-caption{text-align: center;background-color: #59ab76; border: 1px solid #59ab76;}
+		.headcolor2 td{background-color: #404040 !important; border:1px solid #404040 !important;color: #fff;}
+	table tr:nth-child(even){background-color: #e4e4e4;}
+	.tb-style{background-color: #f5f5f5;}
+	.tb-style td{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
+	.navbar-default {background-color: #fff;}
+	.noradius{border-radius: 0px;}
+	.nav,.btn,select,.tb-style{letter-spacing: 1.5px;}
+	.ml5{margin-left: 5px;}
+	.ml20{margin-left: 20px;}
+	caption{color: #fff;}
+	.btn-style{background:#59ab76;}
+	.btn-style:hover {background: linear-gradient(#3b9f5f,#3b9f5f);
+    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;}
+    .btn-success{background: #83c73c;border: 1px solid #6db81f;}
+    .btn-success:hover{background: #6db81f;border: 1px solid #6db81f;}
+	</style>
+</head>
+<body>
+<div id="body_content">
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>财务分析表</h3>
+			<div>
+				<form action="__SELF__" method="post">
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-12 col-md-12">
+								<span class="fl fs-14 mt8">日期 从</span>
+								<input type="text" name="stime" id="date1" value="{$stime}" class="form-control w-115 fl ml5 noradius">
+								<span class="fl fs-14 ml5 mt8">到</span>
+								<input type="text" name="etime" id="date2" value="{$etime}" class="form-control w-120 fl ml5 noradius">
+								<span class="fs-14 mt8 ml20">客户类型</span>
+								<select class="w-115 ml5" onchange="getCilentInfo(this.value)" name="ctid" id="ctid">
+									<option value="">全部类型</option>
+									<volist name="ctlist" id='vo'>
+										<option value="{$vo.ctid}">{$vo.type_name}</option>
+									</volist>
+								</select> 
+								<span class=" fs-14 mt8 ml20">客户名称</span>
+								<select name="c_id" id="c_id" class="w-100">
+									<option value="">全部</option>
+								</select>
+								<span class="fl fs-14 mt8 ml20">品牌名称</span>
+								<input type="text" name="brand_name" id="brand_name" value="{$brand_name}" class="form-control w-120 fl ml5">  
+							</div> 
+						</div>
+					</div>
+					<div class="form-group ml15">
+						<div class="row">
+							<div class="col-xs-12 col-md-12">
+								<span class=" fs-14 mt8">商品类别</span>
+								<select class="w-115" name="gtid" id="gtid" onchange="getTwoTypeInfo(this.value)">
+									<option value="">一级全部</option>
+									<volist name="tlist" id='vo'>
+										<option value="{$vo.gtid}">{$vo.type_name}</option>
+									</volist>
+								</select>
+								<select name="gtid1" id="gtid1"  class="w-115" onchange="getThreeTypeInfo(this.value)">
+									<option value="">二级全部</option>
+								</select>
+								<select name="gtid2" id="gtid2" class="w-115">
+									<option value="">三级全部</option> 
+								</select>  
+								<span class="fs-14 mt8 ml10">商品名</span>
+								<input type="text" name="gname" value="{$gname}" id="gname" class="form-control w-120  ml5"> 
+								<input type="submit" value="搜 索" class="btn btn-style ml20" /> 
+								<input type="button" value="数据列设置" class="btn data w-100 btn-success ml20"/>
+								<input type="button" class="btn btn-style ml20" onclick="printme()" value='打 印' />
+								<input type="button" class="btn btn-style ml20" onclick="exportFinanceAnaly()" value='导 出' />
+							</div> 
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="contianer-fluid mt20">
+		<div class="col-xs-12 col-md-10 ml15">
+			<div id="divPrint">
+				<table class="tb-style t-table">
+					<caption class="t-caption"><input type="text" id="tcaption" style="background: none;border: none;text-align: center;width: 320px;" value="财务分析报表 毛利率=(毛利-销售成本/毛利)*100%" /></caption>
+					<thead> 
+						<tr class="headcolor2">
+							<td>行号</td>
+							<if condition="$finList.gname_s eq 0">
+								<td class="t_gname_p">{$titles.gname}</td>
+								<else />
+								<td class="t_gname_p none">{$titles.gname}</td>
+							</if>
+							<if condition="$finList.uname_s eq 0">
+								<td class="t_uname_p">{$titles.uname}</td>
+								<else />
+								<td class="t_uname_p none">{$titles.uname}</td>
+							</if> 
+							<if condition="$finList.num_s eq 0">
+								<td class="t_num_p">{$titles.num}</td>
+							<else />
+								<td class="t_num_p none">{$titles.num}</td>
+							</if>
+
+							<if condition="$finList.cd_num_s eq 0">
+								<td class="t_cd_num_p">{$titles.cd_num}</td>
+							<else />
+								<td class="t_cd_num_p none">{$titles.cd_num}</td>
+							</if> 
+							<if condition="$finList.cd_cost_s eq 0">
+								<td class="t_cd_cost_p">{$titles.cd_cost}</td>
+							<else />
+								<td class="t_cd_cost_p none">{$titles.cd_cost}</td>
+							</if>
+
+							<if condition="$finList.profit_s eq 0">
+								<td class="t_profit_p">{$titles.profit}</td>
+								<else />
+								<td class="t_profit_p none">{$titles.profit}</td>
+							</if>
+							<if condition="$finList.cost_s eq 0">
+								<td class="t_cost_p">{$titles.cost}</td>
+								<else />
+								<td class="t_cost_p none">{$titles.cost}</td>
+							</if>
+							<if condition="$finList.rate_s eq 0">
+								<td class="t_rate_p">{$titles.rate}</td>
+								<else />
+								<td class="t_rate_p none">{$titles.rate}</td>
+							</if> 
+						</tr>
+					</thead>
+					<tbody>
+						<volist name="list" id="vo">
+						<tr>
+							<td>{$key+1}</td>
+							<if condition="$finList.gname_s eq 0">
+								<td class="t_gname_p">{$vo.gname}</td>
+							<else />
+								<td class="t_gname_p none">{$vo.gname}</td>
+							</if> 
+							<if condition="$finList.uname_s eq 0">
+								<td class="t_uname_p">{$vo.unit_name}</td>
+							<else />
+								<td class="t_uname_p none">{$vo.unit_name}</td>
+							</if>
+							<if condition="$finList.num_s eq 0">
+								<td class="t_num_p">{$vo.num}</td>
+							<else />
+								<td class="t_num_p none">{$vo.num}</td>  
+							</if>
+
+							<if condition="$finList.cd_num_s eq 0">
+								<td class="t_cd_num_p">{$vo.cd_num}</td>
+							<else />
+								<td class="t_cd_num_p none">{$vo.cd_num}</td>  
+							</if> 
+							<if condition="$finList.cd_cost_s eq 0">
+								<td class="t_cd_cost_p"><?php echo keep4(($vo['cost']/$vo['num'])*$vo['cd_num']) ?></td>
+							<else />
+								<td class="t_cd_cost_p none"><?php echo keep4(($vo['cost']/$vo['num'])*$vo['cd_num']) ?></td>  
+							</if>
+
+							<if condition="$finList.profit_s eq 0">
+								<td class="t_profit_p">{$vo.total_amount|keep4}</td>
+							<else />
+								<td class="t_profit_p none">{$vo.total_amount|keep4}</td> 
+							</if>
+							<if condition="$finList.cost_s eq 0">
+								<td class="t_cost_p">{$vo.cost|keep4}</td>
+							<else />
+								<td class="t_cost_p none">{$vo.cost|keep4}</td> 
+							</if>
+							<if condition="$finList.rate_s eq 0">
+								<td class="t_rate_p"><?php echo keep4((($vo['total_amount']-$vo['cost'])/$vo['total_amount'])*100) ?>%</td>
+							<else />
+								<td class="t_rate_p none"><?php echo keep4((($vo['total_amount']-$vo['cost'])/$vo['total_amount'])*100) ?>%</td> 
+							</if>
+						</tr>
+						</volist>
+						<tr>
+							<td colspan="4" class="td_xj">小计</td> 
+							<if condition="$finList.cd_num_s eq 0"> 
+								<td class="td_xj_cdnum t_cd_num_p"></td>
+							<else />
+								<td class="td_xj_cdnum t_cd_num_p none"></td>
+							</if> 
+							<if condition="$finList.cd_cost_s eq 0"> 
+								<td class="td_xj_cdcost t_cd_cost_p"></td>
+							<else />
+								<td class="td_xj_cdcost t_cd_cost_p none"></td>
+							</if>
+							<if condition="$finList.profit_s eq 0"> 
+								<td class="td_xj_ml t_profit_p"></td>
+							<else />
+								<td class="td_xj_ml t_profit_p none"></td>
+							</if>
+							<if condition="$finList.cost_s eq 0">
+								<td class="td_xj_xscb t_cost_p"></td>
+							<else />
+								<td class="td_xj_xscb t_cost_p none"></td>
+							</if>
+							<if condition="$finList.rate_s eq 0">
+								<td class="td_xj_xsmll t_rate_p"></td>
+							<else />
+								<td class="td_xj_xsmll t_rate_p none"></td> 
+							</if>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/scrolltop.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		//导出excel
+        function exportFinanceAnaly(){
+        	var stime = $("#date1").val(),
+        		etime = $("#date2").val(),
+        		brand_name = $("#brand_name").val(),
+        		c_id = $("#c_id").val(),
+        		ctid = $("#ctid").val(),
+        		gtid = $("#gtid").val(),
+        		gtid1 = $("#gtid1").val(),
+        		gtid2 = $("#gtid2").val(),
+        		tcaption = $("#tcaption").val(),
+        		gname = $("#gname").val();
+        	var url ="{:U('Reports/exportFinanceAnaly')}";
+        	url+="?stime="+stime+"&etime="+etime+"&brand_name="+brand_name+"&c_id="+c_id+"&gtid="+gtid+"&gtid1="+gtid1+"&gtid2="+gtid2+"&gname="+gname+"&tcaption="+tcaption+"&ctid="+ctid;
+        	location.href=url;
+        } 
+		//页面加载时
+		$(function(){
+			$("#gtid").val("{$gtid}");
+			$("#c_id").val("{$c_id}"); 
+			$("#ctid").val("{$ctid}");
+			calculationGrossProfit();
+			calculationCost();
+			calculationRate();
+			calculationCdnum();
+			calculationCdcost();
+			getTwoTypeInfo({$gtid});
+			getCilentInfo("{$ctid}");
+		});
+
+		//根据客户类型获取客户信息
+		function getCilentInfo(ctid){
+			if(ctid){
+				$.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">全部类型</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['c_id']+'">'+result[i]['cname']+'</option>';
+		                }
+		                $("#c_id").html(str);  
+		                var c_id = "{$c_id}";
+		                $("#c_id").val(c_id);
+		            }else{ 
+				    	$("#c_id").html('<option value="">全部类型</option>');  
+		            }
+		        }, "json");
+	        }else{
+	        	$("#c_id").html('<option value="">全部类型</option>');  
+	        }
+		} 
+
+		var index =0,index1=0;	
+		//根据1级类型编号获取二级分类
+	    function getTwoTypeInfo(fid){ 
+	    	var gtid1 = "{$gtid1}";
+	    	if(fid!=""){
+		        $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">二级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		                if(gtid1 && gtid1!="0"){
+		                	if(index==0){
+			                	$("#gtid1").val(gtid1);
+			                	getThreeTypeInfo(gtid1);
+			                	index++;
+		                	}
+		                }
+		            }else{
+		            	var str ='<option value="">二级全部</option>';
+				    	$("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		            } 
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">二级全部</option>';
+		    	$("#gtid1").html(str); 
+                $("#gtid2").html('<option value="">三级全部</option>');
+		    }
+	    }
+
+	    //根据二级类型编号获取三级分类
+	    function getThreeTypeInfo(fid){ 
+	    	var gtid2 ="{$gtid2}";
+	    	if(fid!=""){
+		        $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">三级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid2").html(str);
+		                if(gtid2 && gtid2!="0"){
+		                	if(index1==0){
+		                		$("#gtid2").val(gtid2);
+		                		index1++;
+		                	}
+		                } 
+		            }else{
+		            	var str ='<option value="">三级全部</option>';
+		    			$("#gtid2").html(str);
+		            }
+		        }, "json");
+		    }else{
+		    	var str ='<option value="">三级全部</option>';
+		    	$("#gtid2").html(str);
+		    }
+	    }
+
+		laydate({ 
+            elem: '#date1' 
+        });
+        laydate({
+
+            elem: '#date2'
+
+        });
+		//数据列设置
+		$('.data').click(function(){
+			layer.open({
+				type: 2,
+				closeBtn: 1,
+				area: ['700px', '500px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Reports/financeAnalySet.html'
+			});
+		});
+
+		//计算小计毛利
+		function calculationGrossProfit(){
+			var sum =0;
+			$(".t_profit_p").each(function(index,value){
+				var val = $(value).html();
+				if(IsNum(val)){
+					sum +=parseFloat(val);
+				}
+			});
+			$(".td_xj_ml").html(sum.toFixed(4));
+		}
+		//计算小计销售成本
+		function calculationCost(){
+			var sum =0;
+			$(".t_cost_p").each(function(index,value){
+				var val = $(value).html();
+				if(IsNum(val)){
+					sum +=parseFloat(val);
+				}
+			});
+			$(".td_xj_xscb").html(sum);
+		}
+		//计算小计货损数量
+		function calculationCdnum(){
+			var sum =0;
+			$(".t_cd_num_p").each(function(index,value){
+				var val = $(value).html();
+				if(IsNum(val)){
+					sum +=parseFloat(val);
+				}
+			});
+			$(".td_xj_cdnum").html(sum);
+		}
+
+		//计算小计货损数量
+		function calculationCdcost(){
+			var sum =0;
+			$(".t_cd_cost_p").each(function(index,value){
+				var val = $(value).html();
+				if(IsNum(val)){
+					sum +=parseFloat(val);
+				}
+			});
+			$(".td_xj_cdcost").html(sum.toFixed(4));
+		}
+
+		//计算小计毛利率
+		function calculationRate(){
+		   var cost =	$(".td_xj_xscb").html();//销售成本
+		   var ml =	$(".td_xj_ml").html();
+		   if(IsNum(ml) && ml!="0" && IsNum(cost)){
+		   		var sum = (((parseFloat(ml)-parseFloat(cost))/parseFloat(ml))*100).toFixed(4);
+		   		$(".td_xj_xsmll").html(sum+"%");
+		   }else if(IsNum(ml) && ml!="0"){ 
+		   		$(".td_xj_xsmll").html("100%");
+		   }
+		}
+
+
+		
+		function printme(){
+			var stime = $("#date1").val(),
+        		etime = $("#date2").val(),
+        		brand_name = $("#brand_name").val(),
+        		c_id = $("#c_id").val(),
+        		ctid = $("#ctid").val(),
+        		gtid = $("#gtid").val(),
+        		gtid1 = $("#gtid1").val(),
+        		gtid2 = $("#gtid2").val(),
+        		tcaption = $("#tcaption").val(),
+        		gname = $("#gname").val();  
+			var url = "?stime="+stime+"&etime="+etime+"&brand_name="+brand_name+"&c_id="+c_id+"&gtid="+gtid+"&gtid1="+gtid1+"&gtid2="+gtid2+"&gname="+gname+"&tcaption="+tcaption+"&ctid="+ctid;
+			layer.open({
+				type: 2,
+				closeBtn: 0,
+				area: ['0px', '0px'],
+				title: false,
+				content: '__APP__/WholesaleAdmin/Reports/financeAnalyPrint.html'+url
+			});
+		}
+	</script>
+</body>
+</html>

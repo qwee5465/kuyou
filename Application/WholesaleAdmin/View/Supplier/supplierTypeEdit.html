@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>编辑供应商类型</title>
+    <link rel="stylesheet" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css" />
+    <style type="text/css">
+    .title-pop,.confirm-pop{background: #59ab76;}
+    </style>
+</head>
+
+<body style="background:#fff;">
+<div class="">
+    <!-- title -->
+    <div class="title-pop wordspace">编 辑 供 应 商 类 型</div>
+    <!-- 输入位置 -->
+    <form>
+        <div class="mt40">
+            <div class="form-group  cf">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <span class="fl w-90 text-right fs-14" style="padding: 15px 15px 0 0;">供应商类型</span>
+                    <div class="fl inline-block mt6 w-180" >
+                        <input class="form-control" name="type_name" value="{$list.type_name}" id="type_name"  type="text" >
+                        <input type="hidden" id="stid" name="stid" value="{$list.stid}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt40">
+            <div class="form-group">
+                <div class="w50 text-center fl">
+                    <input type="button" value="取 消"  class="cancel-pop" />
+                </div>
+                <div class="w50 text-center fl">
+                    <input type="button" value="确 定" onclick="checkForm()" class="confirm-pop" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+<script src='__PUBLIC__/bootstrap/js/bootstrap.min.js' charset="UTF-8"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript">
+    //表单验证
+    function checkForm(){
+        var type_name =$('#type_name').val();
+        if(!type_name){
+            layer.tips('请填写供应商类型名称', '#type_name', {tips: 1});
+            return false;
+        }  
+        var stid = $("#stid").val();
+        var index = layer.load(2,{time:2000});
+        $.post("{:U('Supplier/supplierTypeEditAjax')}", { "type_name": type_name,"stid":stid},function(data){
+            layer.close(index);
+            if(data == 2){
+                layer.tips('供应商类型已存在', '#type_name', {tips: 1});
+            }else if(data == 0){
+                parent.location.reload();
+            }else{
+                parent.location.reload();
+            }
+        }, "json"); 
+    }
+    $('.cancel-pop').click(function(){ 
+        parent.layer.closeAll('iframe');
+    });
+    //验证供应商类型是否存在
+    function supplierTypeVerify(){
+        var type_name = $('#type_name');
+        $.post("{:U('Supplier/supplierTypeVerify')}", { "type_name": type_name.val()},function(data){
+            if(data == 0){
+                layer.tips('供应商类型已存在', '#type_name', {tips: 1});
+                $("#hid_name").val('');
+            }else{
+                $("#hid_name").val("1");
+            }
+        }, "json");
+    }
+</script>
+</body>
+
+</html>

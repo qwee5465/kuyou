@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+    <style type="text/css">
+        form{margin: 0 2.5%;width: 95%;background:#fff;box-shadow:0 0 8px #d6d6d6;}
+        .tips{width: 250px;background: #d0a972;top:0;right: 0;padding-bottom: 2px;}
+        .tips_content{width: 246px;;background: #fff;margin: 0 auto 0 2px;word-wrap: break-word;}
+        .bg-gap{background: #fff;}
+        .tips{background: #feb235;}
+        .preserve{background: #59ab76; border: 1px solid #3b9f5f;}
+        .preserve:hover{background: #3b9f5f; border: 1px solid #3b9f5f;color: #fff;}
+        .return{line-height:inherit; }
+    </style>
+</head>
+
+<body>
+<div class="nav navbar-default h-60">
+    <div class="container-fluid">
+        <h3 style="border:none">新增客户</h3>
+    </div>
+</div>
+<form action="__SELF__" method="post">
+    <div class="container-fluid mt20 pb20 mb60 pr" style="padding-left:0;padding-right:0;"> 
+        <div class="mt20">
+            <div class="form-group mb20 cf">
+                <div class="col-xs-12 col-sm-12 col-md-12 ">
+                    <span class="l-title pr"><strong class="l-titl-star">* </strong>客户名称</span>
+                    <span class="fl">
+                            <input type="text" name="name" id="name" class="form-control w100"  />
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="mt20">
+            <div class="cf">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <span class="l-title pr"><strong class="l-titl-star">* </strong>客户简码</span>
+                    <span class="fl">
+                        <input type="text" name="code" onchange="isCode(this.value)" id="code" class="form-control w-100" maxlength="5" />
+                        <input type="hidden" id="hid_code" value="" />
+                        <span style="color:#999; letter-spacing: 1.5px;">（1-5个数字,用于生成采购单。 如：01）</span> 
+                    </span>
+                 </div>
+            </div>
+        </div>
+                    <div class="mt20">
+            <div class="form-group cf">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <span class="l-title pr">单价比</span>
+                    <span class="fl">
+                        <input type="text" name="than" id="than" maxlength="4" value="1" class="form-control w-60  t-number" />
+                        <span style="color:#999;letter-spacing: 1.5px;">（折扣或税率。如：1.13）</span> 
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="mt20">
+            <div class="form-group mb20 cf">
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <span class="l-title pr"><strong class="l-titl-star">* </strong>手机</span>
+                        <span class="fl">
+                            <input type="text" id="phone" name="phone" class="form-control w100" />
+                        </span>
+                            
+                </div>
+            </div>
+        </div>
+        <div class="mt20">
+            <div class="form-group mb20 cf">
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <span class="l-title pr"><strong class="l-titl-star">* </strong>客户类型</span>
+                    <select name="ctid" id="ctid">
+                        <option value="">请选择客户类型</option>
+                        <volist name="list" id="vo">
+                            <option value="{$vo.ctid}">{$vo.type_name}</option>
+                        </volist>
+                    </select> 
+                </div> 
+            </div>
+        </div>
+        <div class="mt20">
+            <div class="form-group mb20 cf">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <span class="l-title pr"><strong class="l-titl-star">* </strong>地址</span>
+                        <span class="fl">
+                                <select name="pid" onchange="provinceOpt(this)" id="pid" class="w-120 mr10">
+                                    <option>请选择省份</option>
+                                    <option>浙江省</option>
+                                </select>
+                                <select name="cid" id="cid" onchange="cityOpt(this)"  class="w-120 mr10">
+                                    <option>请选择城市</option>
+                                    <option>杭州市</option>
+                                </select>
+                                <select name="did" id="did"  class="w-120 mr10">
+                                    <option>请选择县区</option>
+                                    <option>西湖区</option>
+                                </select>
+                        </span>
+                         </div>
+            </div>
+        </div>
+                        <div class="mt20">
+            <div class="form-group mb20 cf">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <span class="l-title pr"><strong class="l-titl-star">* </strong>街道信息</span>
+                        <span class="fl">
+                            <input type="text" name="street" id="street" class="form-control w-200" />
+                        </span>
+                </div>
+            </div>
+        </div>
+        <div class="mt20">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <span class="l-title pr">备注</span>
+                <span class="fl">
+                    <textarea class="form-control w-300" name="remark" id="remark"></textarea>
+                </span>
+            </div>
+        </div> 
+        <div class="mt20 bottom-style">
+            <div class="form-group" style="margin-left:30%;padding-top:15px;">
+                    <input type="submit" onclick="return checkForm();" value="保 存" class="btn preserve" />
+                    <a href="javascript:window.history.go(-1)" class="btn return">返 回</a>
+            </div>
+        </div>
+        <div class="pa tips">
+            <div class="pa tips">
+            <p class="fs-16 text-center h-40 lh-40" style="color:#fff;">温 馨 提 示</p>
+            <div class="tips_content fs-14">
+                <div class="p10"><strong style="color: #feb235">● </strong>为了提供更好的服务，请认真填写资料</div>
+                <div class="p10"><strong style="color: #feb235">● </strong>另：凡是带有“谨慎操作”提示的选项，非管理员授权的情况下，一律不允许添加。</div>
+            </div>
+        </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+<script type="text/javascript" src="__PUBLIC__/js/area.js"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var area = _dataArea; //地址json对象
+        var pstr = '<option value="">请选择省份</option>';
+        var cstr = '<option value="">请选择城市</option>';
+        var dstr = '<option value="">请选择县区</option>';
+        for(var i=0;i<area.length;i++){
+            pstr += '<option value="'+i+'">'+area[i].name+'</option>';
+        }
+        $('#pid').html(pstr);
+    });
+
+    function isCode(code){
+        $.post("{:U('Client/isCode')}", { "code": code },function(data){
+            if(data == 1){
+                $("#hid_code").val("1");
+            }else{
+                layer.tips('客户简码已存在请更换', '#code', {tips: 1}); 
+                $("#hid_code").val("");
+            }
+        }, "json");
+    }   
+
+    //省份选择事件
+    function provinceOpt(obj){
+        //根据val查询城市信息
+        var city = _dataArea[obj.value].son; //城市json
+        var cstr ="<option value=''>请选择城市</option>";
+        for(var i=0;i<city.length;i++){
+            cstr += '<option  value="'+i+'">'+city[i].name+'</option>';
+        }
+        $('#cid').html(cstr);
+    }
+    //城市选择事件
+    function cityOpt(obj){
+        var pid_value = $("#pid").val();
+        var district = _dataArea[pid_value].son[obj.value].son; //城市json
+        var dstr ="<option value=''>请选择城市</option>";
+        for(var i=0;i<district.length;i++){
+            dstr += '<option  value="'+i+'">'+district[i].name+'</option>';
+        }
+        $('#did').html(dstr);
+    }
+    //表单验证
+    function checkForm(){
+        var phone =$('#phone').val();
+        var name =$('#name').val();
+        var ctid =$("#ctid").val();
+        var pid =$('#pid').val();
+        var cid =$('#cid').val();
+        var did =$('#did').val();
+        var street =$('#street').val(); 
+        var code = $('#hid_code').val();
+        if(!name){
+            layer.tips('请填写单位名称', '#name', {tips: 1});
+            return false;
+        }
+        if(!code){
+            layer.tips('请填写客户简码', '#code', {tips: 1});
+            return false;
+        }
+        if(code!="1"){
+            layer.tips('客户简码已存在请更换', '#code', {tips: 1});
+            return false;
+        } 
+        if(!phone){
+            layer.tips('请填写手机号码', '#phone', {tips: 1});
+            return false;
+        }
+        if(!IsPhone(phone)){
+            layer.tips('手机号码错误', '#phone', {tips: 1});
+            return false;
+        } 
+        if(!ctid){
+            layer.tips('请选择客户类型', '#ctid', {tips: 1});
+            return false;
+        } 
+        if(!pid){
+            layer.tips('请选择省份', '#pid', {tips: 1});
+            return false;
+        }
+        if(!cid){
+            layer.tips('请选择城市', '#cid', {tips: 1});
+            return false;
+        }
+        if(!did){
+            layer.tips('请选择县区', '#did', {tips: 1});
+            return false;
+        }
+        if(!street){
+            layer.tips('请填写详情', '#street', {tips: 1});
+            return false;
+        }
+        return true;
+    }
+    //验证电话
+    function clientInfoVerify(obj){ 
+        var phone = obj.value;
+        if(!IsPhone(phone)){
+            layer.tips('请输入正确的手机号', '#txt_phone', {tips: 1});
+            $('#phone').val('');
+        }else{
+            $('#phone').val(phone);
+        }
+    }
+</script>
+</body>
+
+</html>

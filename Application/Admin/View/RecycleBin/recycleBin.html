@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+</head>
+<body>
+	<div class="nav navbar-default">
+		<div class="container-fluid">
+			<h3>回收站</h3>
+			<form>
+				<div class="col-xs-12 col-md-2">
+					<div class="form-group">
+						<button class="btn btn-style-r">删除</button>
+						<button class="btn btn-style">清空</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="container-fluid mt20">
+		<div class="col-xs-12 col-md-7">
+			<table class="tb-style">
+				<thead>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 序号</span>
+							</div>
+						</td>
+						<td>列表名称</td>
+						<td>编号</td>
+						<td>时间</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 1</span>
+							</div>
+						</td>
+						<td>平台端</td>
+						<td>王大宝</td>
+						<td>2016-10-1 16:35</td>
+						<td><a href="">删除</a></td>
+					</tr>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 1</span>
+							</div>
+						</td>
+						<td>平台端</td>
+						<td>王大宝</td>
+						<td>2016-10-1 16:35</td>
+						<td><a href="">删除</a></td>
+					</tr>
+					<tr>
+						<td>
+							<div class="w-60" style="margin:0 auto;">
+								<input type="checkbox" name="" class="fl h-15 w-15">
+								<span class="fl sp-s-p"> 1</span>
+							</div>
+						</td>
+						<td>平台端</td>
+						<td>王大宝</td>
+						<td>2016-10-1 16:35</td>
+						<td><a href="">删除</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- 分页栏 -->
+			<div class="row paging" style="margin: 10px -15px;">
+				<!-- 右边 -->
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right pr">
+					{$page}
+				</div>
+			</div>
+		</div>	
+	</div>
+</body>
+</html>

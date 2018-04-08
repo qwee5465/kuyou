@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$unit|getUnitName}采购单</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+	<style type="text/css">
+		 #body_content{    letter-spacing: 0.5px;}
+		.t-caption{text-align: center; color: #000;} 
+		.tb-style{width:99%;margin:auto;font-size:7px;font-weight: 100 !important;}
+		.tb-style td{border: 1px solid #000;height: 25px;    border-bottom: 1px solid #000;}
+		.print-h3{border: none; padding-bottom: 0; margin-top: 0px;text-align: center;font-weight:400;}
+		.code-tr td{min-width:35px;}
+		.tt-table .code-tr td{border-top:none;}
+		.tt-table .num-tr td{border-bottom:none;border-top:none;border:none;}
+		.rbnone{border-right:none !important;}
+		.page-next{page-break-after:always;}
+		.div-25{height:25px;overflow:hidden;line-height: 25px;}
+	</style>
+</head>
+<body style="background: #fff;">
+<div id="body_content">
+	<foreach name="nlist" item="vvv" key="kk">
+	 	<table class="tb-style" id="t_table{$kk}">
+	 		<caption class="t-caption"><h3 class="print-h3" style="margin: 0;position: relative;width:100%;">
+	 		{$tcaption}{$create_time}
+	 		<span style="position: absolute;top:0px;right:5px;">第{$kk + 1}页</span></h3></caption> 
+			<thead>
+				<tr class="headcolor2">
+					<!-- <td style="width:35px;">行号</td>   -->
+					<!-- <td style="width:100px;">供应商</td> -->
+					<td style="width:60px;">商品名称</td> 
+					<td style="width:80px;">实购</td>
+					<td style="width:70px;">合计</td>
+					<td>客户量</td>
+					<!-- <td style="width:100px;">库存数</td> -->
+					
+					<td style="width:100px;">备注</td> 
+				</tr>
+			</thead>
+			<tbody> 
+				<foreach name="vvv.list" item="vo">	
+					<tr>
+						<!-- <td>{$key+1}</td> -->
+						<!-- <td class="td_sname"><div class="div-25">{$vo.sname}</div></td> --> 
+						<td><div class="div-25">{$vo.gname}</div></td>
+						<td><?php echo customDecimal('num',$vo['num']-$vo['stock_num']); ?>{$vo.uname}</td>
+						<td><div class="div-25">{$vo.num|customDecimal="num",###}{$vo.uname}</div></td>
+						<td>
+							<table class="tt-table" style="width:100%;border:none;"> 
+								{$vo.code}
+							</table>
+						</td> 
+						<!-- <td><div class="div-25">{$vo.stock_num|customDecimal="num",###}{$vo.uname}</div></td> --> 
+						<td></td>
+					</tr>  
+				</foreach>
+			</tbody>
+		</table>
+		<div class="page-next"></div>
+	</foreach>
+</div>
+
+
+
+	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$(".tt-table .code-tr").each(function(index,obj){
+				$(obj).find("td").last().addClass("rbnone"); 
+			});
+			$(".tt-table .num-tr").each(function(index,obj){
+				$(obj).find("td").last().addClass("rbnone"); 
+			});
+			//setTd();
+			setTimeout(function(){
+				printme();
+			},50);
+
+		});
+
+		//合并单元格
+		function setTd(){ 
+			var count ={$countnlist};	
+			var firstRow =0;  
+			for(var i=0;i<count;i++){
+				var tempSname =""; //中级变量 
+				var kk = 1;
+				var length = $("#t_table"+i+" .td_sname").length;  
+				$("#t_table"+i+" .td_sname").each(function(index,obj){
+					var value =$(obj).html();
+					if(tempSname==""){ 
+						$(obj).attr("id","td"+firstRow);
+					}else if(tempSname==value){
+						//相同不处理 
+						$(obj).remove();//移除本td
+						kk++;
+						if(index==length-1){ //最后一个
+							$("#td"+firstRow).attr("rowspan",kk);
+							firstRow++;
+						}
+					}else{
+						//不相同处理td rowspan
+						$("#td"+firstRow).attr("rowspan",kk);
+						kk=1;
+						firstRow++;
+						$(obj).attr("id","td"+firstRow);
+					}
+					tempSname =value;
+				});
+			}
+        }
+		//打印
+		function printme(){ 
+			window.print(); 
+			setTimeout(function(){
+				parent.layer.closeAll();
+			},50);
+		}
+	</script>
+</body>
+</html>
