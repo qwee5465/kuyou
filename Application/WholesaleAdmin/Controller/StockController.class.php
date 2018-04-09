@@ -16,12 +16,10 @@ class StockController extends BaseController
 {
 
     /**
-     * 批量修改库存数脚本 商品库存数 = 商品总入库数 - 商品总出库数
+     * 查询库存详情
      */
-    public function batchUpdateStock(){
-        //查出所有商品总入库数 
-        
-        //查出所有商品总出库数
+    public function selStockDetail(){ 
+        $this->display();
     }
 
     public function stockDefault()
