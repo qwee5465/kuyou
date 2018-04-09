@@ -14,6 +14,16 @@ use Think\Controller;
 
 class StockController extends BaseController
 {
+
+    /**
+     * 批量修改库存数脚本 商品库存数 = 商品总入库数 - 商品总出库数
+     */
+    public function batchUpdateStock(){
+        //查出所有商品总入库数 
+        
+        //查出所有商品总出库数
+    }
+
     public function stockDefault()
     {    
     	$m = M("stock");
@@ -126,7 +136,7 @@ class StockController extends BaseController
         }else if($numzf=="4"){
             $where .=" and a.num1 <= 0"; 
         }
-        $sql="select c.`name` gname,a.num1 num,d.unit_name uname from db_stock a
+        $sql="select c.`name` gname,a.num1 num,d.unit_name uname,a.price from db_stock a
             left join db_wholesale_goods b on a.wgid=b.wgid
             left join db_goods c on b.gid=c.gid
             left join db_unit d on a.unit_id1 = d.unit_id "; 

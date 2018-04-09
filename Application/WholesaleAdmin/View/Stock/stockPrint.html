@@ -31,6 +31,7 @@
 						<th>商品名称</th>
 						<th>单位</th>
 						<th>库存数</th> 
+						<th>单价</th> 
 						<th style="width:100px;">备注</th>
 					</tr>
 				</thead>
@@ -41,6 +42,7 @@
 						<td>{$vo.gname}</td>
 						<td>{$vo.uname}</td>
 						<td>{$vo.num|keep4}</td>  
+						<td>{$vo.price|keep4}</td>  
 						<td></td>
 					</tr>
 					</volist> 
