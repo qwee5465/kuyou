@@ -16,11 +16,58 @@ class StockController extends BaseController
 {
 
     /**
-     * 查询库存详情
+     * 查询库存详情页
      */
     public function selStockDetail(){ 
         $this->display();
     }
+
+    /**
+     * 根据商品名称获取商品库存详情接口
+     */
+    public function getStockDetaiByName(){
+        if(IS_GET){
+            $gname = I("gname");
+            if($gname){
+                // 查出wgid
+                $sql ="select b.wgid from db_goods a 
+                        left join db_wholesale_goods b on a.gid = b.gid 
+                        where a.name='$gname' and b.wid = 14 limit 0,1";
+                $data = M()->query($sql); 
+                $wgid = $data[0]['wgid'];
+                if($wgid){
+                    $sql ="select sum(b.num1) num,FROM_UNIXTIME(a.auditing_time,'%Y-%m-%d') date 
+                        from db_join_stock a 
+                        left join db_join_stock_detail b on a.jsid = b.jsid 
+                        where a.`status` = 1 and b.wgid = $wgid
+                        group by date
+                        order by date desc";
+                    $jdata = M()->query($sql);   
+                    $sql ="select sum(b.num1+b.cd_num) num,FROM_UNIXTIME(a.auditing_time,'%Y-%m-%d') date 
+                        from db_out_stock a 
+                        left join db_out_stock_detail b on a.osid = b.osid 
+                        where a.`status` = 1 and b.wgid = $wgid
+                        group by date
+                        order by date desc";
+                    $odata = M()->query($sql);
+
+                    $result = array(
+                        'jdata'=>$jdata,
+                        'odata'=>$odata,
+                    );
+                    //根据wgid 查出出入库数据
+                    $this->ajaxReturn(ReturnJSON(0,$result));
+                }else{
+                    $this->ajaxReturn(ReturnJSON(1));
+                }
+            }else{
+                $this->ajaxReturn(ReturnJSON(13));
+            }
+        }else{
+            $this->ajaxReturn(ReturnJSON(7));
+        }
+    }
+
 
     public function stockDefault()
     {    

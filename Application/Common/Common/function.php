@@ -38,6 +38,7 @@ function ResultCode($resultCode) {
         case 10 : return '单据审核失败';
         case 11 : return '该单据已有物品出库，请先反审核对应的出库验收单。';
         case 12 : return '语法错误，事务自动回滚.';
+        case 13 : return '请求参数有误';
         case 401 : return '用户未登录，需登录';
         case 402 : return '所在用户无该接口操作权限';
         case 403 : return '系统错误';

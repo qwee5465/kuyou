@@ -56,6 +56,7 @@
 					<div class="col-xs-12 col-md-12">
 						<span class="fl mt8 ml10">商品名</span>
 						<input type="text" name="gname" id="gname" value="" class="fl form-control w-110 ml10">	
+						<input type="button" id="search" class="btn btn-style ml10" value="查 询" />
 					</div>   
 				</div>
 			</div>
@@ -66,56 +67,99 @@
 			<table class="tb-style">
 				<thead>
 					<tr class="headcolor2">
-						<td>行号</td>
-						<td>品牌</td>
-						<td>商品名称</td>
-						<td>单位</td>
-						<td>剩余数量</td>
-						<td>进价单位(元)</td>
-						<!-- <td>货损总计</td>  -->
+						<td>入库总数</td>
+						<td>出库总数</td>
+						<td>库存总数</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>30</td>
+						<td>20</td>
+						<td>10</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="tb-style">
+				<thead>
+					<tr class="headcolor2">
+						<td>日期</td>
+						<td>入库数</td>
+						<td>出库数</td> 
+						<td>默认单位</td>
 						<td>操作</td>
 					</tr>
 				</thead>
 				<tbody>
-					<volist name="list" id="vo" key="k">
 					<tr>
-						<td>{$key+$s_num}</td>
-						<td>{$vo.brand_name}</td>
-						<td>{$vo.name}</td>
-						<td>
-							<select onchange="unitSelect(this)" class="noborder">
-								<option data-num="1" value="{$vo.unit_id1}">{$vo.unit_name1}</option> 
-								<foreach name="vo['usub']" item="v">
-									<option data-num="{$v.num}" value="{$v.unit_id1}">{$v.unit_name}</option> 
-								</foreach>	
-							</select>
-							<input type="hidden" class="hid_num" value="{$vo.num1}"/>	
-							<input type="hidden" class="hid_price" value="{$vo.price}"/>	 
-						</td>
-						<td class="td_num">{$vo.num1|keep4}</td>
-						<td class="td_price">{$vo.price|keep4}</td>
-						<!-- <td></td>  -->
-						<td data-id="{$vo.wgid}">
-							<!-- <a href="javascript:;" data-bname="{$vo.brand_name}" data-uname="{$vo.unit_name1}" data-name="{$vo.name}" class="edit">库存更改</a> -->&nbsp;&nbsp;
-							<!-- <a class="detail_page" href="javascript:;">查看库存明细</a> -->
-						</td>
+						<td>2018-04-09</td>
+						<td>90</td>
+						<td>90</td>
+						<td>公斤</td>
+						<td> <a class="sel-detail" href="javascript:;">查看明细</a></td>
 					</tr>
-					</volist> 
+					<tr>
+						<td>2018-04-09</td>
+						<td>90</td>
+						<td>90</td>
+						<td>公斤</td>
+						<td> <a class="sel-detail" href="javascript:;">查看明细</a></td>
+					</tr>
+					<tr>
+						<td>2018-04-09</td>
+						<td>90</td>
+						<td>90</td>
+						<td>公斤</td>
+						<td> <a class="sel-detail" href="javascript:;">查看明细</a></td>
+					</tr>
+					<tr>
+						<td colspan="5">没有更多数据了</td>
+					</tr>
 				</tbody>
 			</table>
-			<div class="pr text-right mt10">
-				{$page}
-			</div>
 		</div>
 	</div> 
 	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
 	<script src="__PUBLIC__/js/base.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
 	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/LodopFuncs.js"></script> 
-
 	<script type="text/javascript">
-		
+		$(function(){
+			$("#search").click(function(){
+				var gname = $("#gname").val();
+				$.ajax({
+					type:"get",
+					url:"{:U('Stock/getStockDetaiByName')}",
+					data:{gname:gname},
+					dataType:"json",
+					success:function(res) {
+						if(res.resultcode==0){
+							var jdata = res.result.jdata;
+							var odata = res.result.odata;
+							var arr = [];
+							if(jdata.length > 0 || odata.length > 0){
+								if(jdata[0])
+							}
+						}else{
+							layer.msg('该商品无历史库存');
+						}
+					},
+					error:function(){
+						 
+					}
+				}); 
+			})
+
+			/**
+			 * 计算哪个数组日期最大 
+			 * @return 0.一样大或没数据 1.jdata 大 2.odata 大
+			 */
+			function aaaaa(jdata,odata){
+				var result = 2;
+				return 
+			}
+			
+		})
 	</script>
 </body>
 </html>
