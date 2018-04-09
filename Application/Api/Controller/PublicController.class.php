@@ -168,6 +168,29 @@ class PublicController extends Controller {
     }
 
     /**
+     * 获取入库商品记忆价
+     */
+    public function getJoinPrice(){
+        if(IS_POST){
+            $wgid = I("wgid");
+            $sid = I("sid");
+            $sql = "select b.price from db_join_stock  a
+                left join db_join_stock_detail b on a.jsid = b.jsid
+                where a.`status` = 1 and a.sid = $sid and b.wgid = $wgid and b.price > 0
+                order by a.auditing_time desc limit 0,1";
+            $data = M()->query($sql);  
+            if($data){  
+                $data = $data[0];
+                $this->ajaxReturn(ReturnJSON(0,$data));
+            }else{
+                $this->ajaxReturn(ReturnJSON(1));
+            }
+        }else{
+            $this->ajaxReturn(ReturnJSON(7));
+        }
+    }
+
+    /**
      * 获取出库商品记忆价 
      */
     public function getOutPrice(){
@@ -180,6 +203,7 @@ class PublicController extends Controller {
                 where b.wgid = $wgid AND a.`status`= 1 AND a.cid = $c_id AND b.price > 0 ORDER BY a.auditing_time desc LIMIT 0,1"; 
             $data = M()->query($sql);  
             if($data){  
+                $data = $data[0];
                 $this->ajaxReturn(ReturnJSON(0,$data));
             }else{
                 $this->ajaxReturn(ReturnJSON(1));

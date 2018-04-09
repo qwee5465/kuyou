@@ -159,6 +159,8 @@ var publicSearch = {
                         publicSearch.liCall(input, this, hidden, page);
                         if (page == "getGoodsInfoOut"){
                             publicSearch.getOutPrice(this,this.dataset.id,cid,ul,fn);
+                        }else if(page == "getGoodsInfoByText"){
+                            publicSearch.getJoinPrice(this,this.dataset.id,ul,fn);
                         }else{
                             if (fn) //判断是否传入回调行数
                                 fn(this, ul); //执行回调行数
@@ -284,8 +286,33 @@ var publicSearch = {
     },
 
     /**
-     * 获取商品出库记忆价
-     * @param 
+     * 获取商品入库记忆价
+     */
+    getJoinPrice:function(that,wgid,ul,fn){
+        var url = apiUrl + 'getJoinPrice';
+        var sid = $("#sid").val();
+        $.ajax({
+            url:url,
+            data: {wgid:wgid,sid:sid},
+            type:"POST",
+            dataType:'json',
+            success:function(res){
+                if(res.resultcode==0){
+                    that.dataset.price=res.result.price;
+                }else{
+                    that.dataset.price='';
+                }
+                if (fn) //判断是否传入回调行数
+                    fn(that, ul); //执行回调行数
+            },
+            error:function(e){
+                console.log("出错了");
+            }
+        })
+    },
+
+    /**
+     * 获取商品出库记忆价 
      */
     getOutPrice: function(that,wgid,cid,ul,fn) {
         var url = apiUrl + 'getOutPrice';
@@ -296,7 +323,7 @@ var publicSearch = {
             dataType:'json',
             success:function(res){
                 if(res.resultcode==0){
-                    that.dataset.price=res.result[0].price;
+                    that.dataset.price=res.result.price;
                 }else{
                     that.dataset.price='';
                 }
