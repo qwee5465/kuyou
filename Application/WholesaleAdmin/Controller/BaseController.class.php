@@ -26,7 +26,7 @@ class BaseController extends Controller {
             } 
             exit();
         } 
-        $this->assign('version','1.0.3');
+        $this->assign('version','1.0.4');
     } 
 
     public function _empty(){        
