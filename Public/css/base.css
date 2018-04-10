@@ -13,7 +13,7 @@ a:hover{text-decoration: none;color:#fff;}
 a:active{text-decoration: none;color: #fff;}
 a:focus{text-decoration: none;color: #fff;}
 button{border:none;outline: none;}
-
+[v-cloak] {display: none;}
 .none{display: none;} 
 ._mt8{margin-top: -8px;}
 ._mt15{margin-top: -15px;}

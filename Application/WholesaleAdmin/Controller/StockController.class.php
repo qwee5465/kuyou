@@ -30,11 +30,15 @@ class StockController extends BaseController
             $gname = I("gname");
             if($gname){
                 // 查出wgid
-                $sql ="select b.wgid from db_goods a 
+                $sql ="select b.wgid,b.unit_id,c.unit_name,d.num1 stock_num from db_goods a 
                         left join db_wholesale_goods b on a.gid = b.gid 
+                        left join db_unit c on b.unit_id = c.unit_id
+                        left join db_stock d on d.wgid = b.wgid
                         where a.name='$gname' and b.wid = 14 limit 0,1";
                 $data = M()->query($sql); 
                 $wgid = $data[0]['wgid'];
+                $unit_name = $data[0]['unit_name'];
+                $stock_num = $data[0]['stock_num'];
                 if($wgid){
                     $sql ="select sum(b.num1) num,FROM_UNIXTIME(a.auditing_time,'%Y-%m-%d') date 
                         from db_join_stock a 
@@ -50,8 +54,10 @@ class StockController extends BaseController
                         group by date
                         order by date desc";
                     $odata = M()->query($sql);
-
                     $result = array(
+                        'wgid'=> $wgid,
+                        'stock_num'=> $stock_num,
+                        'unit_name'=> $unit_name,
                         'jdata'=>$jdata,
                         'odata'=>$odata,
                     );
@@ -68,6 +74,40 @@ class StockController extends BaseController
         }
     }
 
+    /**
+     * 根据日期和商品id获取库存详情接口
+     */
+    public function getStockDetaiByIDAndDate(){
+        if(IS_GET){
+            $wgid = I("wgid");
+            $stime = strtotime(I("date")); 
+            if($wgid){
+                $etime = $stime + 86399;
+                $sql ="select a.jsid,SUM(b.num1) num from db_join_stock a
+                    left join db_join_stock_detail b on a.jsid = b.jsid
+                    where a.`status` = 1 and a.auditing_time>=$stime and a.auditing_time<=$etime and b.wgid = $wgid
+                    GROUP BY a.jsid
+                    order by a.jsid DESC";
+                $jdata = M()->query($sql);       
+                $sql ="select a.osid,SUM(b.num1+b.cd_num) num from db_out_stock a
+                left join db_out_stock_detail b on a.osid = b.osid
+                where a.`status` = 1 and a.auditing_time>=$stime and a.auditing_time<=$etime and b.wgid = $wgid
+                GROUP BY a.osid
+                order by a.osid DESC";
+                $odata = M()->query($sql);
+                $result = array(
+                    'jdata'=>$jdata,
+                    'odata'=>$odata,
+                );
+                //根据wgid 查出出入库数据
+                $this->ajaxReturn(ReturnJSON(0,$result));
+            }else{
+                $this->ajaxReturn(ReturnJSON(13));
+            }  
+        }else{
+            $this->ajaxReturn(ReturnJSON(7));
+        }
+    }
 
     public function stockDefault()
     {    

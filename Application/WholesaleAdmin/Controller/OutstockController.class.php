@@ -687,6 +687,7 @@ class OutstockController extends BaseController
         $sql ="select aa.osname,g.num1 stock_num,f.brand_name,aa.remark remarkf,aa.total totalf,aa.create_time,aa.cid,bb.`name` cname,bb.phone,bb.pid,bb.cid,bb.did,bb.street,b.`name` gname,aa.total,h.unit_name uname,a.num1*a.price*a.than totalx,a.*,aa.`status`,jj.contacts FROM db_out_stock aa left join db_client bb on aa.cid = bb.c_id left join db_out_stock_detail a on a.osid = aa.osid LEFT JOIN db_wholesale_goods bbb ON bbb.wgid = a.wgid LEFT JOIN db_goods b ON bbb.gid = b.gid Left JOIN db_brand f ON b.brand_id =f.brand_id LEFT JOIN db_unit d ON a.unit_id1 = d.unit_id left join db_stock g on g.wgid = a.wgid LEFT JOIN db_unit h ON h.unit_id = a.nei_unit_id LEFT JOIN db_wholesale_user jj on aa.auditing_id = jj.wid WHERE a.osid = '".$osid."' order by a.out_id asc";
         $list = M('')->query($sql);     
         $this->assign("osid",$osid);
+        $this->assign("hide_title",I("hide_title"));
         $this->assign("list",$list);
         $this->assign("status",$list[0]['status']); 
         $wid = getWid();

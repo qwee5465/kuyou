@@ -1,165 +1,495 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title></title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
-	<style type="text/css">
-	.headcolor2 td{background-color: #404040 !important; border:1px solid #404040 !important;color: #fff;}
-	table tr:nth-child(even){background-color: #e4e4e4;}
-	.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;}
-	.tb-style td{border-bottom: 1px solid #d2d2d2; border-left: 1px solid #d2d2d2;}
-	.navbar-default {background-color: #fff;}
-	.btn-style{background-color: #59ab76;border-color:#3b9f5f;}
-	.btn-style:hover{linear-gradient(#3b9f5f,#3b9f5f);
-    background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
-    background-position-x: initial;
-    background-position-y: initial;
-    background-size: initial;
-    background-repeat-x: initial;
-    background-repeat-y: initial;
-    background-attachment: initial;
-    background-origin: initial;
-    background-clip: initial;
-    background-color: initial;}
-    .col-md-2{width:auto;}
-    .col-md-offset-2{margin-left: 0;}
-    .mt8{letter-spacing: 1.5px;}
-    .noborder{border: none;}
-    .ml5{margin-left: 5px;}
-	</style>
-	<style type="text/css" id="style1">
-		table {
-			border-collapse: collapse;
-		    width: 100%;
-		    font-size: 20px;
-		    background-color: #fff;
-		    border: 1px solid #d0d0d0;
-		}
-		td,th {
-			text-align: center;
-			border: 1px solid #d0d0d0; 
-		}
-		td span{margin-left:10px;} 
-	</style>
-</head>
-<body>
-	<div class="nav navbar-default">
-		<div class="container-fluid pb10">
-			<h3 class="pr">
-				商品库存详情 
-			</h3>
-			<div class="">
-				<div class="from-group">
-					<div class="col-xs-12 col-md-12">
-						<span class="fl mt8 ml10">商品名</span>
-						<input type="text" name="gname" id="gname" value="" class="fl form-control w-110 ml10">	
-						<input type="button" id="search" class="btn btn-style ml10" value="查 询" />
-					</div>   
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="container-fluid mt10">
-		<div class="col-xs-12" id="divPrint">
-			<table class="tb-style">
-				<thead>
-					<tr class="headcolor2">
-						<td>入库总数</td>
-						<td>出库总数</td>
-						<td>库存总数</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>30</td>
-						<td>20</td>
-						<td>10</td>
-					</tr>
-				</tbody>
-			</table>
-			<table class="tb-style">
-				<thead>
-					<tr class="headcolor2">
-						<td>日期</td>
-						<td>入库数</td>
-						<td>出库数</td> 
-						<td>默认单位</td>
-						<td>操作</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>2018-04-09</td>
-						<td>90</td>
-						<td>90</td>
-						<td>公斤</td>
-						<td> <a class="sel-detail" href="javascript:;">查看明细</a></td>
-					</tr>
-					<tr>
-						<td>2018-04-09</td>
-						<td>90</td>
-						<td>90</td>
-						<td>公斤</td>
-						<td> <a class="sel-detail" href="javascript:;">查看明细</a></td>
-					</tr>
-					<tr>
-						<td>2018-04-09</td>
-						<td>90</td>
-						<td>90</td>
-						<td>公斤</td>
-						<td> <a class="sel-detail" href="javascript:;">查看明细</a></td>
-					</tr>
-					<tr>
-						<td colspan="5">没有更多数据了</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div> 
-	<script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
-	<script src="__PUBLIC__/js/base.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
-	<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
-	<script type="text/javascript">
-		$(function(){
-			$("#search").click(function(){
-				var gname = $("#gname").val();
-				$.ajax({
-					type:"get",
-					url:"{:U('Stock/getStockDetaiByName')}",
-					data:{gname:gname},
-					dataType:"json",
-					success:function(res) {
-						if(res.resultcode==0){
-							var jdata = res.result.jdata;
-							var odata = res.result.odata;
-							var arr = [];
-							if(jdata.length > 0 || odata.length > 0){
-								if(jdata[0])
-							}
-						}else{
-							layer.msg('该商品无历史库存');
-						}
-					},
-					error:function(){
-						 
-					}
-				}); 
-			})
 
-			/**
-			 * 计算哪个数组日期最大 
-			 * @return 0.一样大或没数据 1.jdata 大 2.odata 大
-			 */
-			function aaaaa(jdata,odata){
-				var result = 2;
-				return 
-			}
-			
-		})
-	</script>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+    <style type="text/css">
+    .headcolor2 td {
+        background-color: #404040 !important;
+        border: 1px solid #404040 !important;
+        color: #fff;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #e4e4e4;
+    }
+
+    .tb-style {
+        background-color: #f5f5f5;
+        letter-spacing: 1.5px;
+    }
+
+    .tb-style td {
+        border-bottom: 1px solid #d2d2d2;
+        border-left: 1px solid #d2d2d2;
+    }
+
+    .navbar-default {
+        background-color: #fff;
+    }
+
+    .btn-style {
+        background-color: #59ab76;
+        border-color: #3b9f5f;
+    }
+
+    .btn-style:hover {
+        linear-gradient(#3b9f5f, #3b9f5f);
+        background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+        background-position-x: initial;
+        background-position-y: initial;
+        background-size: initial;
+        background-repeat-x: initial;
+        background-repeat-y: initial;
+        background-attachment: initial;
+        background-origin: initial;
+        background-clip: initial;
+        background-color: initial;
+    }
+
+    .col-md-2 {
+        width: auto;
+    }
+
+    .col-md-offset-2 {
+        margin-left: 0;
+    }
+
+    .mt8 {
+        letter-spacing: 1.5px;
+    }
+
+    .noborder {
+        border: none;
+    }
+
+    .ml5 {
+        margin-left: 5px;
+    }
+    </style>
+    <style type="text/css" id="style1">
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 20px;
+        background-color: #fff;
+        border: 1px solid #d0d0d0;
+    }
+
+    td,
+    th {
+        text-align: center;
+        border: 1px solid #d0d0d0;
+    }
+
+    td span {
+        margin-left: 10px;
+    }
+    .t-popup{position: fixed;top:0;left:0;width:100%;height:100%;z-index:99;display: flex;justify-content: center;align-items: center;}
+    .t-mask{position: fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,.5);z-index:100;}
+    .t-popup-box{ 
+        width: 650px;
+        height: 400px;
+        background-color: #fff;
+        overflow: hidden;
+        z-index:101;
+    }
+    .t-popup-title{
+        text-align: center;
+        font-size:18px;
+        color:#333;
+        margin:0;
+        padding:10px 0;
+        background-color: #59ab76;
+        color:#fff;
+    }
+    .y-scroll{
+        display:block;
+        height:280px;
+        overflow-y:scroll;
+    }
+    .t-popup-box table thead,.t-popup-box table tfoot,.t-popup-box tbody tr {
+        display:table;
+        width:100%;
+        table-layout:fixed;
+    }
+
+    .t-popup-box table thead,.t-popup-box table tfoot {
+        /*width: calc( 100% - 17px);*/
+    }
+    .navbar-default{
+        display: none;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="nav" style="background-color: #fff;">
+            <div class="container-fluid pb10">
+                <h3 class="pr">
+					商品库存详情 
+				</h3>
+                <div class="">
+                    <div class="from-group">
+                        <div class="col-xs-12 col-md-12">
+                            <span class="fl mt8 ml10">商品名</span>
+                            <input type="text" name="gname" id="gname" v-model="gname" class="fl form-control w-110 ml10">
+                            <input type="button" id="search" class="btn btn-style ml10" @click="getStockDetaiByName()" value="查 询" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid mt10">
+            <div class="col-xs-12" id="divPrint">
+                <table class="tb-style">
+                    <thead>
+                        <tr class="headcolor2">
+                            <td>编号</td>
+                            <td>商品名称</td>
+                            <td>入库总数</td>
+                            <td>出库总数</td>
+                            <td>库存总数</td>
+                            <td>实际库存</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="wgid!=0">
+                            <td>{{wgid}}</td>
+                            <td>{{goodsName}}</td>
+                            <td>{{joinTotal}}</td>
+                            <td>{{outTotal}}</td>
+                            <td>{{parseFloat((joinTotal-outTotal).toFixed(4))}}</td>
+                            <td>{{parseFloat(stockNum)}}</td>
+                        </tr>
+                        <tr v-if="wgid==0">
+                            <td colspan="6">请填写查询商品</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="tb-style">
+                    <thead>
+                        <tr class="headcolor2">
+                            <td>日期</td>
+                            <td>入库数</td>
+                            <td>出库数</td>
+                            <td>默认单位</td>
+                            <td>操作</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item,index) in list">
+                            <td>{{item.date}}</td>
+                            <td>{{item.jnum}}</td>
+                            <td>{{item.onum}}</td>
+                            <td>{{uname}}</td>
+                            <td> <a @click="setShowDetail(wgid,item.date)" href="javascript:;">查看明细</a></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">没有更多数据了</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="t-popup" v-if="isShowDetail">
+            <div class="t-mask" @click="setHideDetail()"></div>
+            <div class="t-popup-box">
+                <h2 class="t-popup-title">库存明细</h2>
+                <table class="tb-style">
+                    <thead>
+                        <tr class="headcolor2">
+                            <td>入库单</td>
+                            <td>数量</td>
+                            <td>出库单</td>
+                            <td>数量</td>
+                        </tr>
+                    </thead>
+                    <tbody class="y-scroll">
+                        <tr v-for="(item,index) in detailList">
+                            <td><a href="javascript:;" @click="openJoinDetail(item.jsid)">{{item.jsid}}</a></td>
+                            <td>{{item.jnum}}</td>
+                            <td><a href="javascript:;" @click="openOutDetail(item.osid)">{{item.osid}}</a></td>
+                            <td>{{item.onum}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="headcolor2">
+                            <td colspan="2">出库合计：37公斤</td>
+                            <td colspan="2">入库合计：30公斤</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src='__PUBLIC__/js/jquery.min.js' charset="UTF-8"></script>
+    <script src="__PUBLIC__/js/base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/vue.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript">
+    'use strict'; //严格模式 
+    var app = new Vue({
+        el: "#app",
+        data: {
+            wgid:0,
+            gname: "", //商品名称 用于搜索
+            goodsName:"", //商品名称
+            uname: "",
+            list: [], //出入库数据
+            joinTotal: 0,
+            outTotal: 0,
+            stockNum: 0,
+            isRequest: true, //请求状态
+            isShowDetail:false, //是否显示明细弹窗
+            detailList:[]
+        },
+        beforeCreate: function() {},
+        created: function() {
+            var that = this;
+        },
+        watch: { //监听数据发生变化触发函数
+
+        },
+        methods: {
+            /**
+             * 初始化数据 
+             */
+            init:function(){
+                var that = this;
+                that.list = [];
+                that.goodsName = '';
+                that.joinTotal = 0;
+                that.outTotal = 0;
+                that.stockNum = 0;
+                that.isRequest = true;
+                that.detailList = [];
+                that.wgid = 0;
+                that.uname="";
+            },
+            /**
+             * 根据商品名称获取库存详情
+             */
+            getStockDetaiByName: function() {
+                var that = this;
+                if (that.isRequest) {
+                    that.isRequest = false;
+                    var index = layer.msg('加载中，请稍后', {
+					    icon: 16,
+					    shade: 0.01
+					}); 
+                    that.init();
+                    that.goodsName = that.gname;
+                    $.ajax({
+                        type: "get",
+                        url: "{:U('Stock/getStockDetaiByName')}",
+                        data: { gname: that.gname },
+                        dataType: "json",
+                        success: function(res) {
+                            if (res.resultcode == 0) {
+                                var jdata = res.result.jdata;
+                                var odata = res.result.odata;
+                                that.joinTotal = that.buildJoinTotal(jdata);
+                                that.outTotal = that.buildJoinTotal(odata);
+                                var arr = that.bulidNewArray(jdata, odata);
+                                for (var i = 0; i < arr.length; i++) {
+                                    for (var j = 0; j < jdata.length; j++) {
+                                        if (arr[i].date == jdata[j].date) {
+                                            arr[i].jnum = parseFloat(jdata[j].num);
+                                            break;
+                                        }
+                                    }
+                                }
+                                for (var i = 0; i < arr.length; i++) {
+                                    for (var j = 0; j < odata.length; j++) {
+                                        if (arr[i].date == odata[j].date) {
+                                            arr[i].onum = parseFloat(odata[j].num);
+                                            break;
+                                        }
+                                    }
+                                }
+                                that.list = arr;
+                                that.wgid = res.result.wgid;
+                                that.uname = res.result.unit_name;
+                                that.stockNum = res.result.stock_num;
+                            } else {
+                                layer.msg('该商品无历史库存');
+                            }
+                        },
+                        error: function() {
+                            console.log("出错了");
+                        },
+                        complete: function() {
+                            that.isRequest = true;
+                            layer.close(index);
+                        }
+                    });
+                }
+
+            },
+
+            /**
+             * 合并数组 按照日期去重在排序
+             * @return 日期数组
+             */
+            bulidNewArray: function(jdata, odata) {
+                var arr = [];
+                for (var i = 0; i < jdata.length; i++) {
+                    if (arr.indexOf(jdata[i].date) == -1) {
+                        arr.push(jdata[i].date);
+                    }
+                }
+                for (var i = 0; i < odata.length; i++) {
+                    if (arr.indexOf(odata[i].date) == -1) {
+                        arr.push(odata[i].date);
+                    }
+                }
+                arr.sort(function(x, y) {
+                    if (x < y) {
+                        return 1;
+                    } else if (x > y) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                })
+                var result = [];
+                for (var i = 0; i < arr.length; i++) {
+                    var obj = { jnum: 0, onum: 0, date: arr[i] };
+                    result.push(obj);
+                }
+                return result;
+            },
+
+            /**
+             * 计算入库总数
+             */
+            buildJoinTotal: function(jdata) {
+                var result = 0;
+                for (var i = 0; i < jdata.length; i++) {
+                    result += parseFloat(jdata[i].num);
+                }
+                return parseFloat(result.toFixed(4));
+            },
+
+            /**
+             * 计算出库总数
+             */
+            buildOutTotal: function(odata) {
+                var result = 0;
+                for (var i = 0; i < odata.length; i++) {
+                    result += parseFloat(odata[i].num);
+                }
+                return parseFloat(result.toFixed(4));
+            },
+
+            /**
+             * 显示隐藏明细弹窗
+             */
+            setShowDetail:function(wgid,date){
+                var that = this; 
+                that.getDetailInfo(wgid,date);
+            },
+
+            /**
+             * 关闭明细弹窗
+             */
+            setHideDetail:function(){
+                var that = this;
+                that.isShowDetail = false;
+            },
+
+            /**
+             * 获取明细信息
+             */
+            getDetailInfo:function(wgid,date){
+                var that = this;
+                if(that.isRequest){
+                    that.isRequest = false;
+                    var index = layer.msg('加载中，请稍后', {
+                        icon: 16,
+                        shade: 0.01
+                    }); 
+                    $.ajax({
+                        type: "get",
+                        url: "{:U('Stock/getStockDetaiByIDAndDate')}",
+                        data: { wgid: wgid,date:date },
+                        dataType: "json",
+                        success: function(res) {
+                            console.log(res);
+                            that.isShowDetail = true;
+                            if (res.resultcode == 0) {
+                                var jdata = res.result.jdata;
+                                var odata = res.result.odata;
+                                var arr = [];
+                                for(var i=0;i<jdata.length;i++){
+                                    var obj = {jsid:jdata[i].jsid,jnum:jdata[i].num,osid:'',onum:''};
+                                    arr.push(obj);
+                                }
+                                for(var i=0;i<odata.length;i++){
+                                    if(typeof arr[i] == 'undefined'){
+                                        var obj = {jsid:'',jnum:'',osid:odata[i].osid,onum:odata[i].num};
+                                        arr.push(obj);
+                                    }else{
+                                        arr[i].osid = odata[i].osid;
+                                        arr[i].onum = odata[i].num;
+                                    }
+                                }
+                                that.detailList = arr;
+                            } 
+                        },
+                        error: function() {
+                            console.log("出错了");
+                        },
+                        complete: function() {
+                            that.isRequest = true;
+                            layer.close(index);
+                        }
+                    });
+                }
+            },
+
+            /**
+             * 打开入库库详情单
+             */
+            openJoinDetail:function(id){ 
+                var url ="{:U('Instock/instockDetail')}";
+                url +="?jsid="+id+"&hide_title="+1;
+                layer.open({
+                    type: 2,
+                    closeBtn: 1,
+                    area: ['90%', '90%'],
+                    title: false,
+                    content: url
+                });
+            },
+
+            /**
+             * 打开出库详情单
+             */
+            openOutDetail:function(id){
+                var url ="{:U('Outstock/outStockDetail')}";
+                url +="?osid="+id+"&hide_title="+1;
+                layer.open({
+                    type: 2,
+                    closeBtn: 1,
+                    area: ['90%', '90%'],
+                    title: false,
+                    content: url
+                });
+            }
+        },
+        updated: function() {
+
+        }
+    });
+    </script>
 </body>
+
 </html>
