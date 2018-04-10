@@ -853,6 +853,7 @@ class InstockController extends BaseController
         $sum = $list[0]['num1'] * $list[0]['price'];  //金额
         $sid = $list[0]['sid'];
         $this->assign("jsid",$jsid);   //入库单据号
+        $this->assign("hide_title",I("hide_title"));
         $this->assign("sum",$sum);
         $this->assign("sid",$sid);
         $this->assign("list",$list);
