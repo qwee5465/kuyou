@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" /> 
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css?v={$version}" /> 
 	<style type="text/css">
 	.headcolor2 td{background-color: #404040 !important; border:1px solid #404040 !important;color: #fff;}
 	table tr:nth-child(even){background-color: #e4e4e4;}
@@ -124,9 +124,8 @@
 						<td class="td_num">{$vo.num1|keep4}</td>
 						<td class="td_price">{$vo.price|keep4}</td>
 						<!-- <td></td>  -->
-						<td data-id="{$vo.wgid}">
-							<!-- <a href="javascript:;" data-bname="{$vo.brand_name}" data-uname="{$vo.unit_name1}" data-name="{$vo.name}" class="edit">库存更改</a> -->&nbsp;&nbsp;
-							<!-- <a class="detail_page" href="javascript:;">查看库存明细</a> -->
+						<td data-id="{$vo.wgid}" data-gname="{$vo.name}">
+							<a class="detail_page" href="javascript:;">库存详情</a>
 						</td>
 					</tr>
 					</volist> 
@@ -259,13 +258,13 @@
 
 
 		$(".detail_page").click(function(){
-			var id = $(this).parent().attr("data-id");
-			var url ="{:U('Stock/stockDetail')}";
-		    url +="?wgid="+id;
+			var gname = $(this).parent().attr("data-gname");
+			var url ="{:U('Stock/selStockDetail')}";
+		    url +="?gname="+gname;
 			layer.open({
 				type: 2,
 				closeBtn: 1,
-				area: ['1000px', '500px'],
+				area: ['95%', '95%'],
 				title: false,
 				content: url
 			});
