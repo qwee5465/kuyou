@@ -484,7 +484,7 @@
 		function specChange(obj){
 			var tr = $(obj).parent().parent();
 			var result = parseFloat(tr.find(".td_unit_id .jcprice").val())  * parseFloat($(obj).find("option:selected").attr("data-nei_num")).toFixed(4);
-			tr.find('.td_price input').val(result);
+			tr.find('.td_price input').val(parseFloat(result.toFixed(4)));
 			calculatePrice(tr);
 		}
 
