@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
-    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css?v={$version}" />
     <style type="text/css">
     .headcolor2 td {
         background-color: #404040 !important;
@@ -156,6 +156,7 @@
                             <td>出库总数</td>
                             <td>库存总数</td>
                             <td>实际库存</td>
+                            <td>操作</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -166,6 +167,7 @@
                             <td>{{outTotal}}</td>
                             <td>{{parseFloat((joinTotal-outTotal).toFixed(4))}}</td>
                             <td>{{parseFloat(stockNum)}}</td>
+                            <td><a href="javascript:;" v-if="parseFloat((joinTotal-outTotal).toFixed(4))!=stockNum" @click="correctStock(parseFloat((joinTotal-outTotal).toFixed(4)))">矫正库存</a></td>
                         </tr>
                         <tr v-if="wgid==0">
                             <td colspan="6">请填写查询商品</td>
@@ -188,7 +190,7 @@
                             <td>{{item.jnum}}</td>
                             <td>{{item.onum}}</td>
                             <td>{{uname}}</td>
-                            <td> <a @click="setShowDetail(wgid,item.date)" href="javascript:;">查看明细</a></td>
+                            <td><a @click="setShowDetail(wgid,item.date)" href="javascript:;">查看明细</a></td>
                         </tr>
                         <tr>
                             <td colspan="5">没有更多数据了</td>
@@ -220,8 +222,8 @@
                     </tbody>
                     <tfoot>
                         <tr class="headcolor2">
-                            <td colspan="2">出库合计：37公斤</td>
-                            <td colspan="2">入库合计：30公斤</td>
+                            <td colspan="2">入库合计：{{detailJoinStock}}{{uname}}</td>
+                            <td colspan="2">出库合计：{{detailOutStock}}{{uname}}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -235,11 +237,12 @@
     <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
     <script type="text/javascript">
     'use strict'; //严格模式 
+    var gname = "{$gname}";
     var app = new Vue({
         el: "#app",
         data: {
             wgid:0,
-            gname: "", //商品名称 用于搜索
+            gname: gname, //商品名称 用于搜索
             goodsName:"", //商品名称
             uname: "",
             list: [], //出入库数据
@@ -248,11 +251,16 @@
             stockNum: 0,
             isRequest: true, //请求状态
             isShowDetail:false, //是否显示明细弹窗
-            detailList:[]
+            detailList:[],
+            detailJoinStock:0,
+            detailOutStock:0,
         },
         beforeCreate: function() {},
         created: function() {
             var that = this;
+            if(that.gname){
+                that.getStockDetaiByName();
+            }
         },
         watch: { //监听数据发生变化触发函数
 
@@ -330,8 +338,42 @@
                             layer.close(index);
                         }
                     });
-                }
+                } 
+            },
 
+            /**
+             * 矫正库存
+             */
+            correctStock:function(num){
+                var that = this;
+                if(that.isRequest){
+                    that.isRequest = false;
+                    var index = layer.msg('正在矫正，请稍后', {
+                        icon: 16,
+                        shade: 0.01
+                    }); 
+                    $.ajax({
+                        type: "post",
+                        url: "{:U('Stock/correctStock')}",
+                        data: { wgid: that.wgid,num:num },
+                        dataType: "json",
+                        success: function(res) {
+                            if (res.resultcode == 0) {
+                                layer.msg("矫正成功");
+                                that.stockNum = num;
+                            }else{
+                                layer.msg("矫正失败",{icon:2});
+                            }
+                        },
+                        error: function() {
+                            console.log("出错了");
+                        },
+                        complete: function() {
+                            that.isRequest = true;
+                            layer.close(index);
+                        }
+                    });
+                }
             },
 
             /**
@@ -428,19 +470,25 @@
                                 var jdata = res.result.jdata;
                                 var odata = res.result.odata;
                                 var arr = [];
+                                var detailJoinStock = 0;
                                 for(var i=0;i<jdata.length;i++){
-                                    var obj = {jsid:jdata[i].jsid,jnum:jdata[i].num,osid:'',onum:''};
+                                    var obj = {jsid:jdata[i].jsid,jnum:parseFloat(jdata[i].num),osid:'',onum:''};
                                     arr.push(obj);
+                                    detailJoinStock +=parseFloat(jdata[i].num);
                                 }
+                                var detailOutStock = 0;
                                 for(var i=0;i<odata.length;i++){
                                     if(typeof arr[i] == 'undefined'){
-                                        var obj = {jsid:'',jnum:'',osid:odata[i].osid,onum:odata[i].num};
+                                        var obj = {jsid:'',jnum:'',osid:odata[i].osid,onum:parseFloat(odata[i].num)};
                                         arr.push(obj);
                                     }else{
                                         arr[i].osid = odata[i].osid;
-                                        arr[i].onum = odata[i].num;
+                                        arr[i].onum = parseFloat(odata[i].num);
                                     }
+                                    detailOutStock +=parseFloat(odata[i].num);
                                 }
+                                that.detailJoinStock = parseFloat(detailJoinStock.toFixed(4));
+                                that.detailOutStock = parseFloat(detailOutStock.toFixed(4));
                                 that.detailList = arr;
                             } 
                         },

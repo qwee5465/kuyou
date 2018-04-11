@@ -16,9 +16,30 @@ class StockController extends BaseController
 {
 
     /**
+     * 矫正库存
+     */
+    public function correctStock(){
+        if(IS_POST){
+            $wgid = I("wgid");
+            $num = I("num");
+            $data =array('num1'=>$num);
+            $res = M("stock")->where('wgid='.$wgid)->save($data); 
+            if($res){
+                $this->ajaxReturn(ReturnJSON(0));
+            }else{
+                $this->ajaxReturn(ReturnJSON(1));
+            }
+        }else{
+           $this->ajaxReturn(ReturnJSON(7)); 
+        }
+    }
+
+    /**
      * 查询库存详情页
      */
     public function selStockDetail(){ 
+        $gname = I("gname");
+        $this->assign("gname",$gname);
         $this->display();
     }
 

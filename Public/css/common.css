@@ -172,3 +172,5 @@ input[type="number"]{-moz-appearance:textfield;}
 
 /*jquery实现返回顶部按钮和scroll滚动功能[带动画效果] */
  #toTop{width: 100px;z-index: 10;border: 1px solid #333;background: #121212;text-align: center;padding: 5px; position: fixed;bottom: 0px;right: 0px;cursor: pointer;display: none; color: #fff;text-transform: lowercase;font-size: 0.9em;}
+
+table tbody tr.active{background-color: #c5edb1;}
