@@ -216,11 +216,17 @@
 								<else />
 									<td class="w-80 b_machining_p none">{$t_list.machining}</td>
 								</if>
-
+								<!-- 数量 -->
 								<if condition="$osbList.num_s eq 0">
 									<td class="w-80 b_num_p">{$t_list.num}</td>
 								<else />
 									<td class="w-80 b_num_p none">{$t_list.num}</td>
+								</if>
+								<!-- 备用数量 -->
+								<if condition="$osbList.num1_s eq 0">
+									<td class="w-80 b_num1_p">{$t_list.num1}</td>
+								<else />
+									<td class="w-80 b_num1_p none">{$t_list.num1}</td>
 								</if>
 								<!-- 单位备注 -->
 								<td class="w-80">单位备注</td>
@@ -234,6 +240,13 @@
 								<else />
 									<td class="w-80 b_price_p none">{$t_list.price}</td>  
 								</if>
+								<!-- 备用单价 -->
+								<!-- <if condition="$osbList.price1_s eq 0">
+									<td class="w-80 b_price1_p">{$t_list.price1}</td>  
+								<else />
+									<td class="w-80 b_price1_p none">{$t_list.price1}</td>  
+								</if> -->
+
 								<if condition="$osbList.tax_price_s eq 0">
 									<td class="w-80 b_tax_price_p">{$t_list.tax_price}</td>  
 								<else />
@@ -339,6 +352,16 @@
 											<input type="text" name="num1s" class="stock-txt w100  t-number">
 										</td>
 									</if>
+									<!-- 备用数量 -->
+									<if condition="$osbList.num1_s eq 0">
+										<td class="td_num1 b_num1_p">
+											<input type="text" name="num2s" class="stock-txt w100  t-number">
+										</td>
+									<else />
+										<td class="td_num1 b_num1_p none">
+											<input type="text" name="num2s" class="stock-txt w100  t-number">
+										</td>
+									</if>
 									<td class="td_p_remark">
 										<input type="text" maxlength="10" name="p_remarks" class="stock-txt w100" />
 									</td>
@@ -360,6 +383,16 @@
 											<input type="text" name="prices" class="stock-txt w100  t-number">
 										</td>  
 									</if>
+									<!-- 备用单价 -->
+									<!-- <if condition="$osbList.price1_s eq 0">
+										<td class="b_price1_p">
+											<input type="text" name="price1s" class="stock-txt w100  t-number">
+										</td>  
+									<else /> 
+										<td class="b_price1_p none">
+											<input type="text" name="price1s" class="stock-txt w100  t-number">
+										</td>  
+									</if> -->
 									<if condition="$osbList.tax_price_s eq 0">
 										<td class="td_tax_price b_tax_price_p"></td>
 									<else />
@@ -649,10 +682,11 @@
 		$('.td_num input').change(function(){ 
 			//判断是否填写金额
 			var tr = $(this).parent().parent();
+			tr.find(".td_num1 input").val(this.value); //修改备用数量信息
 			calculatePremark(tr); //计算单位备注
 			getStockNum(tr); //计算库存数
 			calculateRweight(tr); //计算毛重 
-			//计算金额
+			//计算金额 
 			calculatePrice(tr);
 		}); 
 
@@ -726,27 +760,6 @@
 		//单价比
 		$('.td_than input').change(function(){
 			var tr = $(this).parent().parent();
-			// var than = $(this).val(); //单价比
-			// var num = tr.find(".td_num input").val();
-			// var price = tr.find(".td_price input").val();
-			// if(IsNum(than)){
-			// 	if(IsNum(num) && IsNum(price)){
-			// 		var sum = tr.find(".td_sum input");
-			// 		num=parseFloat(num).toFixed(4);
-			// 		price=parseFloat(price).toFixed(4);
-			// 		than=parseFloat(than).toFixed(4);
-			// 		sum.val((num*price*than).toFixed(4));
-			// 		calculateSum();
-			// 	}
-			// }else{
-			// 	if(IsNum(num) && IsNum(price)){
-			// 		var sum = tr.find(".td_sum input");
-			// 		num=parseFloat(num).toFixed(4);
-			// 		price=parseFloat(price).toFixed(4);
-			// 		sum.val((num*price).toFixed(4));
-			// 		calculateSum();
-			// 	}
-			// }
 			//计算税后单价 
 			calculateTaxPrice(tr); 
 			//计算金额
@@ -868,6 +881,7 @@
 			alias = '', //别名
 			unit_ids = '',//默认单位
 			num1s = '',//数量
+			num2s = '',//备用数量
 			prices = '',//单位进价
 			sums = '',//总金额
 			thans = '',//单价比 
@@ -886,6 +900,7 @@
 					unit_ids+= $("input[name='unit_id']").eq(index).val()+',';
 					alias+= $("input[name='alias']").eq(index).val()+',';
 					num1s+= $("input[name='num1s']").eq(index).val()+',';
+					num2s+= $("input[name='num2s']").eq(index).val()+',';
 					prices+= $("input[name='prices']").eq(index).val()+',';
 					sums+= $("input[name='sums']").eq(index).val()+',';
 					thans+= $("input[name='thans']").eq(index).val()+','; 
@@ -903,6 +918,7 @@
 		data.alias=alias.substr(0,alias.length-1);
 		data.unit_ids=unit_ids.substr(0,unit_ids.length-1);
 		data.num1s=num1s.substr(0,num1s.length-1);
+		data.num2s=num2s.substr(0,num2s.length-1);
 		data.prices=prices.substr(0,prices.length-1);
 		data.sums=sums.substr(0,sums.length-1);
 		data.thans=thans.substr(0,thans.length-1); 

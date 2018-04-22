@@ -349,12 +349,21 @@ class OutstockController extends BaseController
             $wid = getWid();
             $list =array();
             //gids,unit_id1s,num1s,prices,unit_id2s,num2s,unit_id3s,num3s,unit_id4s,num4s
-            $list['wgids'] =$this->strToArray(I("wgids"));   $list['unit_id1s'] =$this->strToArray(I("unit_ids"));
-            $list['num1s'] =$this->strToArray(I("num1s")); $list['prices'] =$this->strToArray(I("prices"));  $list['j_prices'] =$this->strToArray(I("j_prices"));   
-            $list['thans'] =$this->strToArray(I("thans"));  $list['sums'] =$this->strToArray(I("sums"));  
-            $list['cdnums'] =$this->strToArray(I("cdnums"));$list['remarks']=$this->strToArray(I("remarks"));
-            $status = I("status"); $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids")); 
-            $list['nei_nums'] =$this->strToArray(I("nei_nums")); $list['machinings'] =$this->strToArray(I("machinings"));  $list['alias'] =$this->strToArray(I("alias"));
+            $list['wgids'] =$this->strToArray(I("wgids"));   
+            $list['unit_id1s'] =$this->strToArray(I("unit_ids"));
+            $list['num1s'] =$this->strToArray(I("num1s")); 
+            $list['num2s'] =$this->strToArray(I("num2s")); 
+            $list['prices'] =$this->strToArray(I("prices"));  
+            $list['j_prices'] =$this->strToArray(I("j_prices"));   
+            $list['thans'] =$this->strToArray(I("thans"));  
+            $list['sums'] =$this->strToArray(I("sums"));  
+            $list['cdnums'] =$this->strToArray(I("cdnums"));
+            $list['remarks']=$this->strToArray(I("remarks"));
+            $status = I("status"); 
+            $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids")); 
+            $list['nei_nums'] =$this->strToArray(I("nei_nums")); 
+            $list['machinings'] =$this->strToArray(I("machinings"));  
+            $list['alias'] =$this->strToArray(I("alias"));
             // $this->ajaxReturn($list);exit();
             if($this->checkFrom($list)){ 
                 //总表录入 
@@ -399,6 +408,7 @@ class OutstockController extends BaseController
                         //计算默认单价
                         $price1 = floatval($list['prices'][$k])/floatval($list['nei_nums'][$k]);
                         $num1 =floatval($list['num1s'][$k])*floatval($list['nei_nums'][$k]);
+                        $num2 =floatval($list['num2s'][$k])*floatval($list['nei_nums'][$k]);
                         $cd_num =floatval($list['cdnums'][$k])*floatval($list['nei_nums'][$k]);
                         $unit_id = floatval($list['unit_id1s'][$k]);
                         if($unit_id<=0){
@@ -415,6 +425,7 @@ class OutstockController extends BaseController
                             'than'    =>$list['thans'][$k], 
                             'cd_num'  =>$cd_num,
                             'num1'    =>$num1,
+                            'num2'    =>$num2,
                             'price'   =>$price1,
                             'j_price'=>$list['j_prices'][$k],
                             'unit_id1'=>$list['unit_id1s'][$k],
@@ -425,10 +436,6 @@ class OutstockController extends BaseController
                             'sales_amount' => $list['sums'][$k],
                             'machining'=>$list['machinings'][$k],
                         ); 
-                        //计算成本价格 强转换为数字 如果此处去问题 则前端有问题 
-                        //新增了成本价 可以通过成本价 换算成本金额
-                        // $cost = ($num1+$cd_num) * floatval($list['j_prices'][$k]) * floatval($list['nei_nums'][$k]);
-                        $sublist["cost"] = $this->getCost($list['wgids'][$k],$num1,$cd_num);
                         $out_id = $mm->add($sublist);
                         if($out_id<=0){
                             $arr_result['resultcode'] = 10;
@@ -465,12 +472,21 @@ class OutstockController extends BaseController
             $osid = I("osid"); 
             $list =array(); 
             $mm = M("out_stock_detail");  
-            $list['wgids'] =$this->strToArray(I("wgids"));   $list['unit_id1s'] =$this->strToArray(I("unit_ids"));
-            $list['num1s'] =$this->strToArray(I("num1s")); $list['prices'] =$this->strToArray(I("prices"));   $list['j_prices'] =$this->strToArray(I("j_prices"));   
-            $list['thans'] =$this->strToArray(I("thans"));  $list['sums'] =$this->strToArray(I("sums"));  
-            $list['cdnums'] =$this->strToArray(I("cdnums"));$list['remarks']=$this->strToArray(I("remarks"));
-            $status = I("status"); $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids")); 
-            $list['nei_nums'] =$this->strToArray(I("nei_nums")); $list['machinings'] =$this->strToArray(I("machinings"));  $list['alias'] =$this->strToArray(I("alias"));  
+            $list['wgids'] =$this->strToArray(I("wgids"));   
+            $list['unit_id1s'] =$this->strToArray(I("unit_ids"));
+            $list['num1s'] =$this->strToArray(I("num1s")); 
+            $list['num2s'] =$this->strToArray(I("num2s")); 
+            $list['prices'] =$this->strToArray(I("prices"));   
+            $list['j_prices'] =$this->strToArray(I("j_prices"));   
+            $list['thans'] =$this->strToArray(I("thans"));  
+            $list['sums'] =$this->strToArray(I("sums"));  
+            $list['cdnums'] =$this->strToArray(I("cdnums"));
+            $list['remarks']=$this->strToArray(I("remarks"));
+            $status = I("status"); 
+            $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids")); 
+            $list['nei_nums'] =$this->strToArray(I("nei_nums")); 
+            $list['machinings'] =$this->strToArray(I("machinings"));  
+            $list['alias'] =$this->strToArray(I("alias"));  
             // $this->ajaxReturn($list);exit();
             if($this->checkFrom($list)){
                 //总表录入  
@@ -517,6 +533,7 @@ class OutstockController extends BaseController
                             //计算默认单价
                             $price1 = floatval($list['prices'][$k])/floatval($list['nei_nums'][$k]);
                             $num1 =floatval($list['num1s'][$k])*floatval($list['nei_nums'][$k]);
+                            $num2 =floatval($list['num2s'][$k])*floatval($list['nei_nums'][$k]);
                             $cd_num =floatval($list['cdnums'][$k])*floatval($list['nei_nums'][$k]);
                             $unit_id = floatval($list['unit_id1s'][$k]);
                             if($unit_id<=0){
@@ -533,6 +550,7 @@ class OutstockController extends BaseController
                                 'than'    =>$list['thans'][$k], 
                                 'cd_num'    =>$cd_num,
                                 'num1'    =>$num1,
+                                'num2'    =>$num2,
                                 'price'   =>$price1,
                                 'j_price'=>$list['j_prices'][$k],
                                 'unit_id1'=>$list['unit_id1s'][$k],
@@ -543,8 +561,6 @@ class OutstockController extends BaseController
                                 'sales_amount' => $list['sums'][$k],
                                 'machining'=>$list['machinings'][$k],
                             );  
-                            //出库时设置成本金额以供 财务分析报表 查询 和其他作用
-                            $sublist["cost"] = $this->getCost($list['wgids'][$k],$num1,$cd_num);
                             $out_id = $mm->add($sublist);  
                             if($out_id<=0){
                                 $arr_result['resultcode'] = 10;

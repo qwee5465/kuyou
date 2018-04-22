@@ -187,7 +187,7 @@
 						<td>{$vo['num1']/$vo['nei_num']|customDecimal="num",###}</td> 
 					</if> 
 					<if condition="$osbList.num1_p eq 0">
-						<td>0</td> 
+						<td>{$vo['num2']/$vo['nei_num']|customDecimal="num",###}</td> 
 					</if> 
 					<if condition="$osbList.machining_p eq 0">
 						<td>{$t_list.machining|getMachining}</td> 

@@ -200,13 +200,21 @@ class PurchaseController extends BaseController
             $wid = getWid();
             $list =array();
             //gids,unit_id1s,num1s,prices,unit_id2s,num2s,unit_id3s,num3s,unit_id4s,num4s
-            $list['wgids'] =$this->strToArray(I("wgids"));   $list['unit_id1s'] =$this->strToArray(I("unit_ids"));
-            $list['num1s'] =$this->strToArray(I("num1s")); $list['prices'] =$this->strToArray(I("prices"));   
-            $list['thans'] =$this->strToArray(I("thans"));  $list['sums'] =$this->strToArray(I("sums"));  
-            $list['cdnums'] =$this->strToArray(I("cdnums"));$list['remarks']=$this->strToArray(I("remarks"));
-            $status = I("status"); $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids")); 
-            $list['nei_nums'] =$this->strToArray(I("nei_nums")); $list['machinings'] =$this->strToArray(I("machinings"));
-            $list['alias'] =$this->strToArray(I("alias")); $list['p_remarks'] =$this->strToArray(I("p_remarks"));
+            $list['wgids'] =$this->strToArray(I("wgids"));   
+            $list['unit_id1s'] =$this->strToArray(I("unit_ids"));
+            $list['num1s'] =$this->strToArray(I("num1s")); 
+            $list['num2s'] =$this->strToArray(I("num2s")); 
+            $list['prices'] =$this->strToArray(I("prices"));   
+            $list['thans'] =$this->strToArray(I("thans"));  
+            $list['sums'] =$this->strToArray(I("sums"));  
+            $list['cdnums'] =$this->strToArray(I("cdnums"));
+            $list['remarks']=$this->strToArray(I("remarks"));
+            $status = I("status"); 
+            $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids")); 
+            $list['nei_nums'] =$this->strToArray(I("nei_nums")); 
+            $list['machinings'] =$this->strToArray(I("machinings"));
+            $list['alias'] =$this->strToArray(I("alias")); 
+            $list['p_remarks'] =$this->strToArray(I("p_remarks"));
             // $this->ajaxReturn($list);exit();
             if($this->checkFrom($list)){
                 //总表录入 
@@ -244,6 +252,7 @@ class PurchaseController extends BaseController
                     foreach ($list['wgids'] as $k => $v) {
                         $price1 = floatval($list['prices'][$k])/floatval($list['nei_nums'][$k]);
                         $num1 =floatval($list['num1s'][$k])*floatval($list['nei_nums'][$k]);
+                        $num2 =floatval($list['num2s'][$k])*floatval($list['nei_nums'][$k]);
                         $cd_num =floatval($list['cdnums'][$k])*floatval($list['nei_nums'][$k]);
                         $unit_id = floatval($list['unit_id1s'][$k]);
                         if($unit_id<=0){
@@ -262,6 +271,7 @@ class PurchaseController extends BaseController
                             'than'    =>$list['thans'][$k], 
                             'cd_num'  =>$cd_num,
                             'num1'    =>$num1,
+                            'num2'    =>$num2,
                             'price'   =>$price1,
                             'unit_id1'=>$list['unit_id1s'][$k],
                             'remark'=>$list['remarks'][$k],
@@ -273,8 +283,7 @@ class PurchaseController extends BaseController
                             'p_remark'=>$list['p_remarks'][$k],
                             'p_sid'=>$p_sid
                         ); 
-                        //计算成本价格 强转换为数字 如果此处去问题 则前端有问题 
-                        $sublist["cost"] = $this->getCost($list['wgids'][$k],$list['num1s'][$k],$list['cdnums'][$k]);
+                        
                         $out_id = $mm->add($sublist);
                         if($out_id<=0){
                             $arr_result['resultcode'] = 10;
@@ -313,13 +322,21 @@ class PurchaseController extends BaseController
             $osid = I("osid"); 
             $list =array(); 
             $mm = M("purchase_detail");  
-            $list['wgids'] =$this->strToArray(I("wgids"));   $list['unit_id1s'] =$this->strToArray(I("unit_ids"));
-            $list['num1s'] =$this->strToArray(I("num1s")); $list['prices'] =$this->strToArray(I("prices"));   
-            $list['thans'] =$this->strToArray(I("thans"));  $list['sums'] =$this->strToArray(I("sums"));  
-            $list['cdnums'] =$this->strToArray(I("cdnums"));$list['remarks']=$this->strToArray(I("remarks"));
-            $status = I("status"); $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids")); 
-            $list['nei_nums'] =$this->strToArray(I("nei_nums")); $list['machinings'] =$this->strToArray(I("machinings"));
-            $list['alias'] =$this->strToArray(I("alias"));$list['p_remarks'] =$this->strToArray(I("p_remarks"));
+            $list['wgids'] =$this->strToArray(I("wgids"));
+            $list['unit_id1s'] =$this->strToArray(I("unit_ids"));
+            $list['num1s'] =$this->strToArray(I("num1s")); 
+            $list['num2s'] =$this->strToArray(I("num2s")); 
+            $list['prices'] =$this->strToArray(I("prices"));   
+            $list['thans'] =$this->strToArray(I("thans"));  
+            $list['sums'] =$this->strToArray(I("sums"));  
+            $list['cdnums'] =$this->strToArray(I("cdnums"));
+            $list['remarks']=$this->strToArray(I("remarks"));
+            $status = I("status"); 
+            $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids")); 
+            $list['nei_nums'] =$this->strToArray(I("nei_nums")); 
+            $list['machinings'] =$this->strToArray(I("machinings"));
+            $list['alias'] =$this->strToArray(I("alias"));
+            $list['p_remarks'] =$this->strToArray(I("p_remarks"));
             // $this->ajaxReturn($list);exit();
             if($this->checkFrom($list)){
                 //总表录入  
@@ -364,6 +381,7 @@ class PurchaseController extends BaseController
                            //计算默认单价
                             $price1 = floatval($list['prices'][$k])/floatval($list['nei_nums'][$k]);
                             $num1 =floatval($list['num1s'][$k])*floatval($list['nei_nums'][$k]);
+                            $num2 =floatval($list['num2s'][$k])*floatval($list['nei_nums'][$k]);
                             $cd_num =floatval($list['cdnums'][$k])*floatval($list['nei_nums'][$k]);
                             $unit_id = floatval($list['unit_id1s'][$k]);
                             if($unit_id<=0){
@@ -382,6 +400,7 @@ class PurchaseController extends BaseController
                                 'than'    =>$list['thans'][$k], 
                                 'cd_num'    =>$cd_num,
                                 'num1'    =>$num1,
+                                'num2'    =>$num2,
                                 'price'   =>$price1,
                                 'unit_id1'=>$list['unit_id1s'][$k],
                                 'remark'=>$list['remarks'][$k],
@@ -469,6 +488,7 @@ class PurchaseController extends BaseController
                                 'than'    =>$v['than'], 
                                 'cd_num'  =>$v['cd_num'],
                                 'num1'    =>$v['num1'],
+                                'num2'    =>$v['num2'],
                                 'price'   =>$v['price'],
                                 'j_price' =>$v['j_price'],
                                 'unit_id1'=>$v['unit_id1'],
@@ -1956,7 +1976,6 @@ class PurchaseController extends BaseController
             $wid = getWid();
             $create_time = strtotime(I("create_time"));
             $osid="PC".$wid."_".date('Ymd',$create_time)."0000"; 
-            // $this->ajaxReturn($osid);
             $list['unit_id1s'] =$this->strToArray(I("unit_ids"));
             $list['cdnums'] =$this->strToArray(I("cdnums"));
             $list['wgids'] =$this->strToArray(I("wgids"));
@@ -1984,23 +2003,8 @@ class PurchaseController extends BaseController
                             exit();//数据有误结束方法
                         }  
                     }
-                    //M()->startTrans(); 
                     $mResult = $m->where("osid='$osid'")->delete();
-                    // if(empty($mResult)){
-                    //     $arr_result['resultcode'] = 10;
-                    //     $arr_result['msg'] = "删除出库单时失败了!"; 
-                    // }
                     $mmResult= $mm->where("osid='$osid'")->delete();
-                    // if(empty($mmResult)){
-                    //     $arr_result['resultcode'] = 10;
-                    //     $arr_result['msg'] = "删除出库详情时失败了!"; 
-                    // }
-                    // if($arr_result['resultcode'] == 0){
-                    //     M()->commit(); //事务提交   
-                    // }else{
-                    //     M()->rollback(); //事务回滚  
-                    //     exit();//数据有误结束方法
-                    // }     
                 }
                 /*----------------单据存在情况处理结束-------------------------*/
 
