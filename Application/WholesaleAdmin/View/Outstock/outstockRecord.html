@@ -124,7 +124,7 @@
 							</span>	
 						</td>
 						<td>录入时间/编辑时间</td>
-						<!-- <td>打印状态</td>	 -->
+						<!-- <td>审核时间</td>	 -->
 						<td>审核状态</td>
 						<td>是否结算</td>
 						<td>备注</td>
@@ -154,7 +154,11 @@
 						<td class="td_total">{$vo.total|customDecimal="sum",###}</td>
 						<td>{$vo.create_time|date="Y-m-d",###}</td>
 						<td>{$vo.update_time|date="Y-m-d H:i:s",###}</td>
-						<!-- <td>{$vo.print_status|getPrintStatus}</td> -->
+						<!-- <if condition="$vo.auditing_time neq null">
+							<td>{$vo.auditing_time|date="Y-m-d H:i:s",###}</td>
+						<else />
+							<td></td>
+						</if> -->
 						<td class="td_status">{$vo.status|getStatus}</td>
 						<td>
 							<select onchange="upSettlementInfo(this.value,'{$vo.osid}')">

@@ -121,7 +121,7 @@
 					<tr class="headcolor">
 						<td colspan="3" style="text-align: right;">小计:</td>
 						<td id="td_xiaoji"></td>
-						<td colspan="5"></td>
+						<td colspan="6"></td>
 					</tr>
 					<tr class="headcolor2">
 						<td>行号</td>
@@ -129,6 +129,7 @@
 						<td>供应商</td>
 						<td>单据金额</td>
 						<td>录入时间</td>
+						<td>审核时间</td>
 						<td>审核状态</td>
 						<td>是否结算</td>
 						<td>备注</td>
@@ -150,6 +151,7 @@
 						<td>{$vo.s_name|getDefaultSname}</td>
 						<td class="td_total">{$vo.total|customDecimal="sum",###}</td>
 						<td>{$vo.create_time|date="Y-m-d H:i:s",###}</td> 
+						<td>{$vo.auditing_time|date="Y-m-d H:i:s",###}</td> 
 						<td class="td_status">{$vo.status|getStatus}</td>
 						<td>
 							<select onchange="upSettlementInfo(this.value,'{$vo.jsid}')">
