@@ -14,6 +14,15 @@ use Think\Controller;
 
 class ReportsController extends BaseController
 {
+    /**
+     * 报价单路由
+     */
+    public function quotation(){
+        
+        $this->display();
+
+    }
+
     public function daySaleDetails()
     {
         $wid = getWid();
