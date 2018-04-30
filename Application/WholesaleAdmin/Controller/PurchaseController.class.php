@@ -1130,7 +1130,7 @@ class PurchaseController extends BaseController
                 $where .=" and k.stid = $stid";
            }
            if($sid!=""){
-                $where .=" and k.sid = $sid";
+                $where .=" and j.sid = $sid";
            }
            $sql ="select i.type_name ctname,h.`name` cname,h.`code`,
                 d.`name` gname,b.p_remark,b.num1,l.unit_name uname,b.remark,a.create_time
