@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>报价单</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css?v={$version}" />
+	<style type="text/css">
+		.t-caption{text-align: center;border: 1px solid #59ab76; border-bottom: none; background: #59ab76; color: #fff;height:35px;}
+		.headcolor2 td{background-color: #404040; color: #fff;border-left: 1px solid #404040 !important; }
+		table tbody tr:nth-child(even){background-color: #e4e4e4;}
+		.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;width:100%;margin:auto;border:none;}
+		.navbar-default {background-color: #fff;}
+		.noradius{border-radius: 0px;}
+		.ml5{margin-left: 5px;}
+		.ml20{margin-left: 20px;}
+		.col-md-2{width: auto;}
+		.col-xs-6{width: auto;}
+		.fs-14,select{letter-spacing: 1.5px;}
+		.btn-success{background-color: #59ab76;border:1px solid #3b9f5f; letter-spacing: 1.5px; border-radius: 4px;}
+		.btn-success:hover{background-color:#3b9f5f; border:1px solid #3b9f5f;}
+		.btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important;}
+	    .btn_color:hover{background-color: #6db81f !important; border:1px solid #6db81f !important;}
+	    .tb-style td{border-left: 1px solid #d2d2d2; border-bottom: 1px solid #d2d2d2;} 
+	    th{height:40px;}
+	</style>
+	<style type="text/css">
+		table.dataTable thead th, table.dataTable thead td {padding: 0 0;border-bottom: none;}
+		table.dataTable tbody th, table.dataTable tbody td {padding: 0 0;}
+		.dataTables_wrapper.no-footer .dataTables_scrollBody {border-bottom: none;}
+	</style>
+</head>
+<body>
+	<div>
+		<div class="nav navbar-default">
+			<div class="container-fluid">
+				<h3>报价单</h3> 
+				<div class="form-group ml15">
+					<div class="row">
+						<div class="col-xs-12 col-md-12">
+							<span class="fl fs-14 ml10 mt8">客户类型</span>
+							<select id="ctid" class="fl ml10">
+								<option value=''>请选择</option>
+							</select>
+							<span class="fl fs-14 ml10 mt8">商品类型</span>
+							<select id="c_id" class="fl ml10">
+								<option value=''>一级全部</option>
+							</select>
+							<select id="c_id" class="fl ml10">
+								<option value=''>二级全部</option>
+							</select>
+							<select id="c_id" class="fl ml10">
+								<option value=''>三级全部</option>
+							</select>
+							<input type="button" onclick="builTable()" value="搜 索" class="btn btn-success ml20" /> 
+						</div> 
+					</div> 
+				</div>    
+			</div>
+		</div>
+		<div class="contianer-fluid"> 
+			<table class="tb-style" id="example">
+				<thead>
+					<tr class="t-caption">
+						<td colspan="6" id="t-caption">XXX报价单</td>
+					</tr>
+					<tr class="headcolor2">
+						<td>序号</td>
+						<td>商品类型</td>
+						<td>商品名称</td>
+						<td>默认单位</td>
+						<td>最新进价</td>
+						<td>最新售价</td>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js'></script>
+    <script src="__PUBLIC__/js/jquery.dataTables.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.dataTables.order.js"></script> 
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script> 
+
+    <script src="__PUBLIC__/js/base.js"></script>
+	<script src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script src="__PUBLIC__/layer/layer.js"></script>
+	<script type="text/javascript">  
+		//页面加载时
+	    var kk = 0;
+	    function builTable(){
+	    	var data = [];
+	    	if(kk==0){ 
+	    		kk++;
+	    	}else{
+	    		data = JSON.parse(JSON.stringify(dataJosn));
+	    		for(var i=0;i<data.length;i++){
+
+	    		}
+	    	}
+	    	var h = $(window).height() - 200; 
+	    	var i=0;
+	    	//object可以如下初始化表格
+		    var table = $('#example').DataTable( {
+		        data: data,	
+		        dom: 'Bfrtip',
+		        buttons: [
+		            'copyHtml5',
+		            'excelHtml5',
+		            'csvHtml5',
+		            'pdfHtml5'
+		        ],
+		        destroy: true, //销毁已经存在的Datatables实例并替换新的选项
+		        info:false,
+		        searching:false,
+		        ordering:false, //禁止排序
+		        paging:false,
+		        scrollY: h,
+		        //使用对象数组，一定要配置columns，告诉 DataTables 每列对应的属性
+		        //data 这里是固定不变的，name，position，salary，office 为你数据里对应的属性
+		        columns: [
+		        	{data: null,render:function ( data, type, full, meta ) {
+		        		i++;
+		        		return i;
+		        	},className:"text-center"},
+		            { data: 'gtname',className:"text-center"}, 
+		            { data: 'gname',className:"text-center"},
+		            { data: 'uname',className:"text-center"},
+		            { data: 'jnum',render:function ( data, type, full, meta ) { 
+		        		return data;
+		        	},className:"text-center"},
+		            { data: 'onum',className:"text-center"}
+		        ]
+		    });
+		    new $.fn.dataTable.Buttons( table, {
+			    buttons: [
+			        'copy', 'excel', 'pdf'
+			    ]
+			} );
+	    } 
+	    var dataJosn=[{
+	    	gtname:"商品类型",
+	    	gname:"大白菜",
+	    	uname:"斤",
+	    	jnum:5.6,
+	    	onum:6,
+	    }]
+	    for(var ii=0;ii<5;ii++){
+	    	dataJosn = dataJosn.concat(dataJosn);
+	    }
+	    builTable([]);
+	</script>
+</body>
+</html>

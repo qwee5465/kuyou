@@ -240,6 +240,12 @@
 								<else />
 									<td class="w-80 b_num_p none">{$t_list.num}</td>
 								</if>
+								<!-- 备用数量 -->
+								<if condition="$osbList.num1_s eq 0">
+									<td class="w-80 b_num1_p">{$t_list.num1}</td>
+								<else />
+									<td class="w-80 b_num1_p none">{$t_list.num1}</td>
+								</if>
 								<if condition="$osbList.than_s eq 0">
 									<td class="w-80 b_than_p">{$t_list.than}</td>
 								<else />
@@ -358,6 +364,15 @@
 									<else />
 										<td class="td_num b_num_p none">
 											<input type="text" name="num1s" class="stock-txt w100  t-number">
+										</td>
+									</if>
+									<if condition="$osbList.num1_s eq 0">
+										<td class="td_num1 b_num1_p">
+											<input type="text" name="num2s" class="stock-txt w100  t-number">
+										</td>
+									<else />
+										<td class="td_num1 b_num1_p none">
+											<input type="text" name="num2s" class="stock-txt w100  t-number">
 										</td>
 									</if>
 									<if condition="$osbList.than_s eq 0">
@@ -706,6 +721,7 @@
 		$('.td_num input').change(function(){ 
 			//判断是否填写金额
 			var tr = $(this).parent().parent();
+			tr.find(".td_num1 input").val(this.value); //修改备用数量信息
 			getStockNum(tr);
 			calculateRweight(tr); 
 			//计算金额
@@ -889,6 +905,7 @@
 			alias = '', //别名
 			unit_ids = '',//默认单位
 			num1s = '',//数量
+			num2s = '',//数量
 			prices = '',//单位进价
 			j_prices= '',
 			sums = '',//总金额
@@ -907,6 +924,7 @@
 					unit_ids+= $("input[name='unit_id']").eq(index).val()+',';
 					alias+= $("input[name='alias']").eq(index).val()+',';
 					num1s+= $("input[name='num1s']").eq(index).val()+',';
+					num2s+= $("input[name='num2s']").eq(index).val()+',';
 					prices+= $("input[name='prices']").eq(index).val()+',';
 					j_prices+= $("input[name='j_prices']").eq(index).parent().find('span').html()+',';
 					sums+= $("input[name='sums']").eq(index).val()+',';
@@ -924,6 +942,7 @@
 		data.alias=alias.substr(0,alias.length-1);
 		data.unit_ids=unit_ids.substr(0,unit_ids.length-1);
 		data.num1s=num1s.substr(0,num1s.length-1);
+		data.num2s=num2s.substr(0,num2s.length-1);
 		data.prices=prices.substr(0,prices.length-1);
 		data.j_prices=j_prices.substr(0,j_prices.length-1);
 		data.sums=sums.substr(0,sums.length-1);

@@ -228,6 +228,12 @@
 					<else />
 					<td class="w-80 b_num_p none">{$t_list.num}</td>
 				</if>
+				<!-- 备用数量 -->
+				<if condition="$osbList.num1_s eq 0">
+					<td class="w-80 b_num1_p">{$t_list.num1}</td>
+					<else />
+					<td class="w-80 b_num1_p none">{$t_list.num1}</td>
+				</if>
 				<if condition="$osbList.than_s eq 0">
 					<td class="w-80 b_than_p">{$t_list.than}</td>
 					<else />
@@ -390,6 +396,15 @@
 							<input type="text" value="{$vo['num1']/$vo['nei_num']|keep4}" name="num1s" class="stock-txt w100 t-number">
 						</td>
 					</if>
+					<if condition="$osbList.num1_s eq 0">
+						<td class="td_num1 b_num1_p">
+							<input type="text" value="{$vo['num2']/$vo['nei_num']|keep4}" name="num2s" class="stock-txt w100 t-number">
+						</td>
+					<else/>
+						<td class="td_num1 b_num1_p none">
+							<input type="text" value="{$vo['num2']/$vo['nei_num']|keep4}" name="num2s" class="stock-txt w100 t-number">
+						</td>
+					</if>
 					<if condition="$osbList.than_s eq 0">
 							<td class="td_than b_than_p">
 								<input type="text" value="{$vo.than|keep4}" name="thans" class="stock-txt w100 t-number">
@@ -538,6 +553,16 @@
 					<else />
 						<td class="td_num b_num_p none">
 							<input type="text" name="num1s" class="stock-txt w100 t-number">
+						</td>
+					</if>
+					<!-- 备用数量 -->
+					<if condition="$osbList.num1_s eq 0">
+						<td class="td_num1 b_num1_p">
+							<input type="text" name="num2s" class="stock-txt w100 t-number">
+						</td>
+					<else />
+						<td class="td_num1 b_num1_p none">
+							<input type="text" name="num2s" class="stock-txt w100 t-number">
 						</td>
 					</if>
 					<if condition="$osbList.than_s eq 0">
@@ -873,23 +898,7 @@
 	$('.td_num input').change(function(){
 		//判断是否填写金额
 		var tr = $(this).parent().parent();
-		// var price = tr.find(".td_price input").val();
-		// if(IsNum(price)){
-		// 	var num = $(this).val();
-		// 	if(IsNum(num)){
-		// 		var sum = tr.find(".td_sum input");
-		// 		num=parseFloat(num).toFixed(4);
-		// 		price=parseFloat(price).toFixed(4);
-		// 		var than = $(".td_than input").val();
-		// 		if(IsNum(than)){
-		// 			than=parseFloat(than).toFixed(4);
-		// 			sum.val((num*price*than).toFixed(4));
-		// 		}else{
-		// 			sum.val((num*price).toFixed(4));
-		// 		}
-		// 		calculateSum();
-		// 	}
-		// }
+		tr.find(".td_num1 input").val(this.value); //修改备用数量信息
 		getStockNum(tr);
 		calculateRweight(tr);
 		//计算金额
@@ -931,23 +940,6 @@
 	$('.td_price input').change(function(){
 		//判断是否填写数量
 		var tr = $(this).parent().parent();
-		// var num = tr.find(".td_num input").val();
-		// if(IsNum(num)){
-		// 	var price =$(this).val();
-		// 	var than = $(".td_than input").val();
-		// 	if(IsNum(price)){
-		// 		var sum = tr.find(".td_sum input");
-		// 		num=parseFloat(num).toFixed(4);
-		// 		price=parseFloat(price).toFixed(4);
-		// 		if(IsNum(than)){
-		// 			than=parseFloat(than).toFixed(4);
-		// 			sum.val((num*price*than).toFixed(4));
-		// 		}else{
-		// 			sum.val((num*price).toFixed(4));
-		// 		}
-		// 		calculateSum();
-		// 	}
-		// }
 		calculateTaxPrice(tr);
 		//计算金额
 		calculatePrice(tr);
@@ -966,27 +958,6 @@
 	//单价比
 	$('.td_than input').change(function(){
 		var tr = $(this).parent().parent(); 
-		// var than = $(this).val(); //单价比
-		// var num = tr.find(".td_num input").val();
-		// var price = tr.find(".td_price input").val();
-		// if(IsNum(than)){
-		// 	if(IsNum(num) && IsNum(price)){
-		// 		var sum = tr.find(".td_sum input");
-		// 		num=parseFloat(num).toFixed(4);
-		// 		price=parseFloat(price).toFixed(4);
-		// 		than=parseFloat(than).toFixed(4);
-		// 		sum.val((num*price*than).toFixed(4));
-		// 		calculateSum();
-		// 	}
-		// }else{
-		// 	if(IsNum(num) && IsNum(price)){
-		// 		var sum = tr.find(".td_sum input");
-		// 		num=parseFloat(num).toFixed(4);
-		// 		price=parseFloat(price).toFixed(4);
-		// 		sum.val((num*price).toFixed(4));
-		// 		calculateSum();
-		// 	}
-		// }
 		//计算税后单价
 		calculateTaxPrice(tr);
 		//计算金额
@@ -1111,6 +1082,7 @@
 			alias = '',//默认单位
 			unit_ids = '',//默认单位
 			num1s = '',//数量
+			num2s = '',//备用数量
 			prices = '',//单位价格
 			j_prices = '', //进价
 			sums = '',//总金额
@@ -1129,6 +1101,7 @@
 					alias+= $("input[name='alias']").eq(index).val()+',';
 					unit_ids+= $("input[name='unit_id']").eq(index).val()+',';
 					num1s+= $("input[name='num1s']").eq(index).val()+',';
+					num2s+= $("input[name='num2s']").eq(index).val()+',';
 					prices+= $("input[name='prices']").eq(index).val()+',';
 					j_prices+= $("input[name='j_prices']").eq(index).parent().find('span').html()+',';
 					sums+= $("input[name='sums']").eq(index).val()+',';
@@ -1146,6 +1119,7 @@
 		data.alias=alias.substr(0,alias.length-1);
 		data.unit_ids=unit_ids.substr(0,unit_ids.length-1);
 		data.num1s=num1s.substr(0,num1s.length-1);
+		data.num2s=num2s.substr(0,num2s.length-1);
 		data.prices=prices.substr(0,prices.length-1);
 		data.j_prices=j_prices.substr(0,j_prices.length-1);
 		data.sums=sums.substr(0,sums.length-1);
