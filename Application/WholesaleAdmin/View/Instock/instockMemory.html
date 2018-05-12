@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css?v={$version}" />
+    <style>
+    .btn-list.active {
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 20;
+        width: 100%;
+        background: #F8F8F8;
+        box-shadow: 0 1px 5px #c5c5c5;
+        padding: 15px 15px 0;
+    }
+
+    .tr-active {
+        background-color: #c5edb1;
+    }
+
+    .a-xin {
+        font-size: 18px;
+    }
+
+    .noradius {
+        border-radius: 0px;
+    }
+
+    .wordspace {
+        letter-spacing: 1.5px;
+    }
+
+    .tb-style td {
+        border-bottom: 1px solid #d2d2d2;
+        border-left: 1px solid #d2d2d2;
+    }
+
+    .btn-style {
+        background-color: #59ab76;
+        border-color: #3b9f5f;
+    }
+
+    .btn-style:hover {
+        linear-gradient(#3b9f5f, #3b9f5f);
+        background-image: linear-gradient(rgb(59, 159, 95), rgb(59, 159, 95));
+        background-position-x: initial;
+        background-position-y: initial;
+        background-size: initial;
+        background-repeat-x: initial;
+        background-repeat-y: initial;
+        background-attachment: initial;
+        background-origin: initial;
+        background-clip: initial;
+        background-color: initial;
+    }
+
+    .btn2 {
+        width: 60px !important;
+    }
+
+    .headcolor td {
+        background-color: #59ab76;
+        border: 1px solid #59ab76;
+        color: #fff;
+    }
+
+    .headcolor2 td {
+        background-color: #404040;
+        border: 1px solid #404040;
+        color: #fff;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #e4e4e4;
+    }
+
+    .tb-style {
+        background-color: #f5f5f5;
+        letter-spacing: 1.5px;
+    }
+
+    .navbar-default {
+        background-color: #fff;
+    }
+
+    .noradius {
+        border-radius: 0px;
+    }
+
+    .mt8 {
+        letter-spacing: 1.5px;
+    }
+
+    .ml5 {
+        margin-left: 5px;
+    }
+
+    .ml20 {
+        margin-left: 20px;
+    }
+
+    select {
+        letter-spacing: 1.5px;
+    }
+
+    .layui-layer-title {
+        background: #59ab76 !important;
+        color: #fff !important;
+        letter-spacing: 1.5px !important;
+    }
+
+    .layui-layer-dialog .layui-layer-content {
+        letter-spacing: 1.5px;
+    }
+
+    .layui-layer-btn .layui-layer-btn0 {
+        background: #59ab76 !important;
+        border: 1px solid #3b9f5f !important;
+    }
+
+    .layui-layer-btn .layui-layer-btn0:hover {
+        background: #3b9f5f !important;
+        border: 1px solid #3b9f5f !important;
+    }
+
+    .layui-layer-btn a {
+        height: auto !important;
+        line-height: inherit !important;
+        border-radius: 4px !important;
+        padding: 6px 12px !important;
+    }
+
+    [v-cloak] {
+        display: none;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="nav navbar-default">
+            <div class="container-fluid">
+                <h3>记忆价查询</h3>
+                <div class="form-group ml15">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <span class="fl mt8">审核时间 从</span>
+                            <input type="text" onclick="laydate({format:'YYYY-MM-DD',istime:true})" id="date1" placeholder="可不填" class="form-control w-115 fl ml5 noradius">
+                            <span class="fl ml5 mt8">到</span>
+                            <input type="text" onclick="laydate({format:'YYYY-MM-DD',istime:true})" id="date2" placeholder="可不填" class="form-control w-120 fl ml5 noradius">
+                            <span class="fl ml10 mt8">供应商</span>
+                            <span class="fl ml5">
+                            	<select v-model="sid">
+	                                <option v-for="(item,index) in slist" :value="item.sid">{{item.name}}</option>
+	                            </select>
+                            </span>
+                            <input type="text" placeholder="商品名称" id="gname" v-model="gname" class="form-control w-120 fl ml15">
+                            <input type="button" @click="search()" value="搜 索" class="btn btn-style ml20" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid mt20">
+            <div class="col-xs-12">
+                <table class="tb-style t-table" id="table1">
+                    <thead>
+                        <tr class="headcolor">
+                            <td colspan="8">商品记忆价查询 备注：记忆价以最新审核时间为准</td>
+                        </tr>
+                        <tr class="headcolor2">
+                            <td>行号</td>
+                            <td>供应商名称</td>
+                            <td>商品名称</td>
+                            <td>单位</td>
+                            <td>价格</td>
+                            <td>入库单据号</td>
+                            <td>审核时间</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(vo,index) in list">
+                            <td>{{index+1}}</td>
+                            <td>{{vo.sname}}</td>
+                            <td>{{vo.gname}}</td>
+                            <td>{{vo.unit_name}}</td>
+                            <td>{{parseFloat(vo.price)}}</td>
+                            <td>
+                                <a href="javascript:;" @click="openDetail(vo.jsid)" class="t_open">{{vo.jsid}}</a>
+                            </td>
+                            <td>{{vo.time}}</td>
+                        </tr>
+                        <tr v-if="notData">
+                            <td colspan="7">无数据信息了</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src='__PUBLIC__/js/jquery.min.js'></script>
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/vue.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/scrolltop.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript">
+    var slist = {$slist};
+    laydate({
+        elem: '#date1',
+        format: 'YYYY-MM-DD', // 分隔符可以任意定义
+        istime: true,
+        change: function(value, date, endDate) {
+            app.stime = value;
+        },
+    });
+    laydate({
+        elem: '#date2',
+        format: 'YYYY-MM-DD', // 分隔符可以任意定义
+        istime: true,
+        change: function(value, date, endDate) {
+            app.etime = value;
+        },
+    });
+    var app = new Vue({
+        el: "#app",
+        data: {
+            stime: '',
+            etime: '',
+            sid: 0,
+            gname: '', //商品名称
+            slist: slist,
+            list: [],
+            isRequest: true, //请求状态
+            notData: false,
+            limit: 20,
+            offset: 0,
+        },
+        created: function() {
+            var that = this;
+            var tempArr = [{ sid: 0, name: "请选择" }];
+            that.slist = tempArr.concat(that.slist);
+
+        },
+        watch: { //监听数据发生变化触发函数
+
+        },
+        methods: {
+
+            /**
+             * 初始化数据 
+             */
+            init: function() {
+                var that = this;
+                that.list = [];
+                that.isRequest = true;
+            },
+
+            /**
+             * 打开入库详情
+             */
+            openDetail: function(id) {
+                var that = this;
+                var url = "{:U('Instock/inStockDetail')}";
+                url += "?jsid=" + id;
+                layer.open({
+                    type: 2,
+                    closeBtn: 1,
+                    area: ['90%', '90%'],
+                    title: false,
+                    content: url
+                });
+            },
+
+            /**
+             * 初始化数据
+             */
+            init: function() {
+                var that = this;
+                that.list = [];
+                that.offset = 0;
+                that.isRequest = true;
+                that.notData = false;
+            },
+
+            search: function() {
+                var that = this;
+                that.init();
+                if (that.gname == "") {
+                    layer.msg("请输入商品名称", { icon: 2 });
+                    return;
+                }
+                that.getJoinStockPriceByText(true);
+            },
+
+            /**
+             * 获取记忆价列表
+             */
+            getJoinStockPriceByText: function(loading) {
+                var that = this;
+                var layerIndex = null;
+                if (loading) {
+                    var layerIndex = layer.msg('加载中，请稍后', {
+                        icon: 16,
+                        shade: 0.01
+                    });
+                }
+                if (that.isRequest && !that.notData) {
+                    that.isRequest = false;
+                    $.ajax({
+                        url: "{:U('Instock/getJoinStockPriceByText')}",
+                        type: "GET",
+                        data: {
+                            stime: $("#date1").val(),
+                            etime: $("#date2").val(),
+                            limit: that.limit,
+                            offset: that.offset,
+                            sid: that.sid,
+                            gname: that.gname
+                        },
+                        dataType: "json",
+                        success: function(res) {
+                            if (res.resultcode == 0) {
+                                var list = res.result;
+                                if (list.length > 0) {
+                                    for (var i = 0; i < list.length; i++) {
+                                        list[i].gname = that.gname;
+                                        list[i].uname = list[i].unit_id1;
+                                        list[i].time = (new Date(list[i].auditing_time * 1000)).format('yyyy-MM-dd h:m:s');
+                                    }
+                                    that.list = that.list.concat(list);
+                                    that.offset = that.list.length;
+                                } else {
+                                    that.notData = true;
+                                }
+                            } else if (res.resultcode == 1) { 
+                                that.notData = true;
+                            }
+                        },
+                        error: function(res) {
+                            console.log(res);
+                        },
+                        complete: function() {
+                        	layer.close(layerIndex);
+                            that.isRequest = true;
+                        }
+                    })
+                }
+            }
+        },
+        updated: function() {
+
+        }
+    });
+
+    // 滚动条事件
+    window.onscroll = function() {
+        var t = document.documentElement.scrollTop || document.body.scrollTop;
+        
+    }
+
+    //滚动条到页面底部加载更多案例   
+	$(window).scroll(function(){  
+		var scrollTop = $(this).scrollTop();    //滚动条距离顶部的高度  
+		var scrollHeight = $(document).height();   //当前页面的总高度  
+		var clientHeight = $(this).height();    //当前可视的页面高度  
+		if(scrollTop + clientHeight >= scrollHeight - 200){   //距离顶部+当前高度 >=文档总高度 即代表滑动到底部   
+		    app.getJoinStockPriceByText(false);
+		}  
+	}); 
+    </script>
+</body>
+
+</html>

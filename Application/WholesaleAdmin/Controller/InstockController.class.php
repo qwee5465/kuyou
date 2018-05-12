@@ -13,7 +13,61 @@ namespace WholesaleAdmin\Controller;
 use Think\Controller;
 
 class InstockController extends BaseController
-{
+{   
+    /**
+     * 记忆价查询
+     */
+    public function instockMemory(){
+        $m = M("supplier");
+        $slist = $m->field("sid,name")->select();
+        $this->assign("slist",json_encode($slist));
+        $this->display();
+    }
+
+    /**
+     * 获取入库记忆价
+     */
+    public function getJoinStockPriceByText(){
+        if(IS_GET){
+            $stime = I("stime");
+            $etime = I("etime");
+            $sid = I("sid");
+            $gname = I("gname");
+            $offset = I("offset");
+            $limit = I("limit");
+            $sql = "select b.wgid from db_goods a inner join db_wholesale_goods b on a.gid = b.gid where a.`name` = '$gname' limit 0,1";
+            $wgids = M()->query($sql);
+            $wgid = 0;
+            if(count($wgids)>0){
+                $wgid = $wgids[0]['wgid'];
+                $sql ="select a.jsid,b.wgid,c.`name` sname,d.unit_name,b.price,a.auditing_time  from db_join_stock a
+                    inner join db_join_stock_detail b on a.jsid = b.jsid 
+                    inner join db_supplier c on a.sid = c.sid 
+                    inner join db_unit d on b.unit_id1 = d.unit_id ";
+                $where = " where a.`status` = 1 and b.wgid = $wgid ";
+                if($stime){
+                    $where .=" and a.auditing_time >=" . strtotime($stime);
+                }
+                if($etime){
+                    $where .=" and a.auditing_time <=" . strtotime($etime);
+                }
+                if($sid){
+                    $where .=" and c.sid = $sid ";
+                }
+                $order = " order by c.sid,a.auditing_time desc ";
+                $limit = " limit $offset,$limit";
+                $sql = $sql.$where.$group.$order.$limit;
+                $list = M()->query($sql);
+                $this->ajaxReturn(buildData(0,$list));
+            }else{
+                $this->ajaxReturn(buildData(1));
+            }
+            
+        }else{
+            $this->ajaxReturn(buildData(7));
+        }
+    }
+
     public function instockForm()
     {     
         $wid = getWid();

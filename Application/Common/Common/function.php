@@ -19,6 +19,23 @@ function ReturnJSON($resultCode, $list = array()) {
 }
 
 /**
+ * 处理json数据用以返回
+ * @param type $resultCode
+ * @param type $list
+ * @return type
+ */
+function buildData($resultCode, $list = array()) {
+    $JSON['resultcode'] = $resultCode;
+    if ($resultCode == 0) {
+        $JSON['msg'] = ResultCode($resultCode);
+    } else {
+        $JSON['msg'] = ResultCode($resultCode);
+    } 
+    $JSON['result'] = $list;
+    return $JSON;
+}
+
+/**
  * 根据代码生成不同返回值
  * @param type $resultCode
  * @return string
