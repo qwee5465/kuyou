@@ -25,7 +25,7 @@ class UserListController extends BaseController{
                 $where .=" and a.phone like '%$search%'";
             }
         }
-        $sql="select a.*,b.rid,c.name from db_wholesale_user a left join db_user_role b on a.wid=b.uid left join db_role c on b.rid=c.rid where a.fid = $wid"; 
+        $sql="select a.*,b.rid,c.name from db_wholesale_user a left join db_user_role b on a.wid=b.uid left join db_role c on b.rid=c.rid where b.u_type='批发商端' and  a.fid = $wid"; 
         $sql .=$where;
         $list = M("")->query($sql); 
         $this->assign("list",$list);
