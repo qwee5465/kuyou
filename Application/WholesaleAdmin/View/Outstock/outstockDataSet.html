@@ -408,6 +408,30 @@
 			var check_s = $("#check_s").is(':checked') ? 0 : 1;
 			var check_p = $("#check_p").is(':checked') ? 0 : 1; 
 			
+			var delivery = $("#delivery").val();
+			if(!delivery){ 
+				layer.tips('请填写显示名称', '#delivery', {tips: 2});
+				return false; 
+			}
+			var delivery_s = $("#delivery_s").is(':checked') ? 0 : 1;
+			var delivery_p = $("#delivery_p").is(':checked') ? 0 : 1; 
+			
+			var checkp = $("#checkp").val();
+			if(!checkp){ 
+				layer.tips('请填写显示名称', '#checkp', {tips: 2});
+				return false; 
+			}
+			var checkp_s = $("#checkp_s").is(':checked') ? 0 : 1;
+			var checkp_p = $("#checkp_p").is(':checked') ? 0 : 1; 
+			
+			var take_over = $("#take_over").val();
+			if(!take_over){ 
+				layer.tips('请填写显示名称', '#take_over', {tips: 2});
+				return false; 
+			}
+			var take_over_s = $("#take_over_s").is(':checked') ? 0 : 1;
+			var take_over_p = $("#take_over_p").is(':checked') ? 0 : 1; 
+			
 			var data ={
 				"osid":osid,
 	            "osid_s":osid_s,
@@ -447,7 +471,16 @@
 	            "audit_p":audit_p,
 	            "check":check,
 	            "check_s":check_s,
-	            "check_p":check_p
+	            "check_p":check_p,
+	            "delivery":delivery,
+	            "delivery_s":delivery_s,
+	            "delivery_p":delivery_p,
+	            "checkp":checkp,
+	            "checkp_s":checkp_s,
+	            "checkp_p":checkp_p,
+	            "take_over":take_over,
+	            "take_over_s":take_over_s,
+	            "take_over_p":take_over_p,
 			}; 
 			var index = layer.load(2,{time:1000});
 			$.post("{:U('Outstock/dataColumnSubmitT')}", data,function(data){

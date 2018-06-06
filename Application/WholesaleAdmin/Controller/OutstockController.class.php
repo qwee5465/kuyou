@@ -747,6 +747,7 @@ class OutstockController extends BaseController
         $this->assign("osid",$osid);
         $this->assign("list",$list);
         $this->assign("nlist",$nlist);
+        $this->assign("nlist_length",count($nlist));
        
         $this->assign("status",$list[0]['status']); 
         $unit_name = getUnitName();
@@ -1094,10 +1095,20 @@ class OutstockController extends BaseController
                 "check"=>I("check"),
                 "check_s"=>I("check_s"),
                 "check_p"=>I("check_p"),
+                "delivery"=>I("delivery"),
+                "delivery_s"=>I("delivery_s"),
+                "delivery_p"=>I("delivery_p"),
+                "checkp"=>I("checkp"),
+                "checkp_s"=>I("checkp_s"),
+                "checkp_p"=>I("checkp_p"),
+                "take_over"=>I("take_over"),
+                "take_over_s"=>I("take_over_s"),
+                "take_over_p"=>I("take_over_p"),
             );
+
             if($list){ //修改
                 $oscd_id = $list['oscd_id'];
-                $result = $m->where("oscd_id = $oscd_id")->save($data);
+                $result = $m->where("oscd_id = $oscd_id")->save($data); 
             }else{
                 $result = $m->add($data);
             }

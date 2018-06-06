@@ -22,11 +22,14 @@
 		.tb-style td{border: 1px solid #000;height: 25px;}
 		.print-h3{border: none; padding-bottom: 0; margin-top: 0px;text-align: center;font-weight:bold;} 
 		.page-next{page-break-after:always;}
+		.fun-warp{display: flex; display: -webkit-flex;}
+		.fun-item{width: 250px;margin-top:10px;}
+		.fun-item-line{display: inline-block;width: 100px;border-bottom:1px solid #000;box-sizing: border-box;}
 	</style>
 </head>
 <body style="background: #fff;">
 <div id="body_content" style="padding:0 5px;"> 
-	<foreach name="nlist" item="v">
+	<foreach name="nlist" item="v" key="k">
 		 <ul class="cf bill-ul"> 
 			<if condition="$osList.osname_p eq 0">
 				<li class="bill-ul-li w100 t_osname_p">
@@ -226,6 +229,19 @@
 			</foreach>
 			</tbody>
 		</table>
+		<if condition="$k+1 == $nlist_length">
+			<ul class="fun-warp">
+				<if condition="$osList.delivery_p eq 0">
+					<li class="fun-item">{$titles.delivery}：<span class="fun-item-line"></span></li>
+				</if>
+				<if condition="$osList.checkp_p eq 0">
+					<li class="fun-item">{$titles.checkp}：<span class="fun-item-line"></span></li>
+				</if>
+				<if condition="$osList.take_over_p eq 0">
+					<li class="fun-item">{$titles.take_over}：<span class="fun-item-line"></span></li>
+				</if>
+			</ul>
+		</if>
 		<div class="page-next"></div>
 	</foreach>
 </div>
@@ -244,7 +260,7 @@
 		}else{
 			$("#td_heje").html("合计：{$heje}"); 
 		} 
-		printme();
+		// printme();
 	}); 
 
 	function printme(){ 

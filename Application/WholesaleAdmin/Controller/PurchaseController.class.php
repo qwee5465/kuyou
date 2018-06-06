@@ -660,6 +660,7 @@ class PurchaseController extends BaseController
         $this->assign("list",$list);
         // dump($list);
         $this->assign("nlist",$nlist);
+        $this->assign("nlist_length",count($nlist));
        
         $this->assign("status",$list[0]['status']); 
         $unit_name = getUnitName();
@@ -671,7 +672,6 @@ class PurchaseController extends BaseController
             $osList = getOutStockColumnT();
         }
         $titles = $this->getOutStockTitleInfoT($wid);
-       // dump($osList);
         $this->assign("titles",$titles);
         $this->assign("osList",$osList);
         /*----------------------获取数据量设置信息---------------------*/

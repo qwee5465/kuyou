@@ -13,9 +13,9 @@ return array(
 	"JOIN_STOCK_COLUMN_NAME" =>"gname=商品名称,bname=品牌,uname=默认单位,num=数量,price=单位进价,totalb=总金额",
 	"JOIN_STOCK_COLUMN_NEED" =>"gname=0,bname=1,uname=0,num=0,price=0,totalb=0",
 	//出库头部
-    "OUT_STOCK_COLUMN_SHOW_T" =>"osid_s=0,osname_s=0,cname_s=0,cphone_s=0,caddress_s=0,company_s=1,company_address_s=1,company_phone_s=1,ctime_s=0,remark_s=0,total_s=0,audit_s=0,check_s=0",
-	"OUT_STOCK_COLUMN_NAME_T" =>"osid=单据号,osname=单据名称,cname=客户,cphone=客户电话,caddress=客户地址,company=公司,company_address=公司地址,company_phone=公司电话,ctime=日期,remark=备注,total=单据金额(元),audit=审核人,check=验收人",
-	"OUT_STOCK_COLUMN_NEED_T" =>"osid=0,osname=1,cname=0,cphone=1,caddress=1,company=1,company_address=1,company_phone=1,ctime=1,remark=1,total=0,audit=1,check=1",
+    "OUT_STOCK_COLUMN_SHOW_T" =>"osid_s=0,osname_s=0,cname_s=0,cphone_s=0,caddress_s=0,company_s=1,company_address_s=1,company_phone_s=1,ctime_s=0,remark_s=0,total_s=0,audit_s=0,check_s=0,delivery_s=1,checkp_s=1,take_over_s=1",
+	"OUT_STOCK_COLUMN_NAME_T" =>"osid=单据号,osname=单据名称,cname=客户,cphone=客户电话,caddress=客户地址,company=公司,company_address=公司地址,company_phone=公司电话,ctime=日期,remark=备注,total=单据金额(元),audit=审核人,check=验收人,delivery=送货人,checkp=复核人,take_over=收货人（接管人）",
+	"OUT_STOCK_COLUMN_NEED_T" =>"osid=0,osname=1,cname=0,cphone=1,caddress=1,company=1,company_address=1,company_phone=1,ctime=1,remark=1,total=0,audit=1,check=1,delivery=0,checkp=0,take_over=0",
 	//出库内容
 	"OUT_STOCK_COLUMN_SHOW" =>"gname_s=0,alias_s=0,bname_s=0,uname_s=0,num_s=0,num1_s=1,than_s=0,price_s=0,tax_price_s=0,price1_s=1,j_price=1,cd_num=0,stock_s=0,remarkb_s=0,totalb_s=0,rweight_s=1,machining_s=1,check_num_s=1,totalb1_s=1",
 	"OUT_STOCK_COLUMN_NAME" =>"gname=商品名称,alias=别名,bname=品牌,uname=默认单位,num=数量,num1=备用数量,than=单价比,price=售价(元),tax_price=税后单价,price1=备用单价,j_price=进价,cd_num=货损数量,stock=库存剩余,remarkb=备注,totalb=总金额,rweight=毛重,machining=是否加工,check_num=验收数量,totalb1=备用总金额",
