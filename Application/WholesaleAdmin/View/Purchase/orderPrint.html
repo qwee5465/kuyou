@@ -110,6 +110,9 @@
 				<if condition="$osbList.num_p eq 0">
 					<td style="min-width:50px;" class=" b_num_p">{$t_list.num}</td>
 				</if>   
+				<if condition="$osbList.p_remark_p eq 0">
+					<td style="min-width:50px;" class=" b_p_remark_p">{$t_list.p_remark}</td>
+				</if>   
 				<if condition="$osbList.machining_p eq 0">
 					<td style="min-width:70px;" class=" b_machining_p">{$t_list.machining}</td>
 				</if> 
@@ -157,6 +160,9 @@
 					</if>
 					<if condition="$osbList.num_p eq 0">
 						<td>{$vo['num1']/$vo['nei_num']|customDecimal="num",###}</td> 
+					</if> 
+					<if condition="$osbList.p_remark_p eq 0">
+						<td>{$vo['p_remark']}</td> 
 					</if> 
 					<if condition="$osbList.machining_p eq 0">
 						<td>{$vo.machining|getMachining}</td> 

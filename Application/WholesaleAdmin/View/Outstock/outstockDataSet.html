@@ -541,6 +541,20 @@
 				return false; 
 			}
 
+			var p_remark = $("#p_remark").val();
+			if(!p_remark){ 
+				layer.tips('请填写显示名称', '#p_remark', {tips: 2});
+				return false; 
+			}
+			var p_remark_s = $("#p_remark_s").is(':checked') ? 0 : 1;
+			var p_remark_p = $("#p_remark_p").is(':checked') ? 0 : 1;
+
+			var than = $("#than").val();
+			if(!than){ 
+				layer.tips('请填写显示名称', '#than', {tips: 2});
+				return false; 
+			}
+
 			var num1 = $("#num1").val();
 			if(!num1){ 
 				layer.tips('请填写显示名称', '#num1', {tips: 2});
@@ -663,6 +677,9 @@
 	            "num":num,
 	            "num_s":num_s,
 	            "num_p":num_p, 
+	            "p_remark":p_remark,
+	            "p_remark_s":p_remark_s,
+	            "p_remark_p":p_remark_p, 
 	            "num1":num1,
 	            "num1_s":num1_s,
 	            "num1_p":num1_p, 
