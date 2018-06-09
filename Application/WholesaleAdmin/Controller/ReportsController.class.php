@@ -23,6 +23,120 @@ class ReportsController extends BaseController
 
     }
 
+    /**
+     * 库存商品流水
+     */
+    public function flowingWater(){
+        $wid = getWid(); 
+        $ctlist = M("client_type")->where("wid=$wid")->select();
+        $this->assign("ctlist",$ctlist); 
+        $this->display();
+    }
+
+    /**
+     * 获取库存商品流水接口
+     */
+    public function getFlowingWaterInfo(){
+        if(IS_GET){
+            $gname = I("gname");
+            if($gname){
+                $stime = I("stime");
+                $etime = I("etime");
+                if(strtotime($etime)-strtotime($stime)>31*24*60*60){
+                    $this->ajaxReturn(ReturnJSON(1009));
+                    return;
+                }
+                $ctid = I("ctid");
+                $c_id = I("c_id");
+                $wid = getWid();
+                // 查出wgid
+                $sql ="select b.wgid,b.unit_id,c.unit_name,d.num1 stock_num from db_goods a 
+                        left join db_wholesale_goods b on a.gid = b.gid 
+                        left join db_unit c on b.unit_id = c.unit_id
+                        left join db_stock d on d.wgid = b.wgid
+                        where a.name='$gname' and b.wid = $wid limit 0,1";
+                $data = M()->query($sql); 
+                $wgid = $data[0]['wgid'];
+                $uname = $data[0]['unit_name'];
+                if($wgid){
+                    $odata = $this->getOutGoodsInfo($wgid,$stime,$etime,$ctid,$c_id);
+                    $jdata = $this->getJoinGoodsInfo($wgid,$stime,$etime);
+                    $result = array(
+                        'wgid'=> $wgid,
+                        'gname' => $gname,
+                        'uname' => $uname,
+                        'odata'=>$odata,
+                        'jdata'=>$jdata
+                    );
+                    if($data){
+                        $this->ajaxReturn(ReturnJSON(0,$result));
+                    }else{
+                        $this->ajaxReturn(ReturnJSON(1));
+                    } 
+                }else{
+                    $this->ajaxReturn(ReturnJSON(1));
+                }
+            }
+            
+        }else{
+            $this->ajaxReturn(ReturnJSON(7));
+        }
+    }
+
+    /**
+     * 获取出库商品流水
+     */
+    public function getOutGoodsInfo($wgid,$stime,$etime,$ctid,$c_id){
+        $sql = "select c.`name` cname,sum(b.num1) onum,b.price oprice,FROM_UNIXTIME(a.auditing_time,'%Y-%m-%d') date
+            from db_out_stock a 
+            inner join db_out_stock_detail b on a.osid = b.osid
+            inner join db_client c on a.cid = c.c_id
+            inner join db_client_type d on c.ctid = d.ctid";
+        $where =" where a.`status` = 1 and b.wgid = $wgid ";
+        if($stime){
+            $where .=" and a.auditing_time >=" . strtotime($stime);
+        }
+        if($etime){
+            $end_time = strtotime($etime) + (24*60*60);
+            $where .=" and a.auditing_time <" . $end_time;
+        }
+        if($c_id){
+            $where .=" and c.c_id = $c_id ";
+        }
+        if($ctid){
+            $where .=" and d.ctid = $ctid ";
+        }
+        $group =" group by date,cname,oprice";
+        $order =" order by date desc";
+        $sql = $sql.$where.$group.$order;
+        $odata = M()->query($sql);
+        return $odata;
+    }
+
+    /**
+     * 获取入库商品流水
+     */
+    public function getJoinGoodsInfo($wgid,$stime,$etime){
+        $sql = "select c.`name` sname,sum(b.num1) jnum,b.price jprice,FROM_UNIXTIME(a.auditing_time,'%Y-%m-%d') date
+            from db_join_stock a 
+            inner join db_join_stock_detail b on a.jsid = b.jsid
+            inner join db_supplier c on c.sid = a.sid  ";
+        $where =" where a.`status` = 1 and b.wgid = $wgid ";
+        if($stime){
+            $where .=" and a.auditing_time >=" . strtotime($stime);
+        }
+        if($etime){
+            $end_time = strtotime($etime) + (24*60*60);
+            $where .=" and a.auditing_time <" . $end_time;
+        }
+        $group =" group by date,sname,jprice";
+        $order =" order by date desc";
+        $sql = $sql.$where.$group.$order;
+        $jdata = M()->query($sql);
+        return $jdata;
+    }
+
+
     public function daySaleDetails()
     {
         $wid = getWid();

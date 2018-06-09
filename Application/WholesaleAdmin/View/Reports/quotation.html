@@ -95,16 +95,7 @@
 	<script type="text/javascript">  
 		//页面加载时
 	    var kk = 0;
-	    function builTable(){
-	    	var data = [];
-	    	if(kk==0){ 
-	    		kk++;
-	    	}else{
-	    		data = JSON.parse(JSON.stringify(dataJosn));
-	    		for(var i=0;i<data.length;i++){
-
-	    		}
-	    	}
+	    function builTable(data){
 	    	var h = $(window).height() - 200; 
 	    	var i=0;
 	    	//object可以如下初始化表格
@@ -120,7 +111,7 @@
 		        destroy: true, //销毁已经存在的Datatables实例并替换新的选项
 		        info:false,
 		        searching:false,
-		        ordering:false, //禁止排序
+		        ordering:true, //禁止排序
 		        paging:false,
 		        scrollY: h,
 		        //使用对象数组，一定要配置columns，告诉 DataTables 每列对应的属性
@@ -155,7 +146,7 @@
 	    for(var ii=0;ii<5;ii++){
 	    	dataJosn = dataJosn.concat(dataJosn);
 	    }
-	    builTable([]);
+	    builTable(dataJosn);
 	</script>
 </body>
 </html>

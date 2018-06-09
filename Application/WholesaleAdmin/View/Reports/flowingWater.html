@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>库存商品流水</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css?v={$version}" />
+	<style type="text/css">
+		.t-caption{text-align: center;border: 1px solid #59ab76; border-bottom: none; background: #59ab76; color: #fff;height:35px;}
+		.headcolor2 td,.headcolor2 th{background-color: #404040; border:1px solid #404040;color: #fff;border-left: 1px solid #404040 !important; border-bottom: 1px solid #404040 !important;}
+		table tbody tr:nth-child(even){background-color: #e4e4e4;}
+		.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;border:none;}
+		.navbar-default {background-color: #fff;}
+		.noradius{border-radius: 0px;}
+		.ml5{margin-left: 5px;}
+		.ml20{margin-left: 20px;}
+		.col-md-2{width: auto;}
+		.col-xs-6{width: auto;}
+		.fs-14,select{letter-spacing: 1.5px;}
+		.btn-success{background-color: #59ab76;border:1px solid #3b9f5f; letter-spacing: 1.5px; border-radius: 4px;}
+		.btn-success:hover{background-color:#3b9f5f; border:1px solid #3b9f5f;}
+		.btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important;}
+	    .btn_color:hover{background-color: #6db81f !important; border:1px solid #6db81f !important;}
+	    .tb-style td{border-left: 1px solid #d2d2d2; border-bottom: 1px solid #d2d2d2;} 
+		select{max-width: 150px;}
+		
+	</style>
+
+	<style type="text/css">
+		table.dataTable thead th, table.dataTable thead td {padding: 0 0;border-bottom: none;}
+		table.dataTable tbody th, table.dataTable tbody td {padding: 0 0;}
+		.dataTables_wrapper.no-footer .dataTables_scrollBody {border-bottom: none;}
+		.dataTables_filter{display:none;}
+	</style>
+</head>
+<body>
+	<div id="body_content">
+		<div class="nav navbar-default">
+			<div class="container-fluid">
+				<h3>库存商品流水</h3>
+				<div>
+					<form action="__SELF__" method="post">
+						<div class="form-group ml15">
+							<div class="row">
+								<div class="col-xs-12 col-md-12">
+									<span class="fl fs-14 mt8">商品名称</span>
+									<input type="text" id="gname" class="form-control w-115 fl ml5">
+									<span class="fl fs-14 mt8">&nbsp;&nbsp;&nbsp;日期&nbsp;&nbsp;&nbsp;从</span>
+									<input type="text" id="stime" value="" class="form-control w-115 fl ml5 noradius">
+									<span class="fl fs-14 ml5 mt8">到</span>
+									<input type="text" id="etime" value="" class="form-control w-120 fl ml5 noradius">
+									<span class="fl fs-14 ml10 mt8">客户类型</span>
+									<select id="ctid" class="fl ml10" onchange="getCilentInfo(this.value)">
+										<option value=''>全部类型</option>
+										<volist name='ctlist' id='vo'>
+											<option value='{$vo.ctid}'>{$vo.type_name}</option> 
+										</volist>
+									</select>
+									<span class="fl fs-14 ml10 mt8">客户名称</span>
+									<select id="c_id" class="fl ml10">
+										<option value=''>全部名称</option>
+									</select>
+									<input type="button" onclick="getFlowingWaterInfo()" value="搜 索" class="btn btn-success ml20" /> 
+								</div> 
+							</div> 
+						</div>  
+					</form>
+				</div>	
+			</div>
+		</div>
+		<div class="contianer-fluid"> 
+			<table class="tb-style" id="example">
+				<thead>
+					<tr class="headcolor2">
+						<td>序号</td>
+						<td>日期</td>
+						<td>默认单位</td>
+						<td>客户</td>
+						<td>出库数</td>
+						<td>售价</td>
+						<td>销售金额</td>
+						<td>供应商</td>
+						<td>入库数</td>
+						<td>进价</td>
+						<td>成本金额</td>
+					</tr>
+				</thead>
+				<tbody id="tbody">
+					<tr>
+						<td colspan="11">请先搜索,暂无数据!</td> 
+					</tr>
+				</tbody> 
+			</table> 
+			<table class="tb-style none" id="tfoot" >
+				<tr>
+					<td colspan="2">入库总数:</td>
+					<td colspan="2">入库成本:</td>
+					<td colspan="2">出库总数:</td>
+					<td colspan="2">出库成本:</td>
+					<td colspan="3">盈利:</td>
+				</tr>
+			</tfoot>
+		</div>
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js'></script>
+    <script src="__PUBLIC__/js/jquery.dataTables.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.dataTables.order.js"></script> 
+    <script src="__PUBLIC__/js/base.js"></script>
+	<script src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+
+	<script type="text/javascript">  
+		var isRequest = true; //请求状态
+		//根据客户类型获取客户信息
+		function getCilentInfo(ctid){ 
+			if(ctid){
+				$.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">全部类型</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['c_id']+'">'+result[i]['cname']+'</option>';
+		                }
+		                $("#c_id").html(str);   
+		            }else{ 
+				    	$("#c_id").html('<option value="">全部类型</option>');  
+		            }
+		        }, "json");
+	        }else{
+	        	$("#c_id").html('<option value="">全部类型</option>');  
+	        }
+		} 
+
+		laydate({
+            elem: '#stime'
+        });
+        laydate({
+            elem: '#etime'
+        });
+
+        //获取库存商品流水
+        function getFlowingWaterInfo(){
+        	if(isRequest){
+        		var gname = $("#gname").val();
+        		stime = $("#stime").val(),
+        		etime = $("#etime").val(),
+        		ctid = $("#ctid").val(),
+        		c_id = $("#c_id").val();
+	        	if(!gname){
+	        		layer.tips('请选商品名称', '#gname', {tips: 1});
+					return;
+	        	}
+	        	if(!stime){
+	        		layer.tips('请选择开始日期', '#stime', {tips: 1});
+					return;
+	        	}
+	        	if(!etime){
+	        		layer.tips('请选择结束日期', '#etime', {tips: 1});
+					return;
+	        	}
+	        	var index = layer.msg('正在生成数据,请稍后!', {
+				    icon: 16,
+				    shade: 0.01,
+				    time:10000
+				}); 
+	        	data ={"gname":gname,"stime":stime,"etime":etime,"ctid":ctid,"c_id":c_id};
+	        	var url ="{:U('Reports/getFlowingWaterInfo')}";
+        		isRequest = false;
+	        	$.ajax({
+		            type: "GET",
+		            url: url,
+		            data: data,
+		            dataType: "json",
+		            success: function(res){ 
+		            	console.log(res);
+		            	var data = buildData(res.result.jdata,res.result.odata,res.result.uname);
+		            	builTable(data);
+		            	buildTotal(res.result.jdata,res.result.odata);
+
+		            },
+		            error:function(msg){
+		            	layer.msg("请求失败");
+		            },complete: function () {
+	                    layer.close(index);
+	                    isRequest = true;
+	                }
+		        });
+        	}
+        }	
+
+        /**
+         * 生成小计数据
+         */
+        function buildTotal(jdata,odata){
+        	//出库总数 
+        	var onums=0,ototals=0,jnums=0,jtotals=0,profit=0;
+        	for(var i=0;i<jdata.length;i++){
+        		jnums += parseFloat(jdata[i].jnum);
+        		jtotals += parseFloat(jdata[i].jnum)*parseFloat(jdata[i].jprice);
+        	}
+        	for(var i=0;i<odata.length;i++){
+        		onums += parseFloat(odata[i].onum);
+        		ototals += parseFloat(odata[i].onum)*parseFloat(odata[i].oprice);
+        	}
+        	profit = (ototals - jtotals).myToFixed(2);
+        	ototals=ototals.myToFixed(2);
+        	jtotals=jtotals.myToFixed(2);
+        	jnums=jnums.myToFixed(2);
+        	onums=onums.myToFixed(2);
+        	$("#tfoot tr td").each(function(index,obj){
+        		switch(index){
+        			case 0:
+        				obj.innerHTML = "出库总数:" +onums;
+        				break;
+        			case 1:
+        				obj.innerHTML = "销售总额:" +ototals;
+        				break;
+        			case 2:
+        				obj.innerHTML = "入库总数:" +jnums;
+        				break;
+        			case 3:
+        				obj.innerHTML = "入库成本:" +jtotals;
+        				break;
+        			case 4:
+        				obj.innerHTML = "盈利:" +profit;
+        				break;
+        		}
+        	})
+        	$("#tfoot").removeClass('none');
+        }
+
+        /**
+         * 生成数据
+         */
+        function buildData(jdata,odata,uname){
+        	var arr = [];
+        	for(var i=0;i<odata.length;i++){
+        		var obj = {
+			    	date:odata[i].date,
+			    	uname:uname,
+			    	sname:'',
+			    	jnum:'',
+			    	jprice:'',
+			    	jtotal:'',
+			    	cname:odata[i].cname,
+			    	onum:odata[i].onum.myToFixed(2),
+			    	oprice:odata[i].oprice.myToFixed(2),
+			    	ototal:(odata[i].onum*odata[i].oprice).myToFixed(2),
+			    	active:false
+			    }
+        		arr.push(obj);
+        	}
+        	for(var i=0;i<jdata.length;i++){
+        		var active = false; //数据是否插入
+        		for(var j=0;j<arr.length;j++){
+    				if(jdata[i].date==arr[j].date && !arr[j].active){
+						arr[j].active = true;
+						arr[j].jnum = jdata[i].jnum.myToFixed(2);
+						arr[j].jprice = jdata[i].jprice.myToFixed(2);
+						arr[j].jtotal = (jdata[i].jnum*jdata[i].jprice).myToFixed(2);
+						arr[j].sname = jdata[i].sname;
+						active = true;
+						break;
+    				}
+        		}
+        		if(!active){
+        			var obj = {
+				    	date:jdata[i].date,
+				    	uname:uname,
+				    	sname:jdata[i].sname,
+				    	jnum:jdata[i].jnum.myToFixed(2),
+				    	jprice:jdata[i].jprice.myToFixed(2),
+				    	jtotal:(jdata[i].jnum*jdata[i].jprice).myToFixed(2),
+				    	cname:"",
+				    	onum:'',
+				    	oprice:'',
+				    	ototal:'',
+				    	active:true
+				    }
+				    arr.push(obj);
+        		}
+        	}
+        	arr.sort(function(x, y) {
+                if (x.date < y.date) {
+                    return 1;
+                } else if (x.date > y.date) {
+                    return -1;
+                } else {
+                	if(y.active){
+                		return 1;
+                	}else{
+                		return 0;
+                	}
+                }
+            })
+        	return arr;
+        }
+
+        //页面加载时 
+	    function builTable(data){
+	    	var h = $(window).height() - 200; 
+	    	var i=0;
+	    	//object可以如下初始化表格
+		    var table = $('#example').DataTable( {
+		        data: data,	
+		        destroy: true, //销毁已经存在的Datatables实例并替换新的选项
+		        info:false,
+		        searching:true,
+		        // ordering:true, //禁止排序
+		        paging:false,
+		        scrollY: h,
+		        language: {
+			        "sProcessing": "处理中...",
+			        "sLengthMenu": "显示 _MENU_ 项结果",
+			        "sZeroRecords": "没有匹配结果",
+			        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+			        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+			        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+			        "sInfoPostFix": "",
+			        "sSearch": "搜索:",
+			        "sUrl": "",
+			        "sEmptyTable": "表中数据为空",
+			        "sLoadingRecords": "载入中...",
+			        "sInfoThousands": ",",
+			        "oPaginate": {
+			            "sFirst": "首页",
+			            "sPrevious": "上页",
+			            "sNext": "下页",
+			            "sLast": "末页"
+			        },
+			        "oAria": {
+			            "sSortAscending": ": 以升序排列此列",
+			            "sSortDescending": ": 以降序排列此列"
+			        }
+			    },
+		        //使用对象数组，一定要配置columns，告诉 DataTables 每列对应的属性
+		        //data 这里是固定不变的，name，position，salary，office 为你数据里对应的属性
+		        columns: [
+		        	{data: null,render:function ( data, type, full, meta ) {
+		        		i++;
+		        		return i;
+		        	},className:"text-center"}, 
+		            { data: 'date',className:"text-center"},
+		            { data: 'uname',className:"text-center"},
+		            { data: 'cname',className:"text-center"},
+		            { data: 'onum',className:"text-center"},
+		            { data: 'oprice',className:"text-center"},
+		            { data: 'ototal',className:"text-center"},
+		            { data: 'sname',className:"text-center"},
+		            { data: 'jnum',render:function ( data, type, full, meta ) { 
+		        		return data;
+		        	},className:"text-center"},
+		            { data: 'jprice',className:"text-center"},
+		            { data: 'jtotal',className:"text-center"}
+		        ],
+		        columnDefs:[{
+				　　　　'targets' : [0,2,4,5,6,8,9,10],    //除第3，第7两列外，都默认不排序
+				　　　　'orderable' : false
+				}]
+		    });
+	    } 
+	    
+
+
+	</script>
+</body>
+</html>

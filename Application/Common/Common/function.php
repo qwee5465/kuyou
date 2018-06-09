@@ -63,6 +63,7 @@ function ResultCode($resultCode) {
         case 507 : return '签名验证失败';
         case 508 : return '登录已过期';
         case 509 : return '已在别的地方登录';
+        case 1009 : return '请求参数错误，前端自定义提示';
         default :return '请求失败';
     }
 }

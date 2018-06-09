@@ -41,35 +41,65 @@ var saveState = 0; //0.不需要保持1.需要保持
 })();
 
 
-// Number.prototype.toFixed = function(s) {
-//     var that = this,changenum,index;
-//     // 负数
-//     if(this < 0){
-//         that = -that;
-//     }
-//     changenum = (parseInt(that * Math.pow(10, s) + 0.5) / Math.pow(10, s)).toString();
-//     index = changenum.indexOf(".");
-//     if (index < 0 && s > 0) {
-//         changenum = changenum + ".";
-//         for (var i = 0; i < s; i++) {
-//             changenum = changenum + "0";
-//         }
+Number.prototype.myToFixed = function(s) {
+    var that = this,changenum,index;
+    // 负数
+    if(this < 0){
+        that = -that;
+    }
+    changenum = (parseInt(that * Math.pow(10, s) + 0.5) / Math.pow(10, s)).toString();
+    index = changenum.indexOf(".");
+    if (index < 0 && s > 0) {
+        changenum = changenum + ".";
+        for (var i = 0; i < s; i++) {
+            changenum = changenum + "0";
+        }
 
 
-//     } else {
-//         index = changenum.length - index;
-//         for (var i = 0; i < (s - index) + 1; i++) {
-//             changenum = changenum + "0";
-//         }
+    } else {
+        index = changenum.length - index;
+        for (var i = 0; i < (s - index) + 1; i++) {
+            changenum = changenum + "0";
+        }
 
 
-//     }
-//     if(this<0){
-//         return -changenum; 
-//     }else{
-//         return changenum; 
-//     }     
-// }
+    }
+    if(this<0){
+        return -changenum; 
+    }else{
+        return changenum; 
+    }     
+}
+
+String.prototype.myToFixed = function(s) {
+    var that = this,changenum,index;
+    // 负数
+    if(this < 0){
+        that = -that;
+    }
+    changenum = (parseInt(that * Math.pow(10, s) + 0.5) / Math.pow(10, s)).toString();
+    index = changenum.indexOf(".");
+    if (index < 0 && s > 0) {
+        changenum = changenum + ".";
+        for (var i = 0; i < s; i++) {
+            changenum = changenum + "0";
+        }
+
+
+    } else {
+        index = changenum.length - index;
+        for (var i = 0; i < (s - index) + 1; i++) {
+            changenum = changenum + "0";
+        }
+
+
+    }
+    if(this<0){
+        return -changenum; 
+    }else{
+        return changenum; 
+    }     
+}
 
 //判断是否为数字
 function IsNum(s) {

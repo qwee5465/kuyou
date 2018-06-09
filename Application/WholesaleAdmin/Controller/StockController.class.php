@@ -50,12 +50,13 @@ class StockController extends BaseController
         if(IS_GET){
             $gname = I("gname");
             if($gname){
+                $wid = getWid();
                 // 查出wgid
                 $sql ="select b.wgid,b.unit_id,c.unit_name,d.num1 stock_num from db_goods a 
                         left join db_wholesale_goods b on a.gid = b.gid 
                         left join db_unit c on b.unit_id = c.unit_id
                         left join db_stock d on d.wgid = b.wgid
-                        where a.name='$gname' and b.wid = 14 limit 0,1";
+                        where a.name='$gname' and b.wid = $wid limit 0,1";
                 $data = M()->query($sql); 
                 $wgid = $data[0]['wgid'];
                 $unit_name = $data[0]['unit_name'];
