@@ -172,10 +172,10 @@
 		            			zjtotal += parseFloat(list[i].jtotal);
 		            			zototal += parseFloat(list[i].ototal);
 		            			list[i].maori = (parseFloat(list[i].ototal) - parseFloat(list[i].jtotal)).myToFixed(2);
-		            			if(parseFloat(list[i].ototal)){
+		            			if(parseFloat(list[i].ototal)>0){
 		            				list[i].maoriLv = ((1 - parseFloat(list[i].jtotal)/ parseFloat(list[i].ototal))*100).myToFixed(2)+"%";
 		            			}else{
-		            				list[i].maori = "0%";
+		            				list[i].maoriLv = "0%";
 		            			}
 		            			
 		            		}
