@@ -18,6 +18,19 @@ function ReturnJSON($resultCode, $list = array()) {
     return $JSON;
 }
 
+function ReturnJSON1($resultCode,$msg,$list = array()){
+    $JSON['resultcode'] = $resultCode;
+    if ($resultCode == 0) {
+        $JSON['msg'] = $msg?$msg:ResultCode($resultCode);
+    } else {
+        $JSON['msg'] = $msg?$msg:ResultCode($resultCode);
+    } 
+    if (!empty($list)) {
+        $JSON['result'] = $list;
+    }
+    return $JSON;
+}
+
 /**
  * 处理json数据用以返回
  * @param type $resultCode

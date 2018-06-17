@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>毛利分析</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css?v={$version}" />
+	<style type="text/css">
+		.t-caption{text-align: center;border: 1px solid #59ab76; border-bottom: none; background: #59ab76; color: #fff;height:35px;}
+		.headcolor2 td,.headcolor2 th{background-color: #404040; border:1px solid #404040;color: #fff;border-left: 1px solid #404040 !important; border-bottom: 1px solid #404040 !important;}
+		table tbody tr:nth-child(even){background-color: #e4e4e4;}
+		.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;border:none;}
+		.navbar-default {background-color: #fff;}
+		.noradius{border-radius: 0px;}
+		.ml5{margin-left: 5px;}
+		.ml20{margin-left: 20px;}
+		.col-md-2{width: auto;}
+		.col-xs-6{width: auto;}
+		.fs-14,select{letter-spacing: 1.5px;}
+		.btn-success{background-color: #59ab76;border:1px solid #3b9f5f; letter-spacing: 1.5px; border-radius: 4px;}
+		.btn-success:hover{background-color:#3b9f5f; border:1px solid #3b9f5f;}
+		.btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important;}
+	    .btn_color:hover{background-color: #6db81f !important; border:1px solid #6db81f !important;}
+	    .tb-style td{border-left: 1px solid #d2d2d2; border-bottom: 1px solid #d2d2d2;} 
+		select{max-width: 150px;}
+		
+	</style>
+
+	<style type="text/css">
+		table.dataTable thead th, table.dataTable thead td {padding: 0 0;border-bottom: none;}
+		table.dataTable tbody th, table.dataTable tbody td {padding: 0 0;}
+		.dataTables_wrapper.no-footer .dataTables_scrollBody {border-bottom: none;}
+		.dataTables_filter{display:none;}
+	</style>
+</head>
+<body>
+	<div id="body_content">
+		<div class="nav navbar-default">
+			<div class="container-fluid">
+				<h3>毛利分析</h3>
+				<div>
+					<form action="__SELF__" method="post">
+						<div class="form-group ml15">
+							<div class="row">
+								<div class="col-xs-12 col-md-12">
+									<span class="fl fs-14 ml10 mt8">客户类型</span>
+									<select id="ctid" class="fl ml10" onchange="getCilentInfo(this.value)">
+										<option value=''>全部类型</option>
+										<volist name='ctlist' id='vo'>
+											<option value='{$vo.ctid}'>{$vo.type_name}</option> 
+										</volist>
+									</select>
+									<span class="fl fs-14 ml10 mt8">客户名称</span>
+									<select id="c_id" class="fl ml10">
+										<option value=''>全部名称</option>
+									</select>
+									<span class="fl fs-14 mt8">&nbsp;&nbsp;&nbsp;日期&nbsp;&nbsp;&nbsp;从</span>
+									<input type="text" id="stime" value="" class="form-control w-115 fl ml5 noradius">
+									<span class="fl fs-14 ml5 mt8">到</span>
+									<input type="text" id="etime" value="" class="form-control w-120 fl ml5 noradius">
+									<input type="button" onclick="getMaoriAnalysisInfo()" value="搜 索" class="btn btn-success ml20" /> 
+								</div> 
+							</div> 
+						</div>  
+					</form>
+				</div>	
+			</div>
+		</div>
+		<div class="contianer-fluid"> 
+			<table class="tb-style" id="example">
+				<thead>
+					<tr class="headcolor2">
+						<td>序号</td>
+						<td>客户类型</td>
+						<td>客户</td>
+						<td>成本金额</td>
+						<td>销售金额</td>
+						<td>毛利</td>
+						<td>毛利率</td>
+					</tr>
+				</thead>
+				<tbody id="tbody">
+					<tr>
+						<td colspan="7">请先搜索,暂无数据!</td> 
+					</tr>
+				</tbody> 
+			</table> 
+			<table class="tb-style none" id="tfoot" >
+				<tr> 
+					<td colspan="2">总成本金额:</td>
+					<td colspan="2">总销售金额:</td>
+					<td colspan="2">毛利:</td>
+					<td>毛利率:</td>
+				</tr>
+			</tfoot>
+		</div>
+	</div>
+	<script src='__PUBLIC__/js/jquery.min.js'></script>
+    <script src="__PUBLIC__/js/jquery.dataTables.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.dataTables.order.js"></script> 
+    <script src="__PUBLIC__/js/base.js"></script>
+	<script src="__PUBLIC__/js/common.js?v={$version}"></script>
+	<script src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/date/laydate.dev.js"></script>
+
+	<script type="text/javascript">  
+		var isRequest = true; //请求状态
+		//根据客户类型获取客户信息
+		function getCilentInfo(ctid){ 
+			if(ctid){
+				$.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">全部类型</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['c_id']+'">'+result[i]['cname']+'</option>';
+		                }
+		                $("#c_id").html(str);   
+		            }else{ 
+				    	$("#c_id").html('<option value="">全部类型</option>');  
+		            }
+		        }, "json");
+	        }else{
+	        	$("#c_id").html('<option value="">全部类型</option>');  
+	        }
+		} 
+
+		laydate({
+            elem: '#stime'
+        });
+        laydate({
+            elem: '#etime'
+        });
+
+        //获取库存商品流水
+        function getMaoriAnalysisInfo(){
+        	if(isRequest){
+        		var ctid = $("#ctid").val(),
+        		c_id = $("#c_id").val();
+        		stime = $("#stime").val(),
+        		etime = $("#etime").val(); 
+	        	if(!stime){
+	        		layer.tips('请选择开始日期', '#stime', {tips: 1});
+					return;
+	        	}
+	        	if(!etime){
+	        		layer.tips('请选择结束日期', '#etime', {tips: 1});
+					return;
+	        	}
+	        	var index = layer.msg('正在生成数据,请稍后!', {
+				    icon: 16,
+				    shade: 0.01,
+				    time:10000
+				}); 
+	        	data ={"stime":stime,"etime":etime,"ctid":ctid,"c_id":c_id};
+	        	var url ="{:U('Reports/getMaoriAnalysis')}";
+        		isRequest = false;
+	        	$.ajax({
+		            type: "GET",
+		            url: url,
+		            data: data,
+		            dataType: "json",
+		            success: function(res){ 
+		            	console.log(res);
+		            	if(res.resultcode==0){
+		            		var list = res.result,zjtotal=0,zototal=0; 
+		            		for(var i=0;i<list.length;i++){  
+		            			list[i].jtotal = list[i].jtotal.myToFixed(2);
+		            			list[i].ototal = list[i].ototal.myToFixed(2);
+		            			zjtotal += parseFloat(list[i].jtotal);
+		            			zototal += parseFloat(list[i].ototal);
+		            			list[i].maori = (parseFloat(list[i].ototal) - parseFloat(list[i].jtotal)).myToFixed(2);
+		            			list[i].maoriLv = ((1 - parseFloat(list[i].jtotal)/ parseFloat(list[i].ototal))*100).myToFixed(2)+"%";
+		            		}
+		            		builTable(list);
+		            		buildTotal(zjtotal,zototal);
+		            	}else{
+		            		if(res.resultcode==1009){
+		            			layer.msg("时间段不能超过31天",{icon:2});
+		            		}else{
+		            			layer.msg(res.msg,{icon:2});
+		            		}
+		            	}
+		            },
+		            error:function(msg){
+		            	layer.msg("请求失败");
+		            },
+		            complete: function () {
+	                    layer.close(index);
+	                    isRequest = true;
+	                }
+		        });
+        	}
+        }	
+
+        /**
+         * 生成小计数据
+         */
+        function buildTotal(zjtotal,zototal){ 
+        	$("#tfoot tr td").each(function(index,obj){
+        		switch(index){
+        			case 0:
+        				obj.innerHTML = "总成本金额:" +zjtotal.myToFixed(2);
+        				break;
+        			case 1:
+        				obj.innerHTML = "总销售金额:" +zototal.myToFixed(2);
+        				break;
+        			case 2:
+        				obj.innerHTML = "毛利:" +(parseFloat(zototal)-parseFloat(zjtotal)).myToFixed(2);
+        				break;
+        			case 3:
+        				obj.innerHTML = "毛利率:" +((1-parseFloat(zjtotal)/parseFloat(zototal))*100).myToFixed(2)+"%";
+        				break;
+        		}
+        	})
+        	$("#tfoot").removeClass('none');
+        }
+
+        //页面加载时 
+	    function builTable(data){
+	    	var h = $(window).height() - 200; 
+	    	var i=0;
+	    	//object可以如下初始化表格
+		    var table = $('#example').DataTable( {
+		        data: data,	
+		        destroy: true, //销毁已经存在的Datatables实例并替换新的选项
+		        info:false,
+		        searching:true,
+		        // ordering:true, //禁止排序
+		        paging:false,
+		        scrollY: h,
+		        language: {
+			        "sProcessing": "处理中...",
+			        "sLengthMenu": "显示 _MENU_ 项结果",
+			        "sZeroRecords": "没有匹配结果",
+			        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+			        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+			        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+			        "sInfoPostFix": "",
+			        "sSearch": "搜索:",
+			        "sUrl": "",
+			        "sEmptyTable": "表中数据为空",
+			        "sLoadingRecords": "载入中...",
+			        "sInfoThousands": ",",
+			        "oPaginate": {
+			            "sFirst": "首页",
+			            "sPrevious": "上页",
+			            "sNext": "下页",
+			            "sLast": "末页"
+			        },
+			        "oAria": {
+			            "sSortAscending": ": 以升序排列此列",
+			            "sSortDescending": ": 以降序排列此列"
+			        }
+			    },
+		        //使用对象数组，一定要配置columns，告诉 DataTables 每列对应的属性
+		        //data 这里是固定不变的，name，position，salary，office 为你数据里对应的属性
+		        columns: [
+		        	{data: null,render:function ( data, type, full, meta ) {
+		        		i++;
+		        		return i;
+		        	},className:"text-center"}, 
+		            { data: 'tname',className:"text-center"},
+		            { data: 'cname',className:"text-center"},
+		            { data: 'jtotal',className:"text-center"},
+		            { data: 'ototal',className:"text-center"},
+		            { data: 'maori',className:"text-center"},
+		            { data: 'maoriLv',className:"text-center"}
+		        ],
+		        columnDefs:[{
+				　　　　'targets' : [3,4,5,6],   
+				　　　　'orderable' : false
+				}]
+		    });
+	    } 
+	    
+
+
+	</script>
+</body>
+</html>

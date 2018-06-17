@@ -475,7 +475,7 @@ class PurchaseController extends BaseController
                 );  
                 $result = $m->add($data);
                 if($result){  
-                    $sql ="select a.*,b.price*a.nei_num j_price from db_purchase_detail a left join db_stock b on a.wgid = b.wgid where a.osid ='$purchase_id' order by a.out_id asc";
+                    $sql ="select a.*,b.price*a.nei_num j_price from db_purchase_detail a inner join db_stock b on a.wgid = b.wgid where a.osid ='$purchase_id' order by a.out_id asc";
                     $dlist = M()->query($sql);
                     // $dlist = M("purchase_detail")->where("osid = '$purchase_id'")->select();
                     if($dlist){

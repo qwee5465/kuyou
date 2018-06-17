@@ -24,6 +24,59 @@ class ReportsController extends BaseController
     }
 
     /**
+     * 毛利分析
+     */
+    public function maoriAnalysis(){
+        $wid = getWid(); 
+        $ctlist = M("client_type")->where("wid=$wid")->select();
+        $this->assign("ctlist",$ctlist); 
+        $this->display();
+    }
+
+    /**
+     * 获取毛利分析数据
+     */
+    public function getMaoriAnalysis(){
+        if(IS_GET){
+            $ctid = I("ctid");
+            // if(!$ctid){
+            //     $this->ajaxReturn(ReturnJSON1(8,'请选择客户类型'));
+            // }
+            $c_id = I("c_id");
+            $stime = I("stime");
+            $etime = I("etime");
+            if(strtotime($etime)-strtotime($stime)>30*24*60*60){
+                $this->ajaxReturn(ReturnJSON(1009));
+                return;
+            }
+            $sql = "select d.type_name tname,c.`name` cname,sum(a.num1*a.price) ototal,sum(((a.j_price/a.nei_num)*a.num1)) jtotal from db_out_stock_detail a 
+                inner join db_out_stock b on a.osid = b.osid
+                inner join db_client c on c.c_id = b.cid
+                inner join db_client_type d on d.ctid = c.ctid";
+            $where =" where b.`status` = 1 "; 
+            if($stime){
+                $where .=" and b.auditing_time >=" . strtotime($stime);
+            }
+            if($etime){
+                $end_time = strtotime($etime) + (24*60*60);
+                $where .=" and b.auditing_time <" . $end_time;
+            }
+            if($c_id){
+                $where .=" and c.c_id = $c_id ";
+            }
+            if($ctid){
+                $where .=" and d.ctid = $ctid ";
+            }
+            $group =" group by tname,cname ";
+            $sql = $sql.$where.$group;
+            $odata = M()->query($sql); 
+            $this->ajaxReturn(ReturnJSON(0,$odata));
+        }else{
+            $this->ajaxReturn(ReturnJSON(7));
+        }
+    }
+
+    /**
      * 库存商品流水
      */
     public function flowingWater(){
@@ -68,16 +121,11 @@ class ReportsController extends BaseController
                         'odata'=>$odata,
                         'jdata'=>$jdata
                     );
-                    if($data){
-                        $this->ajaxReturn(ReturnJSON(0,$result));
-                    }else{
-                        $this->ajaxReturn(ReturnJSON(1));
-                    } 
+                    $this->ajaxReturn(ReturnJSON(0,$result));
                 }else{
                     $this->ajaxReturn(ReturnJSON(1));
                 }
             }
-            
         }else{
             $this->ajaxReturn(ReturnJSON(7));
         }
