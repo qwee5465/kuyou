@@ -172,7 +172,12 @@
 		            			zjtotal += parseFloat(list[i].jtotal);
 		            			zototal += parseFloat(list[i].ototal);
 		            			list[i].maori = (parseFloat(list[i].ototal) - parseFloat(list[i].jtotal)).myToFixed(2);
-		            			list[i].maoriLv = ((1 - parseFloat(list[i].jtotal)/ parseFloat(list[i].ototal))*100).myToFixed(2)+"%";
+		            			if(parseFloat(list[i].ototal)){
+		            				list[i].maoriLv = ((1 - parseFloat(list[i].jtotal)/ parseFloat(list[i].ototal))*100).myToFixed(2)+"%";
+		            			}else{
+		            				list[i].maori = "0%";
+		            			}
+		            			
 		            		}
 		            		builTable(list);
 		            		buildTotal(zjtotal,zototal);
