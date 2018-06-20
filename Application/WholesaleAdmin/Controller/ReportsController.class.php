@@ -49,7 +49,7 @@ class ReportsController extends BaseController
                 $this->ajaxReturn(ReturnJSON(1009));
                 return;
             }
-            $sql = "select d.type_name tname,c.`name` cname,sum(a.num1*a.price) ototal,sum(((a.j_price/a.nei_num)*a.num1)) jtotal from db_out_stock_detail a 
+            $sql = "select d.type_name tname,c.`name` cname,sum(a.num1*a.price*a.than) ototal,sum(((a.j_price/a.nei_num)*a.num1)) jtotal from db_out_stock_detail a 
                 inner join db_out_stock b on a.osid = b.osid
                 inner join db_client c on c.c_id = b.cid
                 inner join db_client_type d on d.ctid = c.ctid";
