@@ -229,5 +229,7 @@ button{border:none;outline: none;}
 .center{margin: 0 auto;}
 
 .ohid{overflow:hidden;}
+/*标题备注说明*/
+.header-des{color:#999;font-size:11px;margin-left:20px;}
 
 

@@ -55,11 +55,11 @@ class ReportsController extends BaseController
                 inner join db_client_type d on d.ctid = c.ctid";
             $where =" where b.`status` = 1 "; 
             if($stime){
-                $where .=" and b.auditing_time >=" . strtotime($stime);
+                $where .=" and b.create_time >=" . strtotime($stime);
             }
             if($etime){
-                $end_time = strtotime($etime) + (24*60*60);
-                $where .=" and b.auditing_time <" . $end_time;
+                $end_time = strtotime($etime) + (24*60*60) -1;
+                $where .=" and b.create_time <" . $end_time;
             }
             if($c_id){
                 $where .=" and c.c_id = $c_id ";
@@ -69,8 +69,8 @@ class ReportsController extends BaseController
             }
             $group =" group by tname,cname ";
             $sql = $sql.$where.$group;
-            $odata = M()->query($sql); 
-            $this->ajaxReturn(ReturnJSON(0,$odata));
+            $odata = M()->query($sql);  
+            $this->ajaxReturn(ReturnJSON1(0,"",$odata));
         }else{
             $this->ajaxReturn(ReturnJSON(7));
         }
@@ -145,7 +145,7 @@ class ReportsController extends BaseController
             $where .=" and a.auditing_time >=" . strtotime($stime);
         }
         if($etime){
-            $end_time = strtotime($etime) + (24*60*60);
+            $end_time = strtotime($etime) + (24*60*60)-1;
             $where .=" and a.auditing_time <" . $end_time;
         }
         if($c_id){
@@ -174,7 +174,7 @@ class ReportsController extends BaseController
             $where .=" and a.auditing_time >=" . strtotime($stime);
         }
         if($etime){
-            $end_time = strtotime($etime) + (24*60*60);
+            $end_time = strtotime($etime) + (24*60*60) - 1;
             $where .=" and a.auditing_time <" . $end_time;
         }
         $group =" group by date,sname,jprice";

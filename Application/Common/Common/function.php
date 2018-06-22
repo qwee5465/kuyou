@@ -25,9 +25,7 @@ function ReturnJSON1($resultCode,$msg,$list = array()){
     } else {
         $JSON['msg'] = $msg?$msg:ResultCode($resultCode);
     } 
-    if (!empty($list)) {
-        $JSON['result'] = $list;
-    }
+    $JSON['result'] = $list;
     return $JSON;
 }
 
