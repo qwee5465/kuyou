@@ -1014,6 +1014,13 @@ class OutstockController extends BaseController
         /*客户类型*/
         $ctlist = M("client_type")->where("wid=$wid")->select();
         $this->assign("ctlist",$ctlist); 
+        foreach($list as $key=>$val){
+            if($val['auditing_time']){
+                $list[$key]['auditing_time'] = date("Y-m-d H:i:s",$val['auditing_time']);
+            }else{
+                $list[$key]['auditing_time'] = '';
+            }
+        }
         $this->assign("list",$list); 
         $this->display();
     }
