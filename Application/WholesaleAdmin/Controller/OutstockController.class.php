@@ -933,13 +933,16 @@ class OutstockController extends BaseController
         $m = M();
         $wid = getWid(); 
         $where ="";  $gname=I("gname");
-        $stime = I("stime");$etime=I("etime");$sname=I("sname");
+        $stime = I("stime");$etime=I("etime");
+        $astime = I("astime");$aetime=I("aetime");$sname=I("sname");
         $cid = I("cid");$osid=I("osid");$status = I("status");
         $ctid =I("ctid");$hid_order=I("hid_order");
         $key_documents = I("key_documents");  
         $settlement = I("settlement");
         $this->assign("stime",$stime);
         $this->assign("etime",$etime);
+        $this->assign("astime",$astime);
+        $this->assign("aetime",$aetime);
         $this->assign("sname",$sname);
         $this->assign("cid",$cid);
         $this->assign("status",$status);
@@ -958,6 +961,14 @@ class OutstockController extends BaseController
         if($etime){
             $etime =strtotime($etime);
             $where .=" and a.create_time<=$etime+86399";
+        } 
+        if($astime){
+            $astime =strtotime($astime);
+            $where .=" and a.auditing_time>=$astime";
+        }
+        if($aetime){
+            $aetime =strtotime($aetime);
+            $where .=" and a.auditing_time<=$aetime+86399";
         } 
         if($osid){
             $where .=" and a.osid like '%".$osid."%'";
@@ -985,7 +996,10 @@ class OutstockController extends BaseController
         }
         $sql .= " where a.create_id = $wid  and a.back_mark = 0";
         $sql =$sql.$where; 
-        $order =  " order by a.status,a.update_time desc";     
+        $order =  " order by a.status,a.update_time desc"; 
+        if($astime || $aetime){
+            $order =  " order by a.status,a.auditing_time desc"; 
+        }    
         $orderArr =array();
         if($hid_order)
            $orderArr = explode("|",$hid_order);
