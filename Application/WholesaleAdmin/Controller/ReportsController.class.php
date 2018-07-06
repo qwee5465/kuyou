@@ -135,18 +135,18 @@ class ReportsController extends BaseController
      * 获取出库商品流水
      */
     public function getOutGoodsInfo($wgid,$stime,$etime,$ctid,$c_id){
-        $sql = "select c.`name` cname,sum(b.num1) onum,b.price oprice,FROM_UNIXTIME(a.auditing_time,'%Y-%m-%d') date
+        $sql = "select c.`name` cname,sum(b.num1) onum,b.price oprice,FROM_UNIXTIME(a.create_time,'%Y-%m-%d') date
             from db_out_stock a 
             inner join db_out_stock_detail b on a.osid = b.osid
             inner join db_client c on a.cid = c.c_id
             inner join db_client_type d on c.ctid = d.ctid";
         $where =" where a.`status` = 1 and b.wgid = $wgid ";
         if($stime){
-            $where .=" and a.auditing_time >=" . strtotime($stime);
+            $where .=" and a.create_time >=" . strtotime($stime);
         }
         if($etime){
             $end_time = strtotime($etime) + (24*60*60)-1;
-            $where .=" and a.auditing_time <" . $end_time;
+            $where .=" and a.create_time <" . $end_time;
         }
         if($c_id){
             $where .=" and c.c_id = $c_id ";

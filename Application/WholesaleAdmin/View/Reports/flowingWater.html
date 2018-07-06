@@ -39,7 +39,7 @@
 	<div id="body_content">
 		<div class="nav navbar-default">
 			<div class="container-fluid">
-				<h3>库存商品流水<span class="header-des">注：（日期以审核时间为准)</span></h3>
+				<h3>库存商品流水<span class="header-des">注：（日期以出库单时间为准)</span></h3>
 				<div>
 					<form action="__SELF__" method="post">
 						<div class="form-group ml15">
@@ -176,10 +176,13 @@
 		            dataType: "json",
 		            success: function(res){ 
 		            	console.log(res);
-		            	var data = buildData(res.result.jdata,res.result.odata,res.result.uname);
-		            	builTable(data);
-		            	buildTotal(res.result.jdata,res.result.odata);
-
+		            	if(res.resultcode==0){
+		            		var data = buildData(res.result.jdata,res.result.odata,res.result.uname);
+			            	builTable(data);
+			            	buildTotal(res.result.jdata,res.result.odata);
+		            	}else{
+		            		layer.msg("只能查询一个月,或31天的数据",{icon:2});
+		            	}  
 		            },
 		            error:function(msg){
 		            	layer.msg("请求失败");
