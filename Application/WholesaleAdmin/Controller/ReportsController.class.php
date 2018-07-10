@@ -941,129 +941,85 @@ class ReportsController extends BaseController
 
     public function clientTotalSaleDetail()
     {
-        if(IS_POST){
-            $stime =I("stime");$etime=I("etime");$gtid=I("gtid");$gtid1=I("gtid1");$gtid2=I("gtid2");
-            $gname = I("gname");$brand_name = I("brand_name"); $machining = I("machining");
-            $c_id=I("c_id");$ctid = I("ctid");$cgpid = I("cgpid");
-            $this->assign("stime",$stime); $this->assign("etime",$etime); $this->assign("gtid",$gtid);
-            $this->assign("c_id",$c_id);$this->assign("ctid",$ctid); $this->assign("cgpid",$cgpid);
-            $this->assign("gname",$gname);$this->assign("brand_name",$brand_name);
-            $this->assign("machining",$machining); $this->assign("gtid1",$gtid1); $this->assign("gtid2",$gtid2);
-            $wid = getWid();
-            $where =" where aa.create_id= $wid and aa.`status` = 1 and aa.cid !=0 ";
-            $where1 =" where 1=1 "; 
-            if($stime){
-                $stime =strtotime($stime);
-                $where .=" and aa.create_time>=$stime";
-                $where1 .=" and a.stime>$stime";
-            }
-            if($etime){
-                $etime =strtotime($etime);
-                $where .=" and aa.create_time<=$etime+86399";
-                $where1 .=" and a.etime>$etime+86399";
-            } 
-            if($gname){
-                $where .=" and c.`name` like '%".$gname."%'";
-            }
-            if($brand_name!=''){
-                $where .=" and e.brand_name like '%".$brand_name."%'";
-            } 
-            if($gtid!=''){
-                $where .=" and f.gtid = $gtid";
-            } 
-            if($gtid1!=''){
-                $where .=" and ff.gtid = $gtid1";
-            } 
-            if($gtid2!=''){
-                $where .=" and fff.gtid = $gtid2";
-            } 
-            if($c_id!=''){
-                $where .=" and g.c_id = $c_id";
-            } 
-            if($ctid!=''){
-                $where .=" and g.ctid = $ctid";
-            } 
-            if($machining!=''){
-                $where .=" and a.machining = $machining";
-            }
-            $sql ="select a.wgid,c.`name` gname,d.unit_name,e.brand_name,f.type_name,ff.type_name type_name1,fff.type_name type_name2,SUM(a.num1) as num,SUM(a.cd_num) as cd_num,SUM(a.num1 * a.price * a.than) sales_amount
-                from db_out_stock_detail a 
-                left join db_out_stock aa on a.osid = aa.osid
-                left join db_wholesale_goods b on a.wgid = b.wgid
-                left join db_goods c on b.gid=c.gid
-                left join db_unit d on d.unit_id = a.unit_id1
-                left join db_brand e on c.brand_id = e.brand_id
-                left join db_goods_type f on b.gtid  = f.gtid
-                left join db_goods_type ff on b.gtid1 = ff.gtid
-                left join db_goods_type fff on b.gtid2 = fff.gtid
-                left join db_client g on g.c_id = aa.cid ";
-            $group = " group by a.wgid,c.`name`,d.unit_name,e.brand_name,f.type_name,ff.type_name,fff.type_name";
-            $order = " order by b.gtid2,b.gtid1,b.gtid,gname asc";
-            $sql = $sql.$where.$group.$order;  
-            // dump($sql); 
-            $list =M("")->query($sql); 
-            $cgpdlist = M("contract_detail")->field("wgid,tax_price")->where("cgpid='".$cgpid."'")->select(); 
-            foreach ($cgpdlist as $k => $v) {
-                foreach ($list as $key => $vo) {
-                    if($vo['wgid']==$v['wgid']){
-                        $list[$key]['cgp_price']=$v['tax_price'];
-                    }
-                }
-            }
-            $system_param=M("system_param")->where("wid=$wid")->find();
-            if(empty($system_param)){
-                $system_param =getSystemParam();
-            } 
-            $subtotal =0; 
-            $subhttotal = 0;
-            //处理字段 
-            foreach ($list as $k => $v) {
-                //处理数量 
-                $list[$k]['num'] = customDecimal('num',$v['num']); 
-                $list[$k]['cd_num'] = customDecimal('num',$v['cd_num']);   
-                $subtotal += floatval($list[$k]['sales_amount']); 
-                $list[$k]['sales_amount'] = customDecimal('sum',$v['sales_amount']); 
-                if(!empty($v['cgp_price'])){
-                    $list[$k]['cgp_price'] = customDecimal('price',$v['cgp_price']); 
-                    $subhttotal +=floatval($v['cgp_price']*$v['num']);
-                }else{
-                    $list[$k]['cgp_price']=0;
-                } 
-            } 
-            $this->assign("subhttotal",customDecimal("sum",$subhttotal));
-            $this->assign("subtotal",customDecimal("sum",$subtotal));
-            $this->assign("list",$list); 
-        }else{
-            $stime=date('Y-m-01', strtotime(date("Y-m-d"))); 
-            $etime= date('Y-m-d', strtotime("$stime +1 month -1 day"));  
-            $this->assign("stime",$stime);  
-            $this->assign("etime",$etime);
-        } 
+        $stime=date('Y-m-01', strtotime(date("Y-m-d"))); 
+        $etime= date('Y-m-d', strtotime("$stime +1 month -1 day"));  
+        $this->assign("stime",$stime);  
+        $this->assign("etime",$etime);
         $wid = getWid();
-        // $cm = M("client");
-        // $clist = $cm->field("c_id,`name` cname")->where("create_id = $wid")->select();
-        // $this->assign("clist",$clist);
         $tm = M("goods_type");
         $tlist = $tm->where("series=1 and wid=$wid")->select();
         $this->assign("tlist",$tlist); 
         //客户类型
         $ctlist = M("client_type")->where("wid = $wid")->select();
         $this->assign("ctlist",$ctlist);
-        /*----------------------获取数据量设置信息---------------------*/
-        //获取默认商品数据列表信息  
-        $rdcList = M("rdc")->where("wid = $wid")->find();
-        if(!$rdcList){
-            $rdcList = getReportsColumn();
-        }   
-        $titles = $this->getReportsTitleInfo($wid); 
-        $this->assign("titles",$titles);
-        $this->assign("rdcList",$rdcList);
-
-        //获取所有合同 
-        $cgplist = M("contract")->field('cgpid')->where("wid=$wid  and status = 1 and is_enable = 1")->select();
-        $this->assign("cgplist",$cgplist);
-//         dump($titles);dump($rdcList);
         $this->display();
+    }
+
+    /**
+     * 获取客户销售明细接口
+     */
+    public function getClientSaleDetail(){
+        if(IS_GET){
+            $ctid = I("ctid"); 
+            $c_id = I("c_id");
+            $stime = I("stime");
+            $etime = I("etime");
+            $alias = I("alias");
+            $wid = getWid();
+            if(strtotime($etime)-strtotime($stime)>30*24*60*60){
+                $this->ajaxReturn(ReturnJSON(1009));
+                return;
+            }
+            $result = array();
+            if($alias==1){
+                $sql = "select d.type_name tname,c.`name` cname,b.alias gname,b.unit_id1,sum(b.num1) num,sum(b.sales_amount) total
+                    from db_out_stock a
+                    INNER JOIN db_out_stock_detail b on a.osid = b.osid
+                    INNER JOIN db_client c on c.c_id = a.cid
+                    INNER JOIN db_client_type d on d.ctid = c.ctid";
+                $where =" where a.`status` = 1 and a.create_id = $wid and d.ctid = $ctid"; 
+                if($stime){
+                    $where .=" and a.create_time >=" . strtotime($stime);
+                }
+                if($etime){
+                    $end_time = strtotime($etime) + (24*60*60) -1;
+                    $where .=" and a.create_time <" . $end_time;
+                }
+                $group =" GROUP BY tname,cname,gname,unit_id1 ";
+                $order =" ORDER BY num desc";
+                $sql = $sql.$where.$group.$order;
+                $list = M()->query($sql);  
+                $ulist = M()->query("select unit_id,unit_name uname from db_unit");
+                $result['list'] = $list;
+                $result['ulist'] = $ulist;
+            }else{
+                $sql = "select d.type_name tname,c.`name` cname,b.wgid,b.unit_id1,sum(b.num1) num,sum(b.sales_amount) total
+                    from db_out_stock a
+                    INNER JOIN db_out_stock_detail b on a.osid = b.osid
+                    INNER JOIN db_client c on c.c_id = a.cid
+                    INNER JOIN db_client_type d on d.ctid = c.ctid";
+                $where =" where a.`status` = 1 and a.create_id = $wid and d.ctid = $ctid"; 
+                if($stime){
+                    $where .=" and a.create_time >=" . strtotime($stime);
+                }
+                if($etime){
+                    $end_time = strtotime($etime) + (24*60*60) -1;
+                    $where .=" and a.create_time <" . $end_time;
+                }
+                $group =" GROUP BY tname,cname,wgid,unit_id1 ";
+                $order =" ORDER BY num desc";
+                $sql = $sql.$where.$group.$order;
+                $list = M()->query($sql);  
+                $glist = M()->query("select gid wgid,`name` gname from db_goods where create_id = $wid");
+                $ulist = M()->query("select unit_id,unit_name uname from db_unit");
+                $result['list'] = $list;
+                $result['glist'] = $glist;
+                $result['ulist'] = $ulist;
+            }
+            $this->ajaxReturn(ReturnJSON1(0,"",$result));
+        }else{
+            $this->ajaxReturn(ReturnJSON(7));
+        }
     }
 
     //供应商销售汇总
