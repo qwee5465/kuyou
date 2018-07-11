@@ -1,475 +1,572 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>{$unit|getUnitName}客户销售明细</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
-    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery.dataTables.min.css">
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css?v={$version}" />
-	<style type="text/css">
-		.t-caption{text-align: center;border: 1px solid #59ab76; border-bottom: none; background: #59ab76; color: #fff;height:35px;}
-		.headcolor2 td,.headcolor2 th{background-color: #404040; border:1px solid #404040;color: #fff;border-left: 1px solid #404040 !important; border-bottom: 1px solid #404040 !important;}
-		table tbody tr:nth-child(even){background-color: #e4e4e4;}
-		.tb-style{background-color: #f5f5f5; letter-spacing: 1.5px;border:none;}
-		.navbar-default {background-color: #fff;}
-		.noradius{border-radius: 0px;}
-		.ml5{margin-left: 5px;}
-		.ml20{margin-left: 20px;}
-		.col-md-2{width: auto;}
-		.col-xs-6{width: auto;}
-		.fs-14,select{letter-spacing: 1.5px;}
-		.btn-success{background-color: #59ab76;border:1px solid #3b9f5f; letter-spacing: 1.5px; border-radius: 4px;}
-		.btn-success:hover{background-color:#3b9f5f; border:1px solid #3b9f5f;}
-		.btn_color{background-color: #83c73c !important; border:1px solid #6db81f !important;}
-	    .btn_color:hover{background-color: #6db81f !important; border:1px solid #6db81f !important;}
-	    .tb-style td{border-left: 1px solid #d2d2d2; border-bottom: 1px solid #d2d2d2;} 
-		select{max-width: 150px;}
-		
-	</style>
 
-	<style type="text/css">
-		table.dataTable thead th, table.dataTable thead td {padding: 0 0;border-bottom: none;}
-		table.dataTable tbody th, table.dataTable tbody td {padding: 0 0;}
-		.dataTables_wrapper.no-footer .dataTables_scrollBody {border-bottom: none;}
-		.dataTables_filter{display:none;}
-	</style>
+<head>
+    <title>{$unit|getUnitName}客户销售明细</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css?v={$version}" />
+    <style type="text/css">
+    .t-caption {
+        text-align: center;
+        border: 1px solid #59ab76;
+        border-bottom: none;
+        background: #59ab76;
+        color: #fff;
+        height: 35px;
+    }
+
+    .headcolor2 td,
+    .headcolor2 th {
+        background-color: #404040;
+        border: 1px solid #404040;
+        color: #fff;
+        border-left: 1px solid #404040 !important;
+        border-bottom: 1px solid #404040 !important;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #e4e4e4;
+    }
+
+    .tb-style {
+        background-color: #f5f5f5;
+        letter-spacing: 1.5px;
+        border: none;
+    }
+
+    .navbar-default {
+        background-color: #fff;
+    }
+
+    .noradius {
+        border-radius: 0px;
+    }
+
+    .ml5 {
+        margin-left: 5px;
+    }
+
+    .ml20 {
+        margin-left: 20px;
+    }
+
+    .col-md-2 {
+        width: auto;
+    }
+
+    .col-xs-6 {
+        width: auto;
+    }
+
+    .fs-14,
+    select {
+        letter-spacing: 1.5px;
+    }
+
+    .btn-success {
+        background-color: #59ab76;
+        border: 1px solid #3b9f5f;
+        letter-spacing: 1.5px;
+        border-radius: 4px;
+    }
+
+    .btn-success:hover {
+        background-color: #3b9f5f;
+        border: 1px solid #3b9f5f;
+    }
+
+    .btn_color {
+        background-color: #83c73c !important;
+        border: 1px solid #6db81f !important;
+    }
+
+    .btn_color:hover {
+        background-color: #6db81f !important;
+        border: 1px solid #6db81f !important;
+    }
+
+    .tb-style td {
+        border-left: 1px solid #d2d2d2;
+        border-bottom: 1px solid #d2d2d2;
+    }
+
+    select {
+        max-width: 150px;
+    }
+    </style>
+    <style type="text/css">
+    table.dataTable thead th,
+    table.dataTable thead td {
+        padding: 0 0;
+        border-bottom: none;
+    }
+
+    table.dataTable tbody th,
+    table.dataTable tbody td {
+        padding: 0 0;
+    }
+
+    .dataTables_wrapper.no-footer .dataTables_scrollBody {
+        border-bottom: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+    </style>
 </head>
+
 <body>
-	<div id="body_content">
-		<div class="nav navbar-default">
-			<div class="container-fluid">
-				<h3>客户销售明细</h3>
-				<div>
-					<form action="__SELF__" method="post">
-						<div class="form-group ml15">
-							<div class="row">
-								<div>
-									<span class="fl mt8 ml20">客户类型</span>
-									<select class="w-115 fl ml5" onchange="getCilentInfo(this.value)" name="ctid" id="ctid">
-										<option value="">全部类型</option>
-										<volist name="ctlist" id='vo'>
-											<option value="{$vo.ctid}">{$vo.type_name}</option>
-										</volist>
-									</select>
-									<span class="fl fs-14 mt8 ml20">客户名称</span>
-									<select name="c_id" id="c_id" class="w-100 fl ml5">
-										<option value="">全部</option>
-										<volist name="clist" id='vo'>
-											<option value="{$vo.c_id}">{$vo.cname}</option>
-										</volist>
-									</select> 
-								</div> 
-								<div class="col-xs-6 col-md-2">
-									<span class="fl fs-14 mt8">日期&nbsp;&nbsp;&nbsp;从</span>
-									<input type="text" name="stime" id="date1" value="{$stime}" class="form-control w-115 fl ml5 noradius">
-								</div>
-								<div>
-									<span class="fl fs-14 ml5 mt8">到</span>
-									<input type="text" name="etime" id="date2" value="{$etime}" class="form-control w-120 fl ml5 noradius">
-								</div> 
-								<div>
-									<span class="fl fs-14 mt8 ml20">根据别名统计</span>
-									<select id="alias" class="w-60 fl ml5">
-										<option value="0">否</option>
-										<option value="1">是</option>
-									</select>
-								</div>  
-								<div> 
-									<input type="button" value="搜 索" onclick="checkFrom()" class="btn btn-success ml20" />
-									<input type="button" value="导出" onclick="exportInfo.exportData()" class="btn btn-success ml20" />
-									<a download="客户销售明细.xlsx" id="hf"></a>
-								</div>   
-							</div> 
-						</div> 
-					</form>
-				</div>	
-			</div>
-		</div>
-		<div class="contianer-fluid">  
-			<table class="tb-style" id="example">
-				<thead>
-					<tr class="headcolor2">
-						<td>序号</td>
-						<td>客户名称</td>
-						<td>商品名称</td>
-						<td>默认单位</td>
-						<td>数量</td>
-						<td>销售额</td>
-					</tr>
-				</thead>
-				<tbody id="tbody">
-					<tr>
-						<td colspan="6">请先搜索,暂无数据!</td> 
-					</tr>
-				</tbody> 
-			</table> 
-			<table class="tb-style none" id="tfoot" >
-				<tr> 
-					<td style="text-align: right;" colspan="5">小计:</td> 
-				</tr>
-			</tfoot>  
-		</div>
-	</div>
-	<script src='__PUBLIC__/js/jquery.min.js'></script>
+    <div id="body_content">
+        <div class="nav navbar-default">
+            <div class="container-fluid">
+                <h3>客户销售明细</h3>
+                <div>
+                    <form action="__SELF__" method="post">
+                        <div class="form-group ml15">
+                            <div class="row">
+                                <div>
+                                    <span class="fl mt8 ml20">客户类型</span>
+                                    <select class="w-115 fl ml5" onchange="getCilentInfo(this.value)" name="ctid" id="ctid">
+                                        <option value="">全部类型</option>
+                                        <volist name="ctlist" id='vo'>
+                                            <option value="{$vo.ctid}">{$vo.type_name}</option>
+                                        </volist>
+                                    </select>
+                                    <span class="fl fs-14 mt8 ml20">客户名称</span>
+                                    <select name="c_id" id="c_id" class="w-100 fl ml5">
+                                        <option value="">全部</option>
+                                        <volist name="clist" id='vo'>
+                                            <option value="{$vo.c_id}">{$vo.cname}</option>
+                                        </volist>
+                                    </select>
+                                </div>
+                                <div class="col-xs-6 col-md-2">
+                                    <span class="fl fs-14 mt8">日期&nbsp;&nbsp;&nbsp;从</span>
+                                    <input type="text" name="stime" id="date1" value="{$stime}" class="form-control w-115 fl ml5 noradius">
+                                </div>
+                                <div>
+                                    <span class="fl fs-14 ml5 mt8">到</span>
+                                    <input type="text" name="etime" id="date2" value="{$etime}" class="form-control w-120 fl ml5 noradius">
+                                </div>
+                            </div>
+                            <div class="row mt10">
+                                <div>
+                                    <span class="fl fs-14 mt8 ml20">根据别名统计</span>
+                                    <select id="alias" class="w-80 fl ml5">
+                                        <option value="0">否</option>
+                                        <option value="1">是</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <span class="fl fs-14 mt8 ml20">根据内装单位统计</span>
+                                    <select id="nei_unit" class="w-80 fl ml5">
+                                        <option value="0">否</option>
+                                        <option value="1">是</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type="button" value="搜 索" onclick="checkFrom()" class="btn btn-success ml20" />
+                                    <input type="button" value="导出" onclick="exportInfo.exportData()" class="btn btn-success ml20" />
+                                    <a download="客户销售明细.xlsx" id="hf"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="contianer-fluid">
+            <table class="tb-style" id="example">
+                <thead>
+                    <tr class="headcolor2">
+                        <td>序号</td>
+                        <td>客户名称</td>
+                        <td>商品名称</td>
+                        <td>默认单位</td>
+                        <td>数量</td>
+                        <td>销售额</td>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <tr>
+                        <td colspan="6">请先搜索,暂无数据!</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="tb-style none" id="tfoot">
+                <tr>
+                    <td style="text-align: right;" colspan="5">小计:</td>
+                </tr>
+                </tfoot>
+        </div>
+    </div>
+    <script src='__PUBLIC__/js/jquery.min.js'></script>
     <script src="__PUBLIC__/js/jquery.dataTables.min.js"></script>
     <script src="__PUBLIC__/js/jquery.dataTables.order.js"></script>
     <script src="__PUBLIC__/js/base.js"></script>
     <script src="__PUBLIC__/js/xlsx.core.min.js"></script>
-	<script src="__PUBLIC__/js/common.js?v={$version}"></script>
-	<script src="__PUBLIC__/layer/layer.js"></script>
+    <script src="__PUBLIC__/js/common.js?v={$version}"></script>
+    <script src="__PUBLIC__/layer/layer.js"></script>
     <script src="__PUBLIC__/date/laydate.dev.js"></script>
-	<script type="text/javascript">
-		var isRequest = true, //请求状态
-			excelData = [];
-		laydate({elem: '#date1'});
-        laydate({elem: '#date2'}); 
+    <script type="text/javascript">
+    var isRequest = true, //请求状态
+        excelData = [];
+    laydate({ elem: '#date1' });
+    laydate({ elem: '#date2' });
 
-		function checkFrom(){
-			if(isRequest){
-				var stime =$("#date1").val();
-				var etime =$("#date2").val();
-				var ctid = $("#ctid").val();
-				var c_id = $("#c_id").val();
-				var alias = $("#alias").val();
-	        	if(!ctid){
-	        		layer.tips('请选择客户类型', '#ctid', {tips: 1});
-					return false;
-	        	}
-				if(!stime){
-	        		layer.tips('请选择开始日期', '#date1', {tips: 1});
-					return false;
-	        	}
-	        	if(!etime){
-	        		layer.tips('请选择结束日期', '#date2', {tips: 1});
-					return false;
-	        	}
-	        	var index = layer.msg('正在生成数据,请稍后!', {
-				    icon: 16,
-				    shade: 0.01,
-				    time:10000
-				}); 
-	        	data ={"stime":stime,"etime":etime,"ctid":ctid,"c_id":c_id,"alias":alias};
-	        	var url ="{:U('Reports/getClientSaleDetail')}";
-	    		isRequest = false;
-	        	$.ajax({
-		            type: "GET",
-		            url: url,
-		            data: data,
-		            dataType: "json",
-		            success: function(res){ 
-		            	console.log(res);
-		            	if(res.resultcode==0){
-		            		if(alias==0){
-		            			var list = res.result.list;
-			            		var glist = buildGnameObj(res.result.glist);
-			            		var ulist = buildUnameObj(res.result.ulist);
-			            		var total = 0;
-			            		for(var i=0;i<list.length;i++){
-			            			list[i].gname = glist[list[i].wgid];
-			            			list[i].uname = ulist[list[i].unit_id1];
-			            			list[i].num = list[i].num.myToFixed(2);
-			            			list[i].total = list[i].total.myToFixed(2);
-			            			total += parseFloat(list[i].total);
-			            		}
-			            		buildTotal(total.myToFixed(2));
-			            		builTable(list);
-		            		}else{
-		            			var list = res.result.list;
-			            		var ulist = buildUnameObj(res.result.ulist);
-			            		var total = 0;
-			            		for(var i=0;i<list.length;i++){
-			            			list[i].uname = ulist[list[i].unit_id1];
-			            			list[i].num = list[i].num.myToFixed(2);
-			            			list[i].total = list[i].total.myToFixed(2);
-			            			total += parseFloat(list[i].total);
-			            		}
-			            		buildTotal(total.myToFixed(2));
-			            		builTable(list);
-		            		}
-		            	}else{
-		            		if(res.resultcode==1009){
-		            			layer.msg("时间段不能超过31天",{icon:2});
-		            		}else{
-		            			layer.msg(res.msg,{icon:2});
-		            		}
-		            	}
-		            },
-		            error:function(msg){
-		            	layer.msg("请求失败");
-		            },
-		            complete: function () {
-	                    layer.close(index);
-	                    isRequest = true;
-	                }
-		        });
-		    }
-		}
-
-		/**
-         * 生成小计数据
-         */
-        function buildTotal(total){ 
-        	$("#tfoot tr td").html("小计："+total+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        	$("#tfoot").removeClass('none');
+    function checkFrom() {
+        if (isRequest) {
+            var stime = $("#date1").val();
+            var etime = $("#date2").val();
+            var ctid = $("#ctid").val();
+            var c_id = $("#c_id").val();
+            var alias = $("#alias").val();
+            var nei_unit = $("#nei_unit").val();
+            if (!ctid) {
+                layer.tips('请选择客户类型', '#ctid', { tips: 1 });
+                return false;
+            }
+            if (!stime) {
+                layer.tips('请选择开始日期', '#date1', { tips: 1 });
+                return false;
+            }
+            if (!etime) {
+                layer.tips('请选择结束日期', '#date2', { tips: 1 });
+                return false;
+            }
+            var index = layer.msg('正在生成数据,请稍后!', {
+                icon: 16,
+                shade: 0.01,
+                time: 10000
+            });
+            data = { "stime": stime, "etime": etime, "ctid": ctid, "c_id": c_id, "alias": alias, nei_unit: nei_unit };
+            var url = "{:U('Reports/getClientSaleDetail')}";
+            isRequest = false;
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: data,
+                dataType: "json",
+                success: function(res) {
+                    console.log(res);
+                    if (res.resultcode == 0) {
+                        if (alias == 0) {
+                            var list = res.result.list;
+                            var glist = buildGnameObj(res.result.glist);
+                            var ulist = buildUnameObj(res.result.ulist);
+                            var total = 0;
+                            for (var i = 0; i < list.length; i++) {
+                                list[i].gname = glist[list[i].wgid];
+                                list[i].uname = ulist[list[i].unit_id1];
+                                list[i].num = list[i].num.myToFixed(2);
+                                list[i].total = list[i].total.myToFixed(2);
+                                total += parseFloat(list[i].total);
+                            }
+                            buildTotal(total.myToFixed(2));
+                            builTable(list);
+                        } else {
+                            var list = res.result.list;
+                            var ulist = buildUnameObj(res.result.ulist);
+                            var total = 0;
+                            for (var i = 0; i < list.length; i++) {
+                                list[i].uname = ulist[list[i].unit_id1];
+                                list[i].num = list[i].num.myToFixed(2);
+                                list[i].total = list[i].total.myToFixed(2);
+                                total += parseFloat(list[i].total);
+                            }
+                            buildTotal(total.myToFixed(2));
+                            builTable(list);
+                        }
+                    } else {
+                        if (res.resultcode == 1009) {
+                            layer.msg("时间段不能超过31天", { icon: 2 });
+                        } else {
+                            layer.msg(res.msg, { icon: 2 });
+                        }
+                    }
+                },
+                error: function(msg) {
+                    layer.msg("请求失败");
+                },
+                complete: function() {
+                    layer.close(index);
+                    isRequest = true;
+                }
+            });
         }
+    }
 
-		/**
-		 * 生成商品对象
-		 */
-		function buildGnameObj(glist){
-			var result = {};
-			for(var i=0;i<glist.length;i++){
-				result[glist[i].wgid]=glist[i].gname;
-			}
-			return result;
-		}
+    /**
+     * 生成小计数据
+     */
+    function buildTotal(total) {
+        $("#tfoot tr td").html("小计：" + total + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        $("#tfoot").removeClass('none');
+    }
 
-		/**
-		 * 生成单位对象
-		 */
-		function buildUnameObj(ulist){
-			var result = {};
-			for(var i=0;i<ulist.length;i++){
-				result[ulist[i].unit_id]=ulist[i].uname;
-			}
-			return result;
-		}
+    /**
+     * 生成商品对象
+     */
+    function buildGnameObj(glist) {
+        var result = {};
+        for (var i = 0; i < glist.length; i++) {
+            result[glist[i].wgid] = glist[i].gname;
+        }
+        return result;
+    }
 
-		
+    /**
+     * 生成单位对象
+     */
+    function buildUnameObj(ulist) {
+        var result = {};
+        for (var i = 0; i < ulist.length; i++) {
+            result[ulist[i].unit_id] = ulist[i].uname;
+        }
+        return result;
+    }
 
-        //渲染报表数据
-	    function builTable(data){
-	    	excelData = data;
-	    	var h = $(window).height() - 200; 
-	    	var i=0;
-	    	//object可以如下初始化表格
-		    var table = $('#example').DataTable( {
-		        data: data,	
-		        destroy: true, //销毁已经存在的Datatables实例并替换新的选项
-		        info:false,
-		        searching:false,
-		        // ordering:true, //禁止排序
-		        paging:false,
-		        scrollY: h,
-		        language: {
-			        "sProcessing": "处理中...",
-			        "sLengthMenu": "显示 _MENU_ 项结果",
-			        "sZeroRecords": "没有匹配结果",
-			        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-			        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
-			        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
-			        "sInfoPostFix": "",
-			        "sSearch": "搜索:",
-			        "sUrl": "",
-			        "sEmptyTable": "表中数据为空",
-			        "sLoadingRecords": "载入中...",
-			        "sInfoThousands": ",",
-			        "oPaginate": {
-			            "sFirst": "首页",
-			            "sPrevious": "上页",
-			            "sNext": "下页",
-			            "sLast": "末页"
-			        },
-			        "oAria": {
-			            "sSortAscending": ": 以升序排列此列",
-			            "sSortDescending": ": 以降序排列此列"
-			        }
-			    },
-		        //使用对象数组，一定要配置columns，告诉 DataTables 每列对应的属性
-		        //data 这里是固定不变的，name，position，salary，office 为你数据里对应的属性
-		        columns: [
-		        	{data: null,render:function ( data, type, full, meta ) {
-		        		i++;
-		        		return i;
-		        	},className:"text-center"}, 
-		            { data: 'cname',className:"text-center"},
-		            { data: 'gname',className:"text-center"},
-		            { data: 'uname',className:"text-center"},
-		            { data: 'num',className:"text-center"},
-		            { data: 'total',className:"text-center"}
-		        ]
-		    });
-	    } 
 
-		//根据客户类型获取客户信息
-		function getCilentInfo(ctid){
-			if(ctid){
-				$.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid},function(data){
-		            if(data.resultcode==0){
-		                var result =data.result;
-		                var str ='<option value="">全部客户</option>';
-		                for(var i=0;i<result.length;i++){
-		                    str +='<option value="'+result[i]['c_id']+'">'+result[i]['cname']+'</option>';
-		                }
-		                $("#c_id").html(str);  
-		                var c_id = "{$c_id}";
-		                $("#c_id").val(c_id);
-		            }else{ 
-				    	$("#c_id").html('<option value="">全部客户</option>');  
-		            }
-		        }, "json");
-	        }else{
-	        	$("#c_id").html('<option value="">全部客户</option>');  
-	        }
-		}
-		
-        var index =0,index1=0;	
-		//根据1级类型编号获取二级分类
-	    function getTwoTypeInfo(fid){ 
-	    	var gtid1 = "{$gtid1}";
-	    	if(fid){
-		        $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid},function(data){
-		            if(data.resultcode==0){
-		                var result =data.result;
-		                var str ='<option value="">二级全部</option>';
-		                for(var i=0;i<result.length;i++){
-		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
-		                }
-		                $("#gtid1").html(str); 
-		                $("#gtid2").html('<option value="">三级全部</option>');
-		                if(gtid1 && gtid1!="0"){
-		                	if(index==0){
-			                	$("#gtid1").val(gtid1);
-			                	getThreeTypeInfo(gtid1);
-			                	index++;
-		                	}
-		                }
-		            }else{
-		            	var str ='<option value="">二级全部</option>';
-				    	$("#gtid1").html(str); 
-		                $("#gtid2").html('<option value="">三级全部</option>');
-		            }
-		        }, "json");
-		    }else{
-		    	var str ='<option value="">二级全部</option>';
-		    	$("#gtid1").html(str); 
-                $("#gtid2").html('<option value="">三级全部</option>');
-		    }
-	    }
 
-	    //根据二级类型编号获取三级分类
-	    function getThreeTypeInfo(fid){ 
-	    	var gtid2 ="{$gtid2}";
-	    	if(fid){
-		        $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid},function(data){
-		            if(data.resultcode==0){
-		                var result =data.result;
-		                var str ='<option value="">三级全部</option>';
-		                for(var i=0;i<result.length;i++){
-		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
-		                }
-		                $("#gtid2").html(str);
-		                if(gtid2 && gtid2!="0"){
-		                	if(index1==0){
-		                		$("#gtid2").val(gtid2);
-		                		index1++;
-		                	}
-		                } 
-		            }else{
-		            	var str ='<option value="">三级全部</option>';
-		    			$("#gtid2").html(str);
-		            }
-		        }, "json");
-		    }else{
-		    	var str ='<option value="">三级全部</option>';
-		    	$("#gtid2").html(str);
-		    }
-	    }				
-	    (function(){
-	    	var exportInfo = {
-		    	/**
-		         * 展示中文 
-		         */
-		        nameChange: function(list, callback) { 
-		        	var data = [];
-		            for (var i = 0; i < list.length; i++) {
-		                var forData = {
-		                    "序号": i+1,
-		                    "客户名称": list[i].cname,
-		                    "商品名称": list[i].gname,
-		                    "默认单位": list[i].uname,
-		                    "数量": list[i].num,
-		                    "销售额": list[i].total
-		                }
-		                data.push(forData);
-		            }
-		            callback(data);
-		        },
-		        //导出数据
-		        s2ab: function(s) {
-		            var buf = new ArrayBuffer(s.length);
-		            var view = new Uint8Array(buf);
-		            for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-		            return buf;
-		        },
-		        getCharCol: function(n) {
-		            let temCol = '',
-		                s = '',
-		                m = 0
-		            while (n > 0) {
-		                m = n % 26 + 1
-		                s = String.fromCharCode(m + 64) + s
-		                n = (n - m) / 26
-		            }
-		            return s
-		        },
-		        /**
-		         * 导出数据
-		         */
-		        exportData: function() {
-		            var that = this;
-		            that.nameChange(excelData,function(res){
-		            	that.downloadFile(res, "xlsx");
-		            })
-		        },
-		        downloadFile: function(json, type) {
-		            var tmpdata = json[0];
-		            json.unshift({});
-		            var keyMap = []; //获取keys
-		            //keyMap =Object.keys(json[0]);
-		            for (var k in tmpdata) {
-		                keyMap.push(k);
-		                json[0][k] = k;
-		            }
-		            var tmpdata = []; //用来保存转换好的json 
-		            json.map((v, i) => keyMap.map((k, j) => Object.assign({}, {
-		                v: v[k],
-		                position: (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) + (i + 1)
-		            }))).reduce((prev, next) => prev.concat(next)).forEach((v, i) => tmpdata[v.position] = {
-		                v: v.v
-		            });
-		            var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
-		            var tmpWB = {
-		                SheetNames: ['mySheet'], //保存的表标题
-		                Sheets: {
-		                    'mySheet': Object.assign({},
-		                        tmpdata, //内容
-		                        {
-		                            '!ref': outputPos[0] + ':' + outputPos[outputPos.length - 1] //设置填充区域
-		                        })
-		                }
-		            };
-		            tmpDown = new Blob([this.s2ab(XLSX.write(tmpWB, {
-		                    bookType: (type == undefined ? 'xlsx' : type),
-		                    bookSST: false,
-		                    type: 'binary'
-		                } //这里的数据是用来定义导出的格式类型
-		            ))], {
-		                type: ""
-		            }); //创建二进制对象写入转换好的字节流
-		            var href = URL.createObjectURL(tmpDown); //创建对象超链接
-		            document.getElementById("hf").href = href; //绑定a标签
-		            document.getElementById("hf").click(); //模拟点击实现下载
-		            setTimeout(function() { //延时释放
-		                URL.revokeObjectURL(tmpDown); //用URL.revokeObjectURL()来释放这个object URL
-		            }, 100);
-		        }
-		    }
-		    window.exportInfo = exportInfo;
-	    })()
-	    
+    //渲染报表数据
+    function builTable(data) {
+        excelData = data;
+        var h = $(window).height() - 250;
+        var i = 0;
+        //object可以如下初始化表格
+        var table = $('#example').DataTable({
+            data: data,
+            destroy: true, //销毁已经存在的Datatables实例并替换新的选项
+            info: false,
+            searching: false,
+            // ordering:true, //禁止排序
+            paging: false,
+            scrollY: h,
+            language: {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            },
+            //使用对象数组，一定要配置columns，告诉 DataTables 每列对应的属性
+            //data 这里是固定不变的，name，position，salary，office 为你数据里对应的属性
+            columns: [{
+                    data: null,
+                    render: function(data, type, full, meta) {
+                        i++;
+                        return i;
+                    },
+                    className: "text-center"
+                },
+                { data: 'cname', className: "text-center" },
+                { data: 'gname', className: "text-center" },
+                { data: 'uname', className: "text-center" },
+                { data: 'num', className: "text-center" },
+                { data: 'total', className: "text-center" }
+            ]
+        });
+    }
 
-	</script>
+    //根据客户类型获取客户信息
+    function getCilentInfo(ctid) {
+        if (ctid) {
+            $.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid }, function(data) {
+                if (data.resultcode == 0) {
+                    var result = data.result;
+                    var str = '<option value="">全部客户</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        str += '<option value="' + result[i]['c_id'] + '">' + result[i]['cname'] + '</option>';
+                    }
+                    $("#c_id").html(str);
+                    var c_id = "{$c_id}";
+                    $("#c_id").val(c_id);
+                } else {
+                    $("#c_id").html('<option value="">全部客户</option>');
+                }
+            }, "json");
+        } else {
+            $("#c_id").html('<option value="">全部客户</option>');
+        }
+    }
+
+    var index = 0,
+        index1 = 0;
+    //根据1级类型编号获取二级分类
+    function getTwoTypeInfo(fid) {
+        var gtid1 = "{$gtid1}";
+        if (fid) {
+            $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid }, function(data) {
+                if (data.resultcode == 0) {
+                    var result = data.result;
+                    var str = '<option value="">二级全部</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        str += '<option value="' + result[i]['gtid'] + '">' + result[i]['type_name'] + '</option>';
+                    }
+                    $("#gtid1").html(str);
+                    $("#gtid2").html('<option value="">三级全部</option>');
+                    if (gtid1 && gtid1 != "0") {
+                        if (index == 0) {
+                            $("#gtid1").val(gtid1);
+                            getThreeTypeInfo(gtid1);
+                            index++;
+                        }
+                    }
+                } else {
+                    var str = '<option value="">二级全部</option>';
+                    $("#gtid1").html(str);
+                    $("#gtid2").html('<option value="">三级全部</option>');
+                }
+            }, "json");
+        } else {
+            var str = '<option value="">二级全部</option>';
+            $("#gtid1").html(str);
+            $("#gtid2").html('<option value="">三级全部</option>');
+        }
+    }
+
+    //根据二级类型编号获取三级分类
+    function getThreeTypeInfo(fid) {
+        var gtid2 = "{$gtid2}";
+        if (fid) {
+            $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid }, function(data) {
+                if (data.resultcode == 0) {
+                    var result = data.result;
+                    var str = '<option value="">三级全部</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        str += '<option value="' + result[i]['gtid'] + '">' + result[i]['type_name'] + '</option>';
+                    }
+                    $("#gtid2").html(str);
+                    if (gtid2 && gtid2 != "0") {
+                        if (index1 == 0) {
+                            $("#gtid2").val(gtid2);
+                            index1++;
+                        }
+                    }
+                } else {
+                    var str = '<option value="">三级全部</option>';
+                    $("#gtid2").html(str);
+                }
+            }, "json");
+        } else {
+            var str = '<option value="">三级全部</option>';
+            $("#gtid2").html(str);
+        }
+    }
+    (function() {
+        var exportInfo = {
+            /**
+             * 展示中文 
+             */
+            nameChange: function(list, callback) {
+                var data = [];
+                for (var i = 0; i < list.length; i++) {
+                    var forData = {
+                        "序号": i + 1,
+                        "客户名称": list[i].cname,
+                        "商品名称": list[i].gname,
+                        "默认单位": list[i].uname,
+                        "数量": list[i].num,
+                        "销售额": list[i].total
+                    }
+                    data.push(forData);
+                }
+                callback(data);
+            },
+            //导出数据
+            s2ab: function(s) {
+                var buf = new ArrayBuffer(s.length);
+                var view = new Uint8Array(buf);
+                for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+            },
+            getCharCol: function(n) {
+                let temCol = '',
+                    s = '',
+                    m = 0
+                while (n > 0) {
+                    m = n % 26 + 1
+                    s = String.fromCharCode(m + 64) + s
+                    n = (n - m) / 26
+                }
+                return s
+            },
+            /**
+             * 导出数据
+             */
+            exportData: function() {
+                var that = this;
+                that.nameChange(excelData, function(res) {
+                    that.downloadFile(res, "xlsx");
+                })
+            },
+            downloadFile: function(json, type) {
+                var tmpdata = json[0];
+                json.unshift({});
+                var keyMap = []; //获取keys
+                //keyMap =Object.keys(json[0]);
+                for (var k in tmpdata) {
+                    keyMap.push(k);
+                    json[0][k] = k;
+                }
+                var tmpdata = []; //用来保存转换好的json 
+                json.map((v, i) => keyMap.map((k, j) => Object.assign({}, {
+                    v: v[k],
+                    position: (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) + (i + 1)
+                }))).reduce((prev, next) => prev.concat(next)).forEach((v, i) => tmpdata[v.position] = {
+                    v: v.v
+                });
+                var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
+                var tmpWB = {
+                    SheetNames: ['mySheet'], //保存的表标题
+                    Sheets: {
+                        'mySheet': Object.assign({},
+                            tmpdata, //内容
+                            {
+                                '!ref': outputPos[0] + ':' + outputPos[outputPos.length - 1] //设置填充区域
+                            })
+                    }
+                };
+                tmpDown = new Blob([this.s2ab(XLSX.write(tmpWB, {
+                        bookType: (type == undefined ? 'xlsx' : type),
+                        bookSST: false,
+                        type: 'binary'
+                    } //这里的数据是用来定义导出的格式类型
+                ))], {
+                    type: ""
+                }); //创建二进制对象写入转换好的字节流
+                var href = URL.createObjectURL(tmpDown); //创建对象超链接
+                document.getElementById("hf").href = href; //绑定a标签
+                document.getElementById("hf").click(); //模拟点击实现下载
+                setTimeout(function() { //延时释放
+                    URL.revokeObjectURL(tmpDown); //用URL.revokeObjectURL()来释放这个object URL
+                }, 100);
+            }
+        }
+        window.exportInfo = exportInfo;
+    })()
+    </script>
 </body>
+
 </html>

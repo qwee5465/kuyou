@@ -965,6 +965,7 @@ class ReportsController extends BaseController
             $stime = I("stime");
             $etime = I("etime");
             $alias = I("alias");
+            $nei_unit = I("nei_unit");
             $wid = getWid();
             if(strtotime($etime)-strtotime($stime)>30*24*60*60){
                 $this->ajaxReturn(ReturnJSON(1009));
@@ -972,8 +973,13 @@ class ReportsController extends BaseController
             }
             $result = array();
             if($alias==1){
-                $sql = "select d.type_name tname,c.`name` cname,b.alias gname,b.unit_id1,sum(b.num1) num,sum(b.sales_amount) total
-                    from db_out_stock a
+                $sql = "";
+                if($nei_unit==1){
+                    $sql = "select d.type_name tname,c.`name` cname,b.alias gname,b.nei_unit_id unit_id1,sum(b.num1/b.nei_num) num,sum(b.sales_amount) total ";
+                }else{
+                    $sql = "select d.type_name tname,c.`name` cname,b.alias gname,b.unit_id1,sum(b.num1) num,sum(b.sales_amount) total ";
+                }
+                $sql .= "from db_out_stock a
                     INNER JOIN db_out_stock_detail b on a.osid = b.osid
                     INNER JOIN db_client c on c.c_id = a.cid
                     INNER JOIN db_client_type d on d.ctid = c.ctid";
@@ -985,16 +991,29 @@ class ReportsController extends BaseController
                     $end_time = strtotime($etime) + (24*60*60) -1;
                     $where .=" and a.create_time <" . $end_time;
                 }
-                $group =" GROUP BY tname,cname,gname,unit_id1 ";
-                $order =" ORDER BY num desc";
+                if($c_id){
+                    $where .=" and a.cid = $c_id";
+                }
+                $group = " GROUP BY tname,cname,wgid";
+                if($nei_unit==1){
+                    $group .=",nei_unit_id ";
+                }else{
+                    $group .=",unit_id1 ";
+                }
+                $order =" ORDER BY wgid,num desc";
                 $sql = $sql.$where.$group.$order;
-                $list = M()->query($sql);  
+                $list = M()->query($sql);   
                 $ulist = M()->query("select unit_id,unit_name uname from db_unit");
                 $result['list'] = $list;
                 $result['ulist'] = $ulist;
             }else{
-                $sql = "select d.type_name tname,c.`name` cname,b.wgid,b.unit_id1,sum(b.num1) num,sum(b.sales_amount) total
-                    from db_out_stock a
+                $sql ="";
+                if($nei_unit==1){
+                    $sql ="select d.type_name tname,c.`name` cname,b.wgid,b.nei_unit_id unit_id1,sum(b.num1/b.nei_num) num,sum(b.sales_amount) total ";
+                }else{
+                    $sql ="select d.type_name tname,c.`name` cname,b.wgid,b.unit_id1,sum(b.num1) num,sum(b.sales_amount) total ";
+                }
+                $sql .= "from db_out_stock a
                     INNER JOIN db_out_stock_detail b on a.osid = b.osid
                     INNER JOIN db_client c on c.c_id = a.cid
                     INNER JOIN db_client_type d on d.ctid = c.ctid";
@@ -1006,9 +1025,17 @@ class ReportsController extends BaseController
                     $end_time = strtotime($etime) + (24*60*60) -1;
                     $where .=" and a.create_time <" . $end_time;
                 }
-                $group =" GROUP BY tname,cname,wgid,unit_id1 ";
-                $order =" ORDER BY num desc";
-                $sql = $sql.$where.$group.$order;
+                if($c_id){
+                    $where .=" and a.cid = $c_id";
+                }
+                $group = " GROUP BY tname,cname,wgid";
+                if($nei_unit==1){
+                    $group .=",nei_unit_id ";
+                }else{
+                    $group .=",unit_id1";
+                }
+                $order =" ORDER BY wgid,num desc";
+                $sql = $sql.$where.$group.$order; 
                 $list = M()->query($sql);  
                 $glist = M()->query("select gid wgid,`name` gname from db_goods where create_id = $wid");
                 $ulist = M()->query("select unit_id,unit_name uname from db_unit");
