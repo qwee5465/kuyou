@@ -1076,106 +1076,111 @@
 			submitForm(arr,data);
 		} 
 	}
-
+	isRequest = true;
 	function submitForm(arr,data){
-		var wgids = '',// 商品名称
-			alias = '',//默认单位
-			unit_ids = '',//默认单位
-			num1s = '',//数量
-			num2s = '',//备用数量
-			prices = '',//单位价格
-			j_prices = '', //进价
-			sums = '',//总金额
-			thans = '',//单价比 
-			cdnums = '',//货损数量
-			remarks = '',//备注
-			nei_unit_ids="",//内装单位
-			nei_nums="", //内装数
-			machinings=""; //毛重
+		if(isRequest){
+			isRequest = false;
+			var wgids = '',// 商品名称
+				alias = '',//默认单位
+				unit_ids = '',//默认单位
+				num1s = '',//数量
+				num2s = '',//备用数量
+				prices = '',//单位价格
+				j_prices = '', //进价
+				sums = '',//总金额
+				thans = '',//单价比 
+				cdnums = '',//货损数量
+				remarks = '',//备注
+				nei_unit_ids="",//内装单位
+				nei_nums="", //内装数
+				machinings=""; //毛重
 
-		$("input[name='wgids']").each(function(index,value){
-			if(arr.indexOf(index)<0){
-				var val=$(value).val();
-				if (val) {
-					wgids+=val+',';
-					alias+= $("input[name='alias']").eq(index).val()+',';
-					unit_ids+= $("input[name='unit_id']").eq(index).val()+',';
-					num1s+= $("input[name='num1s']").eq(index).val()+',';
-					num2s+= $("input[name='num2s']").eq(index).val()+',';
-					prices+= $("input[name='prices']").eq(index).val()+',';
-					j_prices+= $("input[name='j_prices']").eq(index).parent().find('span').html()+',';
-					sums+= $("input[name='sums']").eq(index).val()+',';
-					thans+= $("input[name='thans']").eq(index).val()+','; 
-					cdnums+= $("input[name='cdnums']").eq(index).val()+',';
-					remarks+= $("input[name='remarks']").eq(index).val()+',';
-					nei_unit_ids += $("select[name='nei_unit_id']").eq(index).val()+','; 
-					nei_nums += $("select[name='nei_unit_id']").eq(index).find("option:selected").attr("data-nei_num")+',';  
-					machinings += $("select[name='machinings']").eq(index).val()+','; 
-				}
-			}
-		});
-
-		data.wgids=wgids.substr(0,wgids.length-1);
-		data.alias=alias.substr(0,alias.length-1);
-		data.unit_ids=unit_ids.substr(0,unit_ids.length-1);
-		data.num1s=num1s.substr(0,num1s.length-1);
-		data.num2s=num2s.substr(0,num2s.length-1);
-		data.prices=prices.substr(0,prices.length-1);
-		data.j_prices=j_prices.substr(0,j_prices.length-1);
-		data.sums=sums.substr(0,sums.length-1);
-		data.thans=thans.substr(0,thans.length-1); 
-		data.cdnums=cdnums.substr(0,cdnums.length-1);
-		data.remarks=remarks.substr(0,remarks.length-1);
-		data.nei_unit_ids=nei_unit_ids.substr(0,nei_unit_ids.length-1);  
-		data.nei_nums=nei_nums.substr(0,nei_nums.length-1);  
-		data.machinings=machinings.substr(0,machinings.length-1);  
-		if(data.wgids==""){
-			layer.msg('请填写数据');
-			return;
-		}
-		var status = data.status;
-		var osid =data.osid;
-		layer.msg("单据提交中",{time:3000});
-		$.ajax({
-			type:"post",
-			url:"{:U('Outstock/outStockAjaxEdit')}",
-			data:data,
-			dataType:"json",
-			success:function(data) {
-				if(data.resultcode==0){
-					$("input[name='wgids']").each(function(index,value){
-						if(arr.indexOf(index)>=0){
-							$(value).parent().parent().parent().remove();
-						}	
-					}); 
-					if(status==1){ 
-						$("#div_zzc").removeClass("none");
-						layer.msg("出库单保存成功,正在审核请稍后...");
-						upOutstockStatus(osid,1);
-					}else{
-						layer.alert('出库单保存成功',function(index){ 
-							layer.close(index);
-						});
-						$("#div_zzc1").removeClass("none"); 
+			$("input[name='wgids']").each(function(index,value){
+				if(arr.indexOf(index)<0){
+					var val=$(value).val();
+					if (val) {
+						wgids+=val+',';
+						alias+= $("input[name='alias']").eq(index).val()+',';
+						unit_ids+= $("input[name='unit_id']").eq(index).val()+',';
+						num1s+= $("input[name='num1s']").eq(index).val()+',';
+						num2s+= $("input[name='num2s']").eq(index).val()+',';
+						prices+= $("input[name='prices']").eq(index).val()+',';
+						j_prices+= $("input[name='j_prices']").eq(index).parent().find('span').html()+',';
+						sums+= $("input[name='sums']").eq(index).val()+',';
+						thans+= $("input[name='thans']").eq(index).val()+','; 
+						cdnums+= $("input[name='cdnums']").eq(index).val()+',';
+						remarks+= $("input[name='remarks']").eq(index).val()+',';
+						nei_unit_ids += $("select[name='nei_unit_id']").eq(index).val()+','; 
+						nei_nums += $("select[name='nei_unit_id']").eq(index).find("option:selected").attr("data-nei_num")+',';  
+						machinings += $("select[name='machinings']").eq(index).val()+','; 
 					}
-					window.scrollTo(0,0); 
-					$(".a_del").addClass("none"); //隐藏删除按钮
-				}else{ 
-					layer.alert(data.msg,function(index){
-						if(data.err_row){
-							var err_row = parseInt(data.err_row)-1;
-							$("#table tbody").find("tr").eq(err_row).find(".a_del").removeClass("none");
-						}
-						layer.close(index);
-					}); 
 				}
-				saveState=0;
-				publicState=1;
-			},
-			error:function(){
-				layer.alert('保存时出现异常，程序猿要帮忙了。',{icon: 2});
+			});
+
+			data.wgids=wgids.substr(0,wgids.length-1);
+			data.alias=alias.substr(0,alias.length-1);
+			data.unit_ids=unit_ids.substr(0,unit_ids.length-1);
+			data.num1s=num1s.substr(0,num1s.length-1);
+			data.num2s=num2s.substr(0,num2s.length-1);
+			data.prices=prices.substr(0,prices.length-1);
+			data.j_prices=j_prices.substr(0,j_prices.length-1);
+			data.sums=sums.substr(0,sums.length-1);
+			data.thans=thans.substr(0,thans.length-1); 
+			data.cdnums=cdnums.substr(0,cdnums.length-1);
+			data.remarks=remarks.substr(0,remarks.length-1);
+			data.nei_unit_ids=nei_unit_ids.substr(0,nei_unit_ids.length-1);  
+			data.nei_nums=nei_nums.substr(0,nei_nums.length-1);  
+			data.machinings=machinings.substr(0,machinings.length-1);  
+			if(data.wgids==""){
+				layer.msg('请填写数据');
+				isRequest = true;
+				return;
 			}
-		}); 
+			var status = data.status;
+			var osid =data.osid;
+			layer.msg("单据提交中",{time:3000});
+			$.ajax({
+				type:"post",
+				url:"{:U('Outstock/outStockAjaxEdit')}",
+				data:data,
+				dataType:"json",
+				success:function(data) {
+					if(data.resultcode==0){
+						$("input[name='wgids']").each(function(index,value){
+							if(arr.indexOf(index)>=0){
+								$(value).parent().parent().parent().remove();
+							}	
+						}); 
+						if(status==1){ 
+							$("#div_zzc").removeClass("none");
+							layer.msg("出库单保存成功,正在审核请稍后...");
+							upOutstockStatus(osid,1);
+						}else{
+							layer.alert('出库单保存成功',function(index){ 
+								layer.close(index);
+							});
+							$("#div_zzc1").removeClass("none"); 
+						}
+						window.scrollTo(0,0); 
+						$(".a_del").addClass("none"); //隐藏删除按钮
+					}else{ 
+						layer.alert(data.msg,function(index){
+							if(data.err_row){
+								var err_row = parseInt(data.err_row)-1;
+								$("#table tbody").find("tr").eq(err_row).find(".a_del").removeClass("none");
+							}
+							layer.close(index);
+						}); 
+					}
+					setTimeout(function(){isRequest = true;},500);
+					saveState=0;
+					publicState=1;
+				},
+				error:function(){
+					layer.alert('保存时出现异常，程序猿要帮忙了。',{icon: 2});
+				}
+			}); 
+		}
 	}
 
 	//修改出库单审核状态
@@ -1189,6 +1194,7 @@
 			}else{
 				layer.alert("单据已保存，审核失败,"+data.msg,{icon:2});
 			}
+			isRequest = true;
 		},"json");
 	}
 

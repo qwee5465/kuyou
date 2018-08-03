@@ -656,91 +656,98 @@
 				submitForm(arr,data);
 			} 
 		}
- 
+ 		
+ 		var isRequest = true;
 		//表单提交
 		function submitForm(arr,data){
-			var wgids = '',// 商品名称
-				unit_ids = '',//默认单位
-				num1s = '',//数量
-				prices = '',//单位进价 
-				sums = '';//总金额 
-				nei_unit_ids="",//内装单位
-				nei_nums="", //内装数  
-			$("input[name='wgids']").each(function(index,value){
-				if(arr.indexOf(index)<0){
-					var val=$(value).val();
-					if (val) { 
-						wgids+=val+',';
-						unit_ids+= $("input[name='unit_id']").eq(index).val()+',';
-						num1s+= $("input[name='num1s']").eq(index).val()+',';
-						prices+= $("input[name='prices']").eq(index).val()+','; 
-						sums+= $("input[name='sums']").eq(index).val()+','; 
-						nei_unit_ids += $("select[name='nei_unit_id']").eq(index).val()+','; 
-						nei_nums += $("select[name='nei_unit_id']").eq(index).find("option:selected").attr("data-nei_num")+','; 
-					}
-				}	
-			});
-			data.wgids=wgids.substr(0,wgids.length-1);
-			data.unit_ids=unit_ids.substr(0,unit_ids.length-1);
-			data.num1s=num1s.substr(0,num1s.length-1);
-			data.prices=prices.substr(0,prices.length-1); 
-			data.sums=sums.substr(0,sums.length-1);  
-			data.nei_unit_ids=nei_unit_ids.substr(0,nei_unit_ids.length-1);  
-			data.nei_nums=nei_nums.substr(0,nei_nums.length-1);   
-			if(data.wgids==""){
-				layer.msg('请填写数据');
-				return;
-			}
-			var status = data.status;
-			var jsid =data.jsid;
-			layer.msg("单据提交中",{time:3000}); 
-			$.ajax({
-				type:"post",
-				url:"{:U('Instock/instockAdd')}",
-				data:data,
-				dataType:"json",
-				success:function(data) {
-					if(data.resultcode==0){
-						$("input[name='wgids']").each(function(index,value){
-							if(arr.indexOf(index)>=0){
-								$(value).parent().parent().parent().remove();
-							}	
-						});
-						if(status==1){  
-							layer.msg("入库单保存成功,正在审核请稍后...");
-							upInstockStatus(jsid,1);
-						}else{
-							layer.alert('入库单保存成功',function(index){
-								layer.close(index);
-							});
-							$("#div_zzc1").removeClass("none"); 
+			if(isRequest){
+				isRequest = false;
+				var wgids = '',// 商品名称
+					unit_ids = '',//默认单位
+					num1s = '',//数量
+					prices = '',//单位进价 
+					sums = '';//总金额 
+					nei_unit_ids="",//内装单位
+					nei_nums="", //内装数  
+				$("input[name='wgids']").each(function(index,value){
+					if(arr.indexOf(index)<0){
+						var val=$(value).val();
+						if (val) { 
+							wgids+=val+',';
+							unit_ids+= $("input[name='unit_id']").eq(index).val()+',';
+							num1s+= $("input[name='num1s']").eq(index).val()+',';
+							prices+= $("input[name='prices']").eq(index).val()+','; 
+							sums+= $("input[name='sums']").eq(index).val()+','; 
+							nei_unit_ids += $("select[name='nei_unit_id']").eq(index).val()+','; 
+							nei_nums += $("select[name='nei_unit_id']").eq(index).find("option:selected").attr("data-nei_num")+','; 
 						}
-						window.scrollTo(0,0);  
-						$(".a_del").addClass("none"); //隐藏删除按钮
-					}else if(data.resultcode == 10){
-						layer.alert(data.msg,function(index){
-							if(data.err_row){
-								var err_row = parseInt(data.err_row)-1;
-								$("#table tbody").find("tr").eq(err_row).find(".a_del").removeClass("none");
-							}
-							layer.close(index);
-						}); 
-						
-					}else if(data.resultcode== 8){
-						layer.alert("数据验证错误");
-					}else{
-						layer.msg(data.msg);
-					}
-					$(".td_xh").each(function(index,value){
-						$(value).html(index+1);
-					});
-					saveState=0;
-					publicState=1;//可打印
-				},
-				error:function(){
-					layer.alert('不能重复保存。',{icon: 2});
+					}	
+				});
+				data.wgids=wgids.substr(0,wgids.length-1);
+				data.unit_ids=unit_ids.substr(0,unit_ids.length-1);
+				data.num1s=num1s.substr(0,num1s.length-1);
+				data.prices=prices.substr(0,prices.length-1); 
+				data.sums=sums.substr(0,sums.length-1);  
+				data.nei_unit_ids=nei_unit_ids.substr(0,nei_unit_ids.length-1);  
+				data.nei_nums=nei_nums.substr(0,nei_nums.length-1);   
+				if(data.wgids==""){
+					layer.msg('请填写数据');
+					isRequest = true;
+					return;
 				}
-			}); 
+				var status = data.status;
+				var jsid =data.jsid;
+				layer.msg("单据提交中",{time:3000}); 
+				$.ajax({
+					type:"post",
+					url:"{:U('Instock/instockAdd')}",
+					data:data,
+					dataType:"json",
+					success:function(data) {
+						if(data.resultcode==0){
+							$("input[name='wgids']").each(function(index,value){
+								if(arr.indexOf(index)>=0){
+									$(value).parent().parent().parent().remove();
+								}	
+							});
+							if(status==1){  
+								layer.msg("入库单保存成功,正在审核请稍后...");
+								upInstockStatus(jsid,1);
+							}else{
+								layer.alert('入库单保存成功',function(index){
+									layer.close(index);
+								});
+								$("#div_zzc1").removeClass("none"); 
+							}
+							window.scrollTo(0,0);  
+							$(".a_del").addClass("none"); //隐藏删除按钮
+						}else if(data.resultcode == 10){
+							layer.alert(data.msg,function(index){
+								if(data.err_row){
+									var err_row = parseInt(data.err_row)-1;
+									$("#table tbody").find("tr").eq(err_row).find(".a_del").removeClass("none");
+								}
+								layer.close(index);
+							}); 
+							
+						}else if(data.resultcode== 8){
+							layer.alert("数据验证错误");
+						}else{
+							layer.msg(data.msg);
+						}
+						$(".td_xh").each(function(index,value){
+							$(value).html(index+1);
+						}); 
+						setTimeout(function(){isRequest = true;},500);
+						saveState=0;
+						publicState=1;//可打印
+					},
+					error:function(){
+						layer.alert('不能重复保存。',{icon: 2});
+						isRequest = true;
+					}
+				}); 
+			} 
 		}
 
 		 //修改入库单审核状态
@@ -756,6 +763,7 @@
 					layer.alert("单据已保存，审核失败,"+data.msg,{icon:2});
 					$("#div_zzc2").removeClass("none");
 				}
+				isRequest = true;
         	},"json");
         }	
 

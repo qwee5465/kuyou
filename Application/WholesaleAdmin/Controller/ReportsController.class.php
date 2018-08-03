@@ -82,7 +82,9 @@ class ReportsController extends BaseController
     public function flowingWater(){
         $wid = getWid(); 
         $ctlist = M("client_type")->where("wid=$wid")->select();
+        $stlist = M("supplier_type")->where("wid=$wid")->select();
         $this->assign("ctlist",$ctlist); 
+        $this->assign("stlist",$stlist); 
         $this->display();
     }
 
@@ -101,6 +103,8 @@ class ReportsController extends BaseController
                 }
                 $ctid = I("ctid");
                 $c_id = I("c_id");
+                $stid = I("stid");
+                $sid = I("sid");
                 $wid = getWid();
                 // 查出wgid
                 $sql ="select b.wgid,b.unit_id,c.unit_name,d.num1 stock_num from db_goods a 
@@ -113,7 +117,7 @@ class ReportsController extends BaseController
                 $uname = $data[0]['unit_name'];
                 if($wgid){
                     $odata = $this->getOutGoodsInfo($wgid,$stime,$etime,$ctid,$c_id);
-                    $jdata = $this->getJoinGoodsInfo($wgid,$stime,$etime);
+                    $jdata = $this->getJoinGoodsInfo($wgid,$stime,$etime,$stid,$sid);
                     $result = array(
                         'wgid'=> $wgid,
                         'gname' => $gname,
@@ -164,11 +168,12 @@ class ReportsController extends BaseController
     /**
      * 获取入库商品流水
      */
-    public function getJoinGoodsInfo($wgid,$stime,$etime){
+    public function getJoinGoodsInfo($wgid,$stime,$etime,$stid,$sid){
         $sql = "select c.`name` sname,sum(b.num1) jnum,b.price jprice,FROM_UNIXTIME(a.auditing_time,'%Y-%m-%d') date
             from db_join_stock a 
             inner join db_join_stock_detail b on a.jsid = b.jsid
-            inner join db_supplier c on c.sid = a.sid  ";
+            inner join db_supplier c on c.sid = a.sid 
+            inner join db_supplier_type d on c.stid = d.stid ";
         $where =" where a.`status` = 1 and b.wgid = $wgid ";
         if($stime){
             $where .=" and a.auditing_time >=" . strtotime($stime);
@@ -176,6 +181,12 @@ class ReportsController extends BaseController
         if($etime){
             $end_time = strtotime($etime) + (24*60*60) - 1;
             $where .=" and a.auditing_time <" . $end_time;
+        }
+        if($sid){
+            $where .=" and c.sid = $sid ";
+        }
+        if($stid){
+            $where .=" and d.stid = $stid ";
         }
         $group =" group by date,sname,jprice";
         $order =" order by date desc";
@@ -291,6 +302,22 @@ class ReportsController extends BaseController
         if(IS_POST){
             $ctid = I("ctid");
             $result = M("client")->field("c_id,`name` cname")->where("ctid=$ctid")->select();
+            if($result){
+                $this->ajaxReturn(ReturnJSON(0,$result));
+            }else{
+                $this->ajaxReturn(ReturnJSON(1,$result));
+            }
+        }else{
+           $this->ajaxReturn(ReturnJSON(7,$result)); 
+        }
+    }
+
+
+    //根据供应商类型获取供应商信息
+    public function getSupplierInfo(){
+        if(IS_POST){
+            $stid = I("stid");
+            $result = M("supplier")->field("sid,`name` sname")->where("stid=$stid")->select();
             if($result){
                 $this->ajaxReturn(ReturnJSON(0,$result));
             }else{
