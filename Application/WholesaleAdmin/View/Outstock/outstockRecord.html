@@ -74,13 +74,13 @@
 									<option value="0">取消标记</option>
 									<option value="1">标记重点</option>
 								</select>
-								<span class="fl mt8  ml20">是否结算</span>
+								<!-- <span class="fl mt8  ml20">是否结算</span>
 								<select name="settlement" id="settlement" class="form-control w-90 fl ml10">
 									<option value="">全部</option>
 									<option value="0">未结算</option> 
 									<option value="1">已结算</option> 
 									<option value="2">未结清</option> 
-								</select> 
+								</select>  -->
 							</div>  
 							<div class="col-xs-12 col-md-12 mt10">
 								<span class="fl ml10 mt8">客户</span>
@@ -130,8 +130,8 @@
 						<td>录入时间/编辑时间</td>	
 						<td>审核状态</td>
 						<td>审核时间</td>
-						<td>是否结算</td>
-						<td>备注</td>
+						<!-- <td>是否结算</td> -->
+						<td style="max-width:200px;">备注</td>
 						<td>操作</td>
 					</tr>
 				</thead>
@@ -157,10 +157,10 @@
 						</td>
 						<td class="td_total">{$vo.total|customDecimal="sum",###}</td>
 						<td>{$vo.create_time|date="Y-m-d",###}</td>
-						<td>{$vo.update_time|date="Y-m-d H:i:s",###}</td>
+						<td style="font-size:12px;">{$vo.update_time|date="Y-m-d H:i:s",###}</td>
 						<td class="td_status">{$vo.status|getStatus}</td>
-						<td>{$vo.auditing_time}</td>
-						<td>
+						<td style="font-size:12px;">{$vo.auditing_time}</td>
+						<!-- <td>
 							<select onchange="upSettlementInfo(this.value,'{$vo.osid}')">
 								<if condition="$vo.settlement eq 0">
 									<option value='0' selected="selected">未结算</option>
@@ -178,8 +178,8 @@
 									<option value='2'>未结清</option> 
 								</if>  
 							</select>
-						</td>
-						<td>{$vo.remark}</td>
+						</td> -->
+						<td style="max-width:200px;">{$vo.remark}</td>
 						<td >
 							<if condition="$vo.status eq 0"> 
 								<a href="{:U('Outstock/outstockEdit',array('osid'=>$vo['osid']))}" class="a-edit" >编辑</a>

@@ -536,6 +536,13 @@
 			}
 			var totalb_s = $("#totalb_s").is(':checked') ? 0 : 1;
 			var totalb_p = $("#totalb_p").is(':checked') ? 0 : 1; 
+			var remarkb = $("#remarkb").val();
+			if(!remarkb){ 
+				layer.tips('请填写显示名称', '#remarkb', {tips: 2});
+				return false; 
+			}
+			var remarkb_s = $("#remarkb_s").is(':checked') ? 0 : 1;
+			var remarkb_p = $("#remarkb_p").is(':checked') ? 0 : 1; 
 			var data ={
 				"gname":gname,
 	            "gname_s":gname_s,
@@ -554,7 +561,10 @@
 	            "price_p":price_p,
 	            "totalb":totalb,
 	            "totalb_s":totalb_s,
-	            "totalb_p":totalb_p
+	            "totalb_p":totalb_p,
+	            "remarkb":remarkb,
+	            "remarkb_s":remarkb_s,
+	            "remarkb_p":remarkb_p
 			}; 
 			// console.log(data);return;
 			var index = layer.load(2,{time:1000});

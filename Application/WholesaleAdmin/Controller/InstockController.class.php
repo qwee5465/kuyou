@@ -422,6 +422,7 @@ class InstockController extends BaseController
             $list['num1s'] =$this->strToArray(I("num1s")); 
             $list['prices'] =$this->strToArray(I("prices"));  
             $list['sums'] =$this->strToArray(I("sums"));  
+            $list['remarkb'] =$this->strToArray(I("remarkb"));  
             $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids"));  
             $list['nei_nums'] =$this->strToArray(I("nei_nums"));  
             // $this->ajaxReturn($list);exit();
@@ -483,6 +484,7 @@ class InstockController extends BaseController
                             'nei_unit_id'=>$list['nei_unit_ids'][$k],
                             'nei_price'=>$list['prices'][$k],
                             'total_cost'=>$list['sums'][$k],
+                            'remarkb'=>$list['remarkb'][$k],
                             'create_time'=>time()
                         ); 
                         $join_id = $mm->add($sublist);
@@ -541,6 +543,7 @@ class InstockController extends BaseController
             $list['num1s'] =$this->strToArray(I("num1s")); 
             $list['prices'] =$this->strToArray(I("prices")); 
             $list['sums'] =$this->strToArray(I("sums"));
+            $list['remarkb'] =$this->strToArray(I("remarkb"));
             $list['nei_unit_ids'] =$this->strToArray(I("nei_unit_ids"));  
             $list['nei_nums'] =$this->strToArray(I("nei_nums"));  
             // $this->ajaxReturn($list);exit();
@@ -604,6 +607,7 @@ class InstockController extends BaseController
                                 'nei_unit_id'=>$list['nei_unit_ids'][$k],
                                 'nei_price'=>$list['prices'][$k],
                                 'total_cost'=>$list['sums'][$k],
+                                'remarkb'=>$list['remarkb'][$k],
                                 'create_time'=>time()
                             );  
                             $join_id = $mm->add($sublist);
@@ -1161,7 +1165,10 @@ class InstockController extends BaseController
                 "shelf_p"=>I("shelf_p"),
                 "totalb"=>I("totalb"),
                 "totalb_s"=>I("totalb_s"),
-                "totalb_p"=>I("totalb_p")
+                "totalb_p"=>I("totalb_p"),
+                "remarkb"=>I("remarkb"),
+                "remarkb_s"=>I("remarkb_s"),
+                "remarkb_p"=>I("remarkb_p"),
             );
             if($list){ //修改
                 $jsdcb_id = $list['jsdcb_id'];

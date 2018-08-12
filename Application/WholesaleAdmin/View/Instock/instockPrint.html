@@ -144,11 +144,11 @@
 					<if condition="$jsbList.price_p eq 0">
 						<td class=" b_price_p">{$t_list.price}</td> 
 					</if>
-					<if condition="$jsbList.shelf_p eq 0">
-						<td class=" b_shelf_p">{$t_list.shelf}</td> 
-					</if>
 					<if condition="$jsbList.totalb_p eq 0">
 						<td class="b_totalb_p">{$t_list.totalb}</td>
+					</if>
+					<if condition="$jsbList.remarkb_p eq 0">
+						<td class="b_remarkb_p">{$t_list.remarkb}</td>
 					</if>
 				</tr>
 			 </thead>
@@ -171,11 +171,11 @@
 						<if condition="$jsbList.price_p eq 0">
 							<td class="b_price_p">{$vo.price|customDecimal="price",###}</td>  
 						</if>
-						<if condition="$jsbList.shelf_p eq 0">
-							<td class="b_shelf_p">{$vo.shelf_life}</td>   
-						</if>
 						<if condition="$jsbList.totalb_p eq 0">
 							<td class="b_totalb_p">{$vo.total_cost|customDecimal="sum",###}</td> 
+						</if>
+						<if condition="$jsbList.remarkb_p eq 0">
+							<td class="b_remarkb_p">{$vo.remarkb}</td> 
 						</if>
 					</tr>
 				</foreach>

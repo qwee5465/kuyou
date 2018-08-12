@@ -9,9 +9,9 @@ return array(
 	"JOIN_STOCK_COLUMN_NAME_T" =>"jsid=入库单据号,jsname=入库名称,sname=供应商,company=公司,company_address=公司地址,company_phone=公司电话,ctime=日期,cfee=运费(元),ufee=卸车费(元),afee=代理费(元),remark=备注,total=单据金额(元),saddress=供应商地址,stel=供应商电话,audit=审核人,settlement=是否结算",
 	"JOIN_STOCK_COLUMN_NEED_T" =>"jsid=0,jsname=1,sname=0,company=1,company_address=1,company_phone=1,ctime=1,cfee=1,ufee=1,afee=1,remark=1,total=0,saddress=1,stel=1,audit=1,settlement=1",
 	//入库内容
-	"JOIN_STOCK_COLUMN_SHOW" =>"gname_s=0,bname_s=0,uname_s=0,num_s=0,price_s=0,totalb_s=0",
-	"JOIN_STOCK_COLUMN_NAME" =>"gname=商品名称,bname=品牌,uname=默认单位,num=数量,price=单位进价,totalb=总金额",
-	"JOIN_STOCK_COLUMN_NEED" =>"gname=0,bname=1,uname=0,num=0,price=0,totalb=0",
+	"JOIN_STOCK_COLUMN_SHOW" =>"gname_s=0,bname_s=0,uname_s=0,num_s=0,price_s=0,totalb_s=0,remarkb_s=0",
+	"JOIN_STOCK_COLUMN_NAME" =>"gname=商品名称,bname=品牌,uname=默认单位,num=数量,price=单位进价,totalb=总金额,remarkb=备注",
+	"JOIN_STOCK_COLUMN_NEED" =>"gname=0,bname=1,uname=0,num=0,price=0,totalb=0,remarkb=0",
 	//出库头部
     "OUT_STOCK_COLUMN_SHOW_T" =>"osid_s=0,osname_s=0,cname_s=0,cphone_s=0,caddress_s=0,company_s=1,company_address_s=1,company_phone_s=1,ctime_s=0,remark_s=0,total_s=0,audit_s=0,check_s=0,delivery_s=1,checkp_s=1,take_over_s=1",
 	"OUT_STOCK_COLUMN_NAME_T" =>"osid=单据号,osname=单据名称,cname=客户,cphone=客户电话,caddress=客户地址,company=公司,company_address=公司地址,company_phone=公司电话,ctime=日期,remark=备注,total=单据金额(元),audit=审核人,check=验收人,delivery=送货人,checkp=复核人,take_over=收货人（接管人）",

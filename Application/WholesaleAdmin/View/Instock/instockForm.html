@@ -277,6 +277,11 @@
 								<else />
 									<td class="w-100 none b_totalb_p">{$t_list.totalb}</td>
 								</if>
+								<if condition="$jsbList.remarkb_s eq 0">
+									<td class="w-100 b_remarkb_p">{$t_list.remarkb}</td>
+								<else />
+									<td class="w-100 none b_remarkb_p">{$t_list.remarkb}</td>
+								</if>
 								<td class="w-80">操作</td>
 							</tr>
 						</thead>
@@ -329,6 +334,11 @@
 										<td class="td_sum b_totalb_p"><input type="text" name="sums" readonly class="stock-txt w100 t-number focus-switch"></td> 
 									<else />
 										<td class="td_sum none b_totalb_p"><input type="text" name="sums" readonly class="stock-txt w100 t-number focus-switch"></td> 
+									</if>
+									<if condition="$jsbList.remarkb_s eq 0">
+										<td class="td_remarkb b_remarkb_p"><input type="text" name="remarkb" class="stock-txt w100 t-number focus-switch"></td> 
+									<else />
+										<td class="td_remarkb none b_remarkb_p"><input type="text" name="remarkb" class="stock-txt w100 t-number focus-switch"></td> 
 									</if>
 									<td>
 										<a href="javascript:;" onclick="removeTr(this)" class="a_del none">
@@ -667,6 +677,7 @@
 					num1s = '',//数量
 					prices = '',//单位进价 
 					sums = '';//总金额 
+					remarkb = '';//备注 
 					nei_unit_ids="",//内装单位
 					nei_nums="", //内装数  
 				$("input[name='wgids']").each(function(index,value){
@@ -680,6 +691,7 @@
 							sums+= $("input[name='sums']").eq(index).val()+','; 
 							nei_unit_ids += $("select[name='nei_unit_id']").eq(index).val()+','; 
 							nei_nums += $("select[name='nei_unit_id']").eq(index).find("option:selected").attr("data-nei_num")+','; 
+							remarkb+= $("input[name='remarkb']").eq(index).val()+','; 
 						}
 					}	
 				});
@@ -688,6 +700,7 @@
 				data.num1s=num1s.substr(0,num1s.length-1);
 				data.prices=prices.substr(0,prices.length-1); 
 				data.sums=sums.substr(0,sums.length-1);  
+				data.remarkb=remarkb.substr(0,remarkb.length-1);  
 				data.nei_unit_ids=nei_unit_ids.substr(0,nei_unit_ids.length-1);  
 				data.nei_nums=nei_nums.substr(0,nei_nums.length-1);   
 				if(data.wgids==""){
