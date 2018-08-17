@@ -854,8 +854,7 @@ class InstockController extends BaseController
         $audit = session("contacts"); 
         $unit_name = getUnitName();
         $this->assign("unit_name",$unit_name);
-        $this->assign("audit",$audit);
-        // dump($list);
+        $this->assign("audit",$audit); 
         $wid = getWid();
         /*----------------------获取数据量设置信息---------------------*/
         //获取默认商品数据列表信息  

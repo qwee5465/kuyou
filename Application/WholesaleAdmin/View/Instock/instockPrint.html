@@ -169,7 +169,7 @@
 							<td class="b_num_p">{$vo['num1']/$vo['nei_num']|customDecimal="num",###}</td>
 						</if>
 						<if condition="$jsbList.price_p eq 0">
-							<td class="b_price_p">{$vo.price|customDecimal="price",###}</td>  
+							<td class="b_price_p">{$vo.nei_price|customDecimal="price",###}</td>  
 						</if>
 						<if condition="$jsbList.totalb_p eq 0">
 							<td class="b_totalb_p">{$vo.total_cost|customDecimal="sum",###}</td> 
