@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>毛利分析</title>
+	<title>毛利分析库存</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
@@ -39,27 +39,16 @@
 	<div id="body_content">
 		<div class="nav navbar-default">
 			<div class="container-fluid">
-				<h3>毛利分析<span class="header-des">注：（日期以出库时间为准)</span></h3>
+				<h3>毛利分析库存<span class="header-des">注：（日期以入库和出库时间为准)</span></h3>
 				<div>
 					<form action="__SELF__" method="post">
 						<div class="form-group ml15">
 							<div class="row">
 								<div class="col-xs-12 col-md-12">
-									<span class="fl fs-14 ml10 mt8">客户类型</span>
-									<select id="ctid" class="fl ml10" onchange="getCilentInfo(this.value)">
-										<option value=''>全部类型</option>
-										<volist name='ctlist' id='vo'>
-											<option value='{$vo.ctid}'>{$vo.type_name}</option> 
-										</volist>
-									</select>
-									<span class="fl fs-14 ml10 mt8">客户名称</span>
-									<select id="c_id" class="fl ml10">
-										<option value=''>全部名称</option>
-									</select>
 									<span class="fl fs-14 mt8">&nbsp;&nbsp;&nbsp;日期&nbsp;&nbsp;&nbsp;从</span>
-									<input type="text" id="stime" value="" class="form-control w-115 fl ml5 noradius">
+									<input type="text" id="stime" value="2018-08-01" class="form-control w-115 fl ml5 noradius">
 									<span class="fl fs-14 ml5 mt8">到</span>
-									<input type="text" id="etime" value="" class="form-control w-120 fl ml5 noradius">
+									<input type="text" id="etime" value="2018-08-31" class="form-control w-120 fl ml5 noradius">
 									<input type="button" onclick="getMaoriAnalysisInfo()" value="搜 索" class="btn btn-success ml20" /> 
 								</div> 
 							</div> 
@@ -73,12 +62,16 @@
 				<thead>
 					<tr class="headcolor2">
 						<td>序号</td>
-						<td>客户类型</td>
-						<td>客户</td>
-						<td>成本金额</td>
+						<td>商品名称</td>
+						<td>默认单位</td>
+						<td>入库数</td>
+						<td>入库成本</td>
+						<td>出库数</td>
 						<td>销售金额</td>
-						<td>毛利</td>
-						<td>毛利率</td>
+						<!-- <td>库存数</td> -->
+						<!-- <td>库存成本</td> -->
+						<!-- <td>毛利</td>
+						<td>毛利率</td> -->
 					</tr>
 				</thead>
 				<tbody id="tbody">
@@ -89,10 +82,8 @@
 			</table> 
 			<table class="tb-style none" id="tfoot" >
 				<tr> 
-					<td colspan="2">总成本金额:</td>
-					<td colspan="2">总销售金额:</td>
-					<td colspan="2">毛利:</td>
-					<td>毛利率:</td>
+					<td colspan="3">总成本金额:</td>
+					<td colspan="4">总销售金额:</td> 
 				</tr>
 			</tfoot>
 		</div>
@@ -107,26 +98,7 @@
 
 	<script type="text/javascript">  
 		var isRequest = true; //请求状态
-		//根据客户类型获取客户信息
-		function getCilentInfo(ctid){ 
-			if(ctid){
-				$.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid},function(data){
-		            if(data.resultcode==0){
-		                var result =data.result;
-		                var str ='<option value="">全部类型</option>';
-		                for(var i=0;i<result.length;i++){
-		                    str +='<option value="'+result[i]['c_id']+'">'+result[i]['cname']+'</option>';
-		                }
-		                $("#c_id").html(str);   
-		            }else{ 
-				    	$("#c_id").html('<option value="">全部类型</option>');  
-		            }
-		        }, "json");
-	        }else{
-	        	$("#c_id").html('<option value="">全部类型</option>');  
-	        }
-		} 
-
+		
 		laydate({
             elem: '#stime'
         });
@@ -136,9 +108,7 @@
 
         //获取库存商品流水
         function getMaoriAnalysisInfo(){
-        	if(isRequest){
-        		var ctid = $("#ctid").val(),
-        		c_id = $("#c_id").val();
+        	if(isRequest){ 
         		stime = $("#stime").val(),
         		etime = $("#etime").val(); 
 	        	if(!stime){
@@ -154,8 +124,8 @@
 				    shade: 0.01,
 				    time:10000
 				}); 
-	        	data ={"stime":stime,"etime":etime,"ctid":ctid,"c_id":c_id};
-	        	var url ="{:U('Reports/getMaoriAnalysis')}";
+	        	data ={"stime":stime,"etime":etime};
+	        	var url ="{:U('Reports/getMaoriAnalysisStock')}";
         		isRequest = false;
 	        	$.ajax({
 		            type: "GET",
@@ -165,22 +135,17 @@
 		            success: function(res){ 
 		            	console.log(res);
 		            	if(res.resultcode==0){
-		            		var list = res.result,zjtotal=0,zototal=0; 
-		            		for(var i=0;i<list.length;i++){  
-		            			list[i].jtotal = list[i].jtotal.myToFixed(2);
-		            			list[i].ototal = list[i].ototal.myToFixed(2);
-		            			zjtotal += parseFloat(list[i].jtotal);
-		            			zototal += parseFloat(list[i].ototal);
-		            			list[i].maori = (parseFloat(list[i].ototal) - parseFloat(list[i].jtotal)).myToFixed(2);
-		            			if(parseFloat(list[i].ototal)>0){
-		            				list[i].maoriLv = ((parseFloat(item.ototal) - parseFloat(list[i].jtotal)/ parseFloat(list[i].ototal))*100).myToFixed(2)+"%";
-		            			}else{
-		            				list[i].maoriLv = "0%";
-		            			}
-		            			
-		            		}
-		            		builTable(list);
-		            		buildTotal(zjtotal,zototal);
+		            		//组合入库数据和出库数据
+		            		var data = handleData(res.result.jdata,res.result.odata);
+
+        					console.log("组装完的：",data)
+		            		//将数据换成中文
+		            		data = idTurnName(data,res.result.gdata,res.result.udata);
+
+        					console.log("转中文的：",data)
+		            		//数据渲染
+		            		builTable(data.data);
+		            		buildTotal(data.jsum,data.osum);
 		            	}else{
 		            		if(res.resultcode==1009){
 		            			layer.msg("时间段不能超过31天",{icon:2});
@@ -201,22 +166,103 @@
         }	
 
         /**
+         * 根据入库数据和出库数据生成新的数组
+         */
+        function handleData(jdata,odata){
+        	var obj={jsum:0,osum:0},result = [];
+        	//去除重复
+        	jdata.map(function(item,index){
+        		result.push({
+        			wgid:item.wgid, 
+        			unit_id:item.unit_id1, 
+        			jnum:"0.00",
+        			jprice:"0.00",
+        			onum:"0.00",
+        			oprice:"0.00",
+        			jtotal:"0.00",
+        			ototal:"0.00",
+        			maori:"0.00",
+        			grossInterestRate:""
+        		});
+        	})
+        	odata.map(function(item,index){
+        		var bl = false; //是否重复
+        		for(var i = 0;i<result.length;i++){
+        			if(item.wgid == result[i].wgid){
+        				bl = true;
+        				break;
+        			}
+        		} 
+        		!bl && result.push({
+        			wgid:item.wgid, 
+        			unit_id:item.unit_id1, 
+        			jnum:"0.00",
+        			jprice:"0.00",
+        			onum:"0.00",
+        			oprice:"0.00",
+        			jtotal:"0.00",
+        			ototal:"0.00",
+        			maori:"0.00",
+        			grossInterestRate:""
+        		});
+        	})
+        	//组装数据
+        	result.map(function(item,index){
+        		jdata.map(function(vo,key){
+        			if(item.wgid == vo.wgid){
+        				item.jnum = vo.jnum.myToFixed(2);
+        				item.jtotal = vo.jtotal.myToFixed(2); 
+        			}
+        		})
+        		odata.map(function(vo,key){
+        			if(item.wgid == vo.wgid){
+        				item.onum = vo.onum.myToFixed(2);
+        				item.ototal = vo.ototal.myToFixed(2); 
+        			}
+        		})
+        		obj.jsum += parseFloat(item.jtotal);
+        		obj.osum += parseFloat(item.ototal);
+        	})
+        	obj.data = result;
+        	obj.jsum = obj.jsum.myToFixed(2);
+        	obj.osum = obj.osum.myToFixed(2);
+        	return obj;
+        }
+
+        /**
+         * 通过id获取中文
+         */
+        function idTurnName(json,gdata,udata){
+        	json.data.map(function(item,index){
+        		for(var i=0;i<gdata.length;i++){
+        			if(item.wgid == gdata[i].wgid){
+        				item.gname = gdata[i].gname;
+        				break;
+        			}
+        		}
+        	});
+        	json.data.map(function(item,index){
+        		for(var i=0;i<udata.length;i++){
+        			if(item.unit_id == udata[i].unit_id){
+        				item.uname = udata[i].uname;
+        				break;
+        			}
+        		}
+        	});
+        	return json;
+        }
+
+        /**
          * 生成小计数据
          */
         function buildTotal(zjtotal,zototal){ 
         	$("#tfoot tr td").each(function(index,obj){
         		switch(index){
         			case 0:
-        				obj.innerHTML = "总成本金额:" +zjtotal.myToFixed(2);
+        				obj.innerHTML = "总成本金额:" +dealNumber(zjtotal);
         				break;
         			case 1:
-        				obj.innerHTML = "总销售金额:" +zototal.myToFixed(2);
-        				break;
-        			case 2:
-        				obj.innerHTML = "毛利:" +(parseFloat(zototal)-parseFloat(zjtotal)).myToFixed(2);
-        				break;
-        			case 3:
-        				obj.innerHTML = "毛利率:" +((1-parseFloat(zjtotal)/parseFloat(zototal))*100).myToFixed(2)+"%";
+        				obj.innerHTML = "总销售金额:" +dealNumber(zototal);
         				break;
         		}
         	})
@@ -267,15 +313,15 @@
 		        		i++;
 		        		return i;
 		        	},className:"text-center"}, 
-		            { data: 'tname',className:"text-center"},
-		            { data: 'cname',className:"text-center"},
+		            { data: 'gname',className:"text-center"},
+		            { data: 'uname',className:"text-center"},
+		            { data: 'jnum',className:"text-center"},
 		            { data: 'jtotal',className:"text-center"},
-		            { data: 'ototal',className:"text-center"},
-		            { data: 'maori',className:"text-center"},
-		            { data: 'maoriLv',className:"text-center"}
+		            { data: 'onum',className:"text-center"},
+		            { data: 'ototal',className:"text-center"}
 		        ],
 		        columnDefs:[{
-				　　　　'targets' : [3,4,5,6],   
+				　　　　'targets' : [0,1,2,3,4,5,6],   
 				　　　　'orderable' : false
 				}]
 		    });

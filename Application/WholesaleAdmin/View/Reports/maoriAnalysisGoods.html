@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>毛利分析</title>
+	<title>毛利分析商品</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/base.css" />
@@ -39,28 +39,30 @@
 	<div id="body_content">
 		<div class="nav navbar-default">
 			<div class="container-fluid">
-				<h3>毛利分析<span class="header-des">注：（日期以出库时间为准)</span></h3>
+				<h3>毛利分析商品<span class="header-des">注：（日期以出库时间为准)</span></h3>
 				<div>
 					<form action="__SELF__" method="post">
 						<div class="form-group ml15">
 							<div class="row">
 								<div class="col-xs-12 col-md-12">
-									<span class="fl fs-14 ml10 mt8">客户类型</span>
-									<select id="ctid" class="fl ml10" onchange="getCilentInfo(this.value)">
-										<option value=''>全部类型</option>
-										<volist name='ctlist' id='vo'>
-											<option value='{$vo.ctid}'>{$vo.type_name}</option> 
-										</volist>
+									<span class="fl mt8">商品类型</span>
+									<select class="fl ml10" id="gtid" onchange="getTwoTypeInfo(this.value)">
+										<option value="">一级全部</option>
+										<foreach name="gtlist" item="vo">
+											<option value="{$vo.gtid}">{$vo.type_name}</option>
+										</foreach>
 									</select>
-									<span class="fl fs-14 ml10 mt8">客户名称</span>
-									<select id="c_id" class="fl ml10">
-										<option value=''>全部名称</option>
+									<select id="gtid1"  class="fl ml10" onchange="getThreeTypeInfo(this.value)">
+										<option value="">二级全部</option>
+									</select>
+									<select id="gtid2" class="fl ml10">
+										<option value="">三级全部</option> 
 									</select>
 									<span class="fl fs-14 mt8">&nbsp;&nbsp;&nbsp;日期&nbsp;&nbsp;&nbsp;从</span>
-									<input type="text" id="stime" value="" class="form-control w-115 fl ml5 noradius">
+									<input type="text" id="stime" value="2018-08-01" class="form-control w-115 fl ml5 noradius">
 									<span class="fl fs-14 ml5 mt8">到</span>
-									<input type="text" id="etime" value="" class="form-control w-120 fl ml5 noradius">
-									<input type="button" onclick="getMaoriAnalysisInfo()" value="搜 索" class="btn btn-success ml20" /> 
+									<input type="text" id="etime" value="2018-08-31" class="form-control w-120 fl ml5 noradius">
+									<input type="button" onclick="getMaoriAnalysisInfoGoods()" value="搜 索" class="btn btn-success ml20" /> 
 								</div> 
 							</div> 
 						</div>  
@@ -73,8 +75,9 @@
 				<thead>
 					<tr class="headcolor2">
 						<td>序号</td>
-						<td>客户类型</td>
-						<td>客户</td>
+						<td>商品类型</td>
+						<td>商品名称</td>
+						<td>默认单位</td>
 						<td>成本金额</td>
 						<td>销售金额</td>
 						<td>毛利</td>
@@ -83,7 +86,7 @@
 				</thead>
 				<tbody id="tbody">
 					<tr>
-						<td colspan="7">请先搜索,暂无数据!</td> 
+						<td colspan="8">请先搜索,暂无数据!</td> 
 					</tr>
 				</tbody> 
 			</table> 
@@ -92,7 +95,7 @@
 					<td colspan="2">总成本金额:</td>
 					<td colspan="2">总销售金额:</td>
 					<td colspan="2">毛利:</td>
-					<td>毛利率:</td>
+					<td colspan="2">毛利率:</td>
 				</tr>
 			</tfoot>
 		</div>
@@ -107,25 +110,63 @@
 
 	<script type="text/javascript">  
 		var isRequest = true; //请求状态
-		//根据客户类型获取客户信息
-		function getCilentInfo(ctid){ 
-			if(ctid){
-				$.post("{:U('Reports/getCilentInfo')}", { "ctid": ctid},function(data){
+		//根据1级类型编号获取二级分类
+	    function getTwoTypeInfo(fid){ 
+	    	var gtid1 = "{$gtid1}";
+	    	if(fid){
+		        $.post("{:U('Goods/getTwoTypeInfo')}", { "fid": fid},function(data){
 		            if(data.resultcode==0){
 		                var result =data.result;
-		                var str ='<option value="">全部类型</option>';
+		                var str ='<option value="">二级全部</option>';
 		                for(var i=0;i<result.length;i++){
-		                    str +='<option value="'+result[i]['c_id']+'">'+result[i]['cname']+'</option>';
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
 		                }
-		                $("#c_id").html(str);   
-		            }else{ 
-				    	$("#c_id").html('<option value="">全部类型</option>');  
+		                $("#gtid1").html(str); 
+		                $("#gtid2").html('<option value="">三级全部</option>');
+		                if(gtid1 && gtid1!="0"){
+		                	if(index==0){
+			                	$("#gtid1").val(gtid1);
+			                	getThreeTypeInfo(gtid1);
+			                	index++;
+		                	}
+		                }
+		            }else{
+			        	$("#gtid1").html('<option value="">二级全部</option>'); 
+			        	$("#gtid2").html('<option value="">三级全部</option>');
 		            }
 		        }, "json");
 	        }else{
-	        	$("#c_id").html('<option value="">全部类型</option>');  
+	        	$("#gtid1").html('<option value="">二级全部</option>'); 
+	        	$("#gtid2").html('<option value="">三级全部</option>');
 	        }
-		} 
+	    }
+
+	    //根据二级类型编号获取三级分类
+	    function getThreeTypeInfo(fid){ 
+	    	var gtid2 ="{$gtid2}";
+	    	if(fid!=""){
+		        $.post("{:U('Goods/getThreeTypeInfo')}", { "fid": fid},function(data){
+		            if(data.resultcode==0){
+		                var result =data.result;
+		                var str ='<option value="">三级全部</option>';
+		                for(var i=0;i<result.length;i++){
+		                    str +='<option value="'+result[i]['gtid']+'">'+result[i]['type_name']+'</option>';
+		                }
+		                $("#gtid2").html(str);
+		                if(gtid2 && gtid2!="0"){
+		                	if(index1==0){
+		                		$("#gtid2").val(gtid2);
+		                		index1++;
+		                	}
+		                } 
+		            }else{
+		            	$("#gtid2").html("<option value=''>三级全部</option>");
+		            }
+		        }, "json");
+		    }else{
+		    	$("#gtid2").html("<option value=''>三级全部</option>");
+		    }
+	    }
 
 		laydate({
             elem: '#stime'
@@ -135,12 +176,13 @@
         });
 
         //获取库存商品流水
-        function getMaoriAnalysisInfo(){
+        function getMaoriAnalysisInfoGoods(){
         	if(isRequest){
-        		var ctid = $("#ctid").val(),
-        		c_id = $("#c_id").val();
-        		stime = $("#stime").val(),
-        		etime = $("#etime").val(); 
+        		var gtid = $("#gtid").val(), 
+        			gtid1 = $("#gtid1").val(), 
+        			gtid2 = $("#gtid2").val(), 
+	        		stime = $("#stime").val(),
+	        		etime = $("#etime").val(); 
 	        	if(!stime){
 	        		layer.tips('请选择开始日期', '#stime', {tips: 1});
 					return;
@@ -154,8 +196,8 @@
 				    shade: 0.01,
 				    time:10000
 				}); 
-	        	data ={"stime":stime,"etime":etime,"ctid":ctid,"c_id":c_id};
-	        	var url ="{:U('Reports/getMaoriAnalysis')}";
+	        	data ={"stime":stime,"etime":etime,"gtid":gtid,"gtid1":gtid1,"gtid2":gtid2};
+	        	var url ="{:U('Reports/getMaoriAnalysisGoods')}";
         		isRequest = false;
 	        	$.ajax({
 		            type: "GET",
@@ -165,22 +207,32 @@
 		            success: function(res){ 
 		            	console.log(res);
 		            	if(res.resultcode==0){
-		            		var list = res.result,zjtotal=0,zototal=0; 
-		            		for(var i=0;i<list.length;i++){  
-		            			list[i].jtotal = list[i].jtotal.myToFixed(2);
-		            			list[i].ototal = list[i].ototal.myToFixed(2);
-		            			zjtotal += parseFloat(list[i].jtotal);
-		            			zototal += parseFloat(list[i].ototal);
-		            			list[i].maori = (parseFloat(list[i].ototal) - parseFloat(list[i].jtotal)).myToFixed(2);
-		            			if(parseFloat(list[i].ototal)>0){
-		            				list[i].maoriLv = ((parseFloat(item.ototal) - parseFloat(list[i].jtotal)/ parseFloat(list[i].ototal))*100).myToFixed(2)+"%";
+		            		var data = res.result,
+		            			jtotal=0,
+		            			ototal=0,
+		            			maori=0,
+		            			maoriLv="";
+		            		data.map(function(item,index){
+		            			item.tname = item.tname1;
+		            			if(item.tname2)
+		            				item.tname +=" >"+item.tname2;
+		            			if(item.tname3)
+		            				item.tname +=" >"+item.tname3;
+		            			jtotal += parseFloat(item.jtotal);
+		            			ototal += parseFloat(item.sales_amount);
+		            			item.jtotal = item.jtotal.myToFixed(2);
+		            			item.sales_amount = item.sales_amount.myToFixed(2);
+		            			item.maori = (parseFloat(item.sales_amount) - parseFloat(item.jtotal)).myToFixed(2);
+		            			if(item.sales_amount>0){ 
+		            				item.maoriLv = ((parseFloat(item.sales_amount) - parseFloat(item.jtotal))/parseFloat(item.sales_amount))*100;
+		            				item.maoriLv=item.maoriLv.myToFixed(2)+"%";
 		            			}else{
-		            				list[i].maoriLv = "0%";
-		            			}
-		            			
-		            		}
-		            		builTable(list);
-		            		buildTotal(zjtotal,zototal);
+		            				item.maoriLv = "0%";
+		            			} 
+		            		})
+		            		maori = ototal - jtotal;
+		            		builTable(data);
+		            		buildTotal(jtotal,ototal,maori);
 		            	}else{
 		            		if(res.resultcode==1009){
 		            			layer.msg("时间段不能超过31天",{icon:2});
@@ -203,20 +255,20 @@
         /**
          * 生成小计数据
          */
-        function buildTotal(zjtotal,zototal){ 
+        function buildTotal(zjtotal,zototal,maori){ 
         	$("#tfoot tr td").each(function(index,obj){
         		switch(index){
         			case 0:
-        				obj.innerHTML = "总成本金额:" +zjtotal.myToFixed(2);
+        				obj.innerHTML = "总成本金额:" +dealNumber(zjtotal);
         				break;
         			case 1:
-        				obj.innerHTML = "总销售金额:" +zototal.myToFixed(2);
+        				obj.innerHTML = "总销售金额:" +dealNumber(zototal);
         				break;
         			case 2:
-        				obj.innerHTML = "毛利:" +(parseFloat(zototal)-parseFloat(zjtotal)).myToFixed(2);
+        				obj.innerHTML = "毛利:" +dealNumber(maori);
         				break;
         			case 3:
-        				obj.innerHTML = "毛利率:" +((1-parseFloat(zjtotal)/parseFloat(zototal))*100).myToFixed(2)+"%";
+        				obj.innerHTML = "毛利率:" +dealNumber((maori/zototal)*100)+"%";
         				break;
         		}
         	})
@@ -268,14 +320,15 @@
 		        		return i;
 		        	},className:"text-center"}, 
 		            { data: 'tname',className:"text-center"},
-		            { data: 'cname',className:"text-center"},
+		            { data: 'gname',className:"text-center"},
+		            { data: 'uname',className:"text-center"},
 		            { data: 'jtotal',className:"text-center"},
-		            { data: 'ototal',className:"text-center"},
+		            { data: 'sales_amount',className:"text-center"},
 		            { data: 'maori',className:"text-center"},
 		            { data: 'maoriLv',className:"text-center"}
 		        ],
 		        columnDefs:[{
-				　　　　'targets' : [3,4,5,6],   
+				　　　　'targets' : [0,1,2,3,4,5,6,7],   
 				　　　　'orderable' : false
 				}]
 		    });

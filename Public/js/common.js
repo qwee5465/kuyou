@@ -40,6 +40,22 @@ var saveState = 0; //0.不需要保持1.需要保持
     });
 })();
 
+//保留两位小数并且整数部分三位一个逗号分隔符的数字金钱标准表示法：
+ //这里假设我们即不知道输入数字的整数位数，也不知道小数位数
+/*将100000转为100,000.00形式*/
+var dealNumber = function(money){
+    if(money && money!=null){
+        money = String(money);
+        var left=money.split('.')[0],right=money.split('.')[1];
+        right = right ? (right.length>=2 ? '.'+right.substr(0,2) : '.'+right+'0') : '.00';
+        var temp = left.split('').reverse().join('').match(/(\d{1,3})/g);
+        return (Number(money)<0?"-":"") + temp.join(',').split('').reverse().join('')+right;
+    }else if(money===0){   //注意===在这里的使用，如果传入的money为0,if中会将其判定为boolean类型，故而要另外做===判断
+        return '0.00';
+    }else{
+        return "";
+    }
+};
 
 Number.prototype.myToFixed = function(s) {
     var that = this,changenum,index;

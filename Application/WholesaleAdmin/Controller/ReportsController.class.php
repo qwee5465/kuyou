@@ -34,14 +34,30 @@ class ReportsController extends BaseController
     }
 
     /**
+     * 毛利分析-库存
+     */
+    public function maoriAnalysisStock(){
+        $this->display();
+    }
+
+    /**
+     * 毛利分析-商品
+     */
+    public function maoriAnalysisGoods(){
+        // 商品类型
+        $wid = getWid();
+        $gtlist = M("goods_type")->where("series=1 and wid = $wid")->select();
+        $this->assign("gtlist",$gtlist);
+        $this->display();
+    }
+    
+
+    /**
      * 获取毛利分析数据
      */
     public function getMaoriAnalysis(){
         if(IS_GET){
-            $ctid = I("ctid");
-            // if(!$ctid){
-            //     $this->ajaxReturn(ReturnJSON1(8,'请选择客户类型'));
-            // }
+            $ctid = I("ctid"); 
             $c_id = I("c_id");
             $stime = I("stime");
             $etime = I("etime");
@@ -77,6 +93,109 @@ class ReportsController extends BaseController
     }
 
     /**
+     * 获取毛利分析库存数据
+     */
+    public function getMaoriAnalysisStock(){
+        if(IS_GET){ 
+            $stime = I("stime");
+            $etime = I("etime");
+            if(strtotime($etime)-strtotime($stime)>30*24*60*60){
+                $this->ajaxReturn(ReturnJSON(1009));
+                return;
+            }
+            //查询入库信息
+            $sql = "select b.wgid,b.unit_id1,SUM(b.num1) jnum,SUM(b.total_cost) jtotal from db_join_stock a INNER JOIN db_join_stock_detail b on a.jsid = b.jsid ";
+            $where = " where a.`status` = 1 "; 
+            if($stime){
+                $where .=" and a.create_time >=" . strtotime($stime);
+            }
+            if($etime){
+                $end_time = strtotime($etime) + (24*60*60) -1;
+                $where .=" and a.create_time <" . $end_time;
+            } 
+            $group = " group by b.wgid,b.unit_id1";       
+            $order ="  ORDER BY wgid ASC";
+            $sql = $sql.$where.$group.$order;
+            $jdata = M()->query($sql); 
+            //查询出库信息 
+            $sql = "select b.wgid,b.unit_id1,SUM(b.num1) onum,SUM(sales_amount) ototal from db_out_stock a INNER JOIN db_out_stock_detail b on a.osid = b.osid";
+            $where = " where a.`status` = 1 "; 
+            if($stime){
+                $where .=" and a.create_time >=" . strtotime($stime);
+            }
+            if($etime){
+                $end_time = strtotime($etime) + (24*60*60) -1;
+                $where .=" and a.create_time <" . $end_time;
+            } 
+            $group = " group by b.wgid,b.unit_id1";       
+            $order ="  ORDER BY wgid ASC";
+            $sql = $sql.$where.$group.$order;
+            $odata = M()->query($sql);  
+            //查询商品信息
+            $wid = getWid();
+            $sql = "select a.wgid,b.`name` gname from db_wholesale_goods a INNER JOIN db_goods b on a.gid = b.gid where a.wid = $wid";
+            $gdata = M()->query($sql);  
+            //查询单位信息
+            $sql = "select unit_id,unit_name uname from db_unit";
+            $udata = M()->query($sql);   
+            $result = array(
+                "jdata"=>$jdata,
+                "odata"=>$odata,
+                "gdata"=>$gdata,
+                "udata"=>$udata,
+            );
+            $this->ajaxReturn(ReturnJSON1(0,"",$result));
+        }else{
+            $this->ajaxReturn(ReturnJSON(7));
+        }
+    }
+
+    /**
+     * 获取毛利分析商品数据
+     */
+    public function getMaoriAnalysisGoods(){
+        if(IS_GET){ 
+            $stime = I("stime");
+            $etime = I("etime");
+            $gtid = I("gtid");
+            $gtid1 = I("gtid1");
+            $gtid2 = I("gtid2");
+            if(strtotime($etime)-strtotime($stime)>30*24*60*60){
+                $this->ajaxReturn(ReturnJSON(1009));
+                return;
+            }
+            $sql = "select c.type_name tname1,d.type_name tname2,e.type_name tname3,f.`name` gname,h.unit_name uname,a.* 
+                from(select b.wgid,b.unit_id1,
+                SUM(b.num1) num,SUM(b.sales_amount) sales_amount,sum(((b.j_price/b.nei_num)*b.num1)) jtotal 
+                from db_out_stock a 
+                INNER JOIN db_out_stock_detail b on a.osid = b.osid
+                WHERE a.`status` = 1 and a.create_time >= ".strtotime($stime)." and a.create_time < ".(strtotime($etime) + (24*60*60) -1)."
+                group by wgid,unit_id1) a
+                INNER JOIN db_wholesale_goods b on a.wgid = b.wgid
+                INNER JOIN db_goods_type c on b.gtid = c.gtid
+                INNER JOIN db_goods_type d on b.gtid1 = d.gtid
+                INNER JOIN db_goods_type e on b.gtid2 = e.gtid
+                INNER JOIN db_goods f on f.gid = b.gid
+                INNER JOIN db_unit h on h.unit_id = a.unit_id1 ";
+            $where = " where 1=1 ";  
+            if($gtid){
+                $where .= " and b.gtid = $gtid"; 
+            }
+            if($gtid1){
+                $where .= " and b.gtid1 = $gtid1"; 
+            }
+            if($gtid2){
+                $where .= " and b.gtid2 = $gtid2"; 
+            }
+            $sql = $sql.$where; 
+            $data = M()->query($sql); 
+            $this->ajaxReturn(ReturnJSON1(0,"",$data));
+        }else{
+            $this->ajaxReturn(ReturnJSON(7));
+        }
+    }
+
+    /**
      * 库存商品流水
      */
     public function flowingWater(){
@@ -86,7 +205,7 @@ class ReportsController extends BaseController
         $this->assign("ctlist",$ctlist); 
         $this->assign("stlist",$stlist); 
         $this->display();
-    }
+    } 
 
     /**
      * 获取库存商品流水接口
@@ -130,6 +249,71 @@ class ReportsController extends BaseController
                     $this->ajaxReturn(ReturnJSON(1));
                 }
             }
+        }else{
+            $this->ajaxReturn(ReturnJSON(7));
+        }
+    }
+
+    /**
+     * 供应商明细
+     */
+    public function supplierDetail(){
+        $wid = getWid();  
+        $stlist = M("supplier_type")->where("wid=$wid")->select();
+        $this->assign("stlist",$stlist); 
+        $this->display();
+    }
+
+    /**
+     * 毛利分析供应商
+     */
+    public function maoriAnalysisSupplier(){
+        $wid = getWid();  
+        $stlist = M("supplier_type")->where("wid=$wid")->select();
+        $this->assign("stlist",$stlist); 
+        $this->display();
+    }
+
+    /**
+     * 获取供应商明细
+     */
+    public function getSupplierDetailInfo(){
+        if(IS_GET){
+            $stime = I("stime");
+            $etime = I("etime");
+            if(strtotime($etime)-strtotime($stime)>31*24*60*60){
+                $this->ajaxReturn(ReturnJSON(1009));
+                return;
+            }
+            $stid = I("stid");
+            $sid = I("sid");
+            $wid = getWid();
+            // 查出wgid
+            $sql ="select d.type_name stname,c.`name` sname,f.`name` gname,g.unit_name uname,SUM(b.num1*b.price) total 
+                FROM db_join_stock a 
+                INNER JOIN db_join_stock_detail b on a.jsid = b.jsid
+                INNER JOIN db_supplier c on a.sid = c.sid
+                INNER JOIN db_supplier_type d on d.stid = c.stid
+                INNER JOIN db_wholesale_goods e on e.wgid = b.wgid
+                INNER JOIN db_goods f on f.gid = e.gid
+                INNER JOIN db_unit g on g.unit_id = b.unit_id1 ";
+            if($stime){
+                $where .=" and a.create_time >=" . strtotime($stime);
+            }
+            if($etime){
+                $end_time = strtotime($etime) + (24*60*60) -1;
+                $where .=" and a.create_time <" . $end_time;
+            }
+            if($stid){
+                $where .=" and d.stid = $stid ";
+            }
+            if($sid){
+                $where .=" and c.sid = $sid ";
+            }
+            $group =" GROUP BY stname,sname,gname,uname";
+            $sql = $sql.$where.$group;
+            $result = M()->query($sql);
+            $this->ajaxReturn(ReturnJSON(0,$result));
         }else{
             $this->ajaxReturn(ReturnJSON(7));
         }
