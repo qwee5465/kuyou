@@ -2,11 +2,33 @@
 <html>
 <head>
 	<title></title>
-	
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
 </head>
 <body style="background: #fff;">
 	<div style="width:1000px;margin:auto;">
+		<button id="button1" style="margin:20px 0;height: 50px;">批量审核出库单</button>
 		<img src="__PUBLIC__/img/kuyou.jpg"  style="width:100%;" />
 	</div>
+	<script>
+		$("#button1").click(function(e) {
+			$.post("{:U('Outstock/queryOutboundOrder')}",{},function(res){
+				if(res.resultcode==0){
+					for(var i=0;i<res.result.length;i++){
+						auditingOrder(res.result[i].osid);
+						break;
+					}
+				}
+	    	},"json");
+		});
+		function auditingOrder(osid){
+			$.post("{:U('Outstock/auditingOrder')}",{osid:osid},function(res){
+				if(res.resultcode==0){
+					console.log("单据:"+osid+"审核成功");
+				}else{
+					console.log("单据:"+osid+"审核失败");
+				}
+	    	},"json");
+		}
+	</script>
 </body>
 </html>
