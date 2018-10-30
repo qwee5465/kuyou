@@ -10,24 +10,30 @@
 		<img src="__PUBLIC__/img/kuyou.jpg"  style="width:100%;" />
 	</div>
 	<script>
+		var data = [];
 		$("#button1").click(function(e) {
 			$.post("{:U('Outstock/queryOutboundOrder')}",{},function(res){
 				if(res.resultcode==0){
-					for(var i=0;i<res.result.length;i++){
-						auditingOrder(res.result[i].osid);
-						break;
-					}
+					data = res.result;
+					auditingOrder();
 				}
 	    	},"json");
 		});
-		function auditingOrder(osid){
-			$.post("{:U('Outstock/auditingOrder')}",{osid:osid},function(res){
-				if(res.resultcode==0){
-					console.log("单据:"+osid+"审核成功");
-				}else{
-					console.log("单据:"+osid+"审核失败");
-				}
-	    	},"json");
+		function auditingOrder(){
+			if(data.length>0){
+				$.get("{:U('Outstock/auditingOrder1')}",{osid:data[0].osid},function(res){
+					if(res.resultcode==0){
+						data.splice(0,1);
+						auditingOrder();
+						console.log("单据:"+data[0].osid+res.msg);
+					}else{
+						console.log("单据:"+data[0].osid+"审核失败,终止批量操作");
+					}
+		    	},"json");
+			}else{
+				console.log("批量执行完成");
+			}
+			
 		}
 	</script>
 </body>

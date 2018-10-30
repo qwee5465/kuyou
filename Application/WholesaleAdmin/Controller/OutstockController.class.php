@@ -37,12 +37,12 @@ class OutstockController extends BaseController
     /**
      * 批量审核出库单 用于鲁汉计算成本 
      */
-    public function auditingOrder(){
-        if(IS_POST){
+    public function auditingOrder1(){
+        if(IS_GET){
             $osid = I('osid'); 
             //根据osid 查出要出库的商品数量
-            $sql ="select a.out_id,a.wgid,a.num1,b.create_time from db_out_stock_detail a inner join db_out_stock b on b.osid = a.osid where a.osid='$osid' and b.`status` = 0";
-            $data = M()->query($sql); 
+            $sql ="select a.out_id,a.wgid,a.num1,b.create_time from db_out_stock_detail a inner join db_out_stock b on b.osid = a.osid where a.osid='$osid' and b.`status` = 0 and a.num1 > 0";
+            $data = M()->query($sql);  
             if($data){
                 //事务开启
                 M()->startTrans();
@@ -52,45 +52,47 @@ class OutstockController extends BaseController
                 );
                 foreach($data as $k => $v){
                     //根据先进先出的原则和商品数量 查出入库商品批次
-                    $sql1 ="select join_id,surplus,price from db_join_stock_detail where wgid = $v.wgid and surplus > 0  order by join_id ASC";
+                    $sql1 ="select join_id,surplus,price from db_join_stock_detail where wgid = ".$v['wgid']." and surplus > 0 and price > 0 order by join_id ASC";
                     $data1 = M()->query($sql1); 
                     foreach($data1 as $kk => $vv){
                         if($vv['surplus']>=$v['num1']){ //该批次够 修改这些批次的剩余数量
                             $res = M()->execute("update db_join_stock_detail set surplus = surplus - ".$v['num1']." where join_id = ".$vv["join_id"]);
-                            $v['num1'] = 0;
                             if($res){//计算该出库商品的成本
                                 $cost  = $vv['price'] * $v['num1'];
                                 $res = M()->execute("update db_out_stock_detail set cost = cost + ".$cost." where out_id = ".$v['out_id']);
                                 if(!$res){
                                     $arr_result['resultcode'] = 10;
-                                    $arr_result['msg'] .="批次够,修改出库成本失败。单据号为：$osid-----out_id:$v['out_id']";
+                                    $arr_result['msg'] ="批次够,修改出库成本失败。单据号为：$osid-----out_id:".$v['out_id']."成本：$cost----价格:".$vv['price']."数量:".$v['num1'];
                                     break;
                                 }
                             }else{
                                 $arr_result['resultcode'] = 10;
-                                $arr_result['msg'] .="批次够,修改入库剩余数失败。单据号为：$osid-----join_id:$vv['join_id']";
+                                $arr_result['msg'] ="批次够,修改入库剩余数失败。单据号为：$osid-----join_id:".$vv['join_id']."数量:".$v['num1'];
                                 break;
                             }
+                            $v['num1'] = 0;
                             break;
                         }else{ //该批次不够 修改这些批次的剩余数量
                             $res = M()->execute("update db_join_stock_detail set surplus = 0 where join_id = ".$vv["join_id"]);
-                            $v['num1'] = $v['num1'] - $vv['surplus'];
+                            $v['num1'] = round($v['num1'] - $vv['surplus'],4);
                             if($res){ //计算该出库商品的成本
                                 $cost  = $vv['price'] * $vv['surplus'];
                                 $res = M()->execute("update db_out_stock_detail set cost = cost + ".$cost." where out_id = ".$v['out_id']);
                                 if(!$res){
                                     $arr_result['resultcode'] = 10;
-                                    $arr_result['msg'] .="批次不够,修改出库成本失败。单据号为：$osid-----out_id:$v['out_id']";
+                                    $arr_result['msg'] ="批次不够,修改出库成本失败。单据号为：$osid-----out_id:".$v['out_id'];
                                     $v['num1'] = 0;
                                     break;
                                 }
                             }else{
                                 $arr_result['resultcode'] = 10;
-                                $arr_result['msg'] .="批次不够,修改入库剩余数失败。单据号为：$osid-----join_id:$vv['join_id']";
+                                $arr_result['msg'] ="批次不够,修改入库剩余数失败。单据号为：$osid-----join_id:".$vv['join_id'];
                                 $v['num1'] = 0;
                                 break;
                             }
                         }
+                        if($v['num1']==0)
+                            break;
                     }
                     //若库存不足则按最近的成本价计算
                     //若没有最近的成本则按0 计算
@@ -98,29 +100,30 @@ class OutstockController extends BaseController
                         $sql1 = "select b.price from db_join_stock a 
                                 INNER JOIN db_join_stock_detail b on a.jsid = b.jsid
                                 where a.`status` = 1 and b.wgid = ".$v['wgid']." and b.price >0 and a.create_time <= ".$v['create_time']." order by a.create_time asc limit 1";
-                        $data1 = $m->query($sql); 
+                        $data1 = M()->query($sql1);
                         if($data1){
                             $cost = $v['num1']*$data1[0]['price'];
                             $res = M()->execute("update db_out_stock_detail set cost = cost + ".$cost." where out_id = ".$v['out_id']);
                             if(!$res){
                                 $arr_result['resultcode'] = 10;
-                                $arr_result['msg'] .="库存不足<=0,修改出库成本失败。单据号为：$osid-----out_id:$v['out_id']";
+                                $arr_result['msg'] ="库存不足<=0,修改出库成本失败。单据号为：$osid-----out_id:".$v['out_id']."create_time:".$v['create_time']."--num1:".$v['num1']."--price:".$data1[0]['price']."sql=".$sql1;
                                 break;
                             }
                         }else{
                             $sql1 = "select b.price from db_join_stock a 
                                 INNER JOIN db_join_stock_detail b on a.jsid = b.jsid
                                 where a.`status` = 1 and b.wgid = ".$v['wgid']." and b.price >0 and a.create_time > ".$v['create_time']." order by a.create_time asc limit 1";
-                            $data1 = $m->query($sql); 
+                            $data1 = M()->query($sql1); 
                             if($data1){
                                 $cost = $v['num1']*$data1[0]['price'];
                                 $res = M()->execute("update db_out_stock_detail set cost = cost + ".$cost." where out_id = ".$v['out_id']);
                                 if(!$res){
                                     $arr_result['resultcode'] = 10;
-                                    $arr_result['msg'] .="库存不足>0,修改出库成本失败。单据号为：$osid-----out_id:$v['out_id']";
+                                    $arr_result['msg'] ="库存不足>0,修改出库成本失败。单据号为：$osid-----out_id:".$v['out_id'];
                                     break;
                                 }
                             }else{
+                                $arr_result['msg'] .="如果还没有成本价格就不对了";
                                 //如果还没有成本价格就不对了
                             }
 
