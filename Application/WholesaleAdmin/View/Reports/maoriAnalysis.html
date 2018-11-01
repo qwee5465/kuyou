@@ -173,7 +173,7 @@
 		            			zototal += parseFloat(list[i].ototal);
 		            			list[i].maori = (parseFloat(list[i].ototal) - parseFloat(list[i].jtotal)).myToFixed(2);
 		            			if(parseFloat(list[i].ototal)>0){
-		            				list[i].maoriLv = ((parseFloat(list[i].ototal) - parseFloat(list[i].jtotal)/ parseFloat(list[i].ototal))*100).myToFixed(2)+"%";
+		            				list[i].maoriLv = (((parseFloat(list[i].ototal) - parseFloat(list[i].jtotal))/ parseFloat(list[i].ototal))*100).myToFixed(2)+"%";
 		            			}else{
 		            				list[i].maoriLv = "0%";
 		            			}
@@ -216,7 +216,7 @@
         				obj.innerHTML = "毛利:" +(parseFloat(zototal)-parseFloat(zjtotal)).myToFixed(2);
         				break;
         			case 3:
-        				obj.innerHTML = "毛利率:" +((1-parseFloat(zjtotal)/parseFloat(zototal))*100).myToFixed(2)+"%";
+        				obj.innerHTML = "毛利率:" +(((parseFloat(zototal) - parseFloat(zjtotal))/parseFloat(zototal))*100).myToFixed(2)+"%";
         				break;
         		}
         	})
