@@ -1920,11 +1920,11 @@ class PurchaseController extends BaseController
             if($k==0){ //第一次  
                 $clist[$i]=array();
                 $clist[$i]['gname']=$v['gname']; 
-                $uulist = $this->getDamageOfCargoInfo($osid,$v['wgid']);
+                // $uulist = $this->getDamageOfCargoInfo($osid,$v['wgid']);
                 $clist[$i]['wgid']=$v['wgid'];
-                $clist[$i]['cd_num']=$uulist['cd_num'];
-                $clist[$i]['unit_id']=$uulist['unit_id'];
-                $clist[$i]['ulist']=$uulist['ulist'];
+                // $clist[$i]['cd_num']=$uulist['cd_num'];
+                // $clist[$i]['unit_id']=$uulist['unit_id'];
+                // $clist[$i]['ulist']=$uulist['ulist'];
                 $clist[$i]['clist']=array(); 
                 $clist[$i]['clist'][$n]=array();
                 $clist[$i]['clist'][$n]['code']=$v['code'];
@@ -1949,11 +1949,11 @@ class PurchaseController extends BaseController
                 $n=0;
                 $clist[$i]=array();
                 $clist[$i]['gname']=$v['gname'];
-                $uulist = $this->getDamageOfCargoInfo($osid,$v['wgid']);
+                // $uulist = $this->getDamageOfCargoInfo($osid,$v['wgid']);
                 $clist[$i]['wgid']=$v['wgid'];
-                $clist[$i]['cd_num']=$uulist['cd_num'];
-                $clist[$i]['unit_id']=$uulist['unit_id'];
-                $clist[$i]['ulist']=$uulist['ulist'];
+                // $clist[$i]['cd_num']=$uulist['cd_num'];
+                // $clist[$i]['unit_id']=$uulist['unit_id'];
+                // $clist[$i]['ulist']=$uulist['ulist'];
                 $clist[$i]['clist']=array(); 
                 $clist[$i]['clist'][$n]=array();
                 $clist[$i]['clist'][$n]['code']=$v['code'];

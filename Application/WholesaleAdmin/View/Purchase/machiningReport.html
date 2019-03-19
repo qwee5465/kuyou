@@ -178,16 +178,17 @@
 	            			}
 	            			hjnum = hjnum.toFixed(2);
 	            			str +="</td><td>"+hjnum+clist[0]['jcuname']+"</td>";
-	            			str +="<td></td><td></td><td><input class='t-number stock-txt not-print' type='text' value='"+list[i].cd_num+"' data-wgid='"+list[i].wgid+"' name='wgids' /><select class='not-print' name='nei_unit_id'>";
-	            			var ulist =list[i].ulist;
-	            			for(var j=0;j<ulist.length;j++){
-	            				if(ulist[j].unit_id==list[i].unit_id){
-	            					str +="<option selected='selected'  value='"+ulist[j].unit_id+"' data-nei_num='"+ulist[j].num+"'>"+ulist[j].uname+"</option>";
-	            				}else{
-	            					str +="<option value='"+ulist[j].unit_id+"' data-nei_num='"+ulist[j].num+"'>"+ulist[j].uname+"</option>";
-	            				}
-	            			}
-	            			str +="</select><input type='hidden' name='unit_id' value='"+ulist[0].unit_id+"' /></td>"; 
+	            			str +="<td></td><td></td>";
+							// <td><input class='t-number stock-txt not-print' type='text' value='"+list[i].cd_num+"' data-wgid='"+list[i].wgid+"' name='wgids' /><select class='not-print' name='nei_unit_id'>";
+	            			// var ulist =list[i].ulist;
+	            			// for(var j=0;j<ulist.length;j++){
+	            			// 	if(ulist[j].unit_id==list[i].unit_id){
+	            			// 		str +="<option selected='selected'  value='"+ulist[j].unit_id+"' data-nei_num='"+ulist[j].num+"'>"+ulist[j].uname+"</option>";
+	            			// 	}else{
+	            			// 		str +="<option value='"+ulist[j].unit_id+"' data-nei_num='"+ulist[j].num+"'>"+ulist[j].uname+"</option>";
+	            			// 	}
+	            			// }
+	            			// str +="</select><input type='hidden' name='unit_id' value='"+ulist[0].unit_id+"' /></td>"; 
 	            			str +="</tr>";
 	            		}
 	            		$("#tbody").html(str);  
